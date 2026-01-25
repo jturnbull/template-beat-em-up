@@ -92,7 +92,7 @@ func unhandled_input(event: InputEvent) -> void:
 	
 	var has_handled := false
 	
-	if event.is_action_pressed("attack"):
+	if event.is_action_pressed(_action_name("attack")):
 		_attack()
 		has_handled = true
 	
@@ -101,7 +101,7 @@ func unhandled_input(event: InputEvent) -> void:
 
 
 func physics_process(delta: float) -> void:
-	var h_direction := Input.get_vector("move_left", "move_right", "move_up", "move_down").x
+	var h_direction := _movement_vector().x
 	var air_control_influence: float = _air_control_max_speed * h_direction
 	
 	if _should_apply_air_control(h_direction):

@@ -56,7 +56,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 ### Public Methods --------------------------------------------------------------------------------
 
 func enter(msg: = {}) -> void:
-	_move_state._direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	_move_state._direction = _movement_vector()
 	super(msg)
 	_move_state.enter(msg)
 	_skin.transition_to(_walk_skin_state)
@@ -71,7 +71,7 @@ func unhandled_input(event: InputEvent) -> void:
 
 
 func physics_process(delta: float) -> void:
-	_move_state._direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	_move_state._direction = _movement_vector()
 	_handle_facing_direction()
 	
 	if _is_turning:

@@ -82,7 +82,7 @@ func _disconnect_signals() -> void:
 
 
 func _on_skin_animation_finished() -> void:
-	var direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	var direction = _movement_vector()
 	if direction.is_equal_approx(Vector2.ZERO):
 		_state_machine.transition_to(_path_idle)
 	else:

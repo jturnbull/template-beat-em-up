@@ -66,9 +66,9 @@ func enter(msg: = {}) -> void:
 func unhandled_input(event: InputEvent) -> void:
 	var has_handled := true
 	
-	if event.is_action_pressed("attack"):
+	if event.is_action_pressed(_action_name("attack")):
 		attack()
-	elif event.is_action_pressed("jump"):
+	elif event.is_action_pressed(_action_name("jump")):
 		jump()
 	else:
 		has_handled = false

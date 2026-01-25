@@ -54,5 +54,20 @@ func _on_owner_ready() -> void:
 	_skin = _character._skin as QuiverCharacterSkin
 	_attributes = _character.attributes
 
-### -----------------------------------------------------------------------------------------------
+### Input Helpers --------------------------------------------------------------------------------
 
+func _action_name(action: StringName) -> StringName:
+	if is_instance_valid(_character):
+		return _character.get_input_action(action)
+	return action
+
+
+func _movement_vector() -> Vector2:
+	return Input.get_vector(
+		_action_name("move_left"),
+		_action_name("move_right"),
+		_action_name("move_up"),
+		_action_name("move_down")
+	)
+
+### -----------------------------------------------------------------------------------------------

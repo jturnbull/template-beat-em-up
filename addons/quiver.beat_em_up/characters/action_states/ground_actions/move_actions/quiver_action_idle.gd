@@ -62,7 +62,7 @@ func unhandled_input(event: InputEvent) -> void:
 
 
 func physics_process(delta: float) -> void:
-	_move_state._direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	_move_state._direction = _movement_vector()
 	if _move_state._direction != Vector2.ZERO:
 		_state_machine.transition_to(_path_walk_state)
 		return

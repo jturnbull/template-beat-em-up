@@ -17,6 +17,8 @@ extends Camera2D
 		collision_width = value
 		_update_collision_limits_width()
 
+@export var follow_players := true
+
 #--- private variables - order: export > normal var > onready -------------------------------------
 
 @onready var _limit_left := $ScreenLimits/Left as CollisionShape2D
@@ -41,6 +43,9 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	if follow_players:
+		_update_player_tracking()
+
 	for limit in _collision_limits:
 		var half_collision_width := collision_width * Vector2.ONE /2.0
 		var half_size := get_viewport_rect().size / zoom / 2.0 + half_collision_width
@@ -98,5 +103,44 @@ func _update_collision_limits_length() -> void:
 	var rect_size := get_viewport_rect().size / zoom
 	for limit in _collision_limits:
 		(limit.shape as RectangleShape2D).size.x = rect_size.y + collision_width
+
+
+func _update_player_tracking() -> void:
+	var players := get_tree().get_nodes_in_group("players")
+	if players.size() == 0:
+		return
+	
+	var min_x := INF
+	var max_x := -INF
+	var sum_y := 0.0
+	var count := 0
+	for node in players:
+		var player := node as Node2D
+		if player == null:
+			continue
+		min_x = minf(min_x, player.global_position.x)
+		max_x = maxf(max_x, player.global_position.x)
+		sum_y += player.global_position.y
+		count += 1
+	
+	if count == 0:
+		return
+	
+	var desired_x := (min_x + max_x) * 0.5
+	var half_width := get_viewport_rect().size.x / zoom.x / 2.0
+	var min_center_x := max_x - half_width
+	var max_center_x := min_x + half_width
+	if min_center_x > max_center_x:
+		# Players are farther apart than the viewport; fall back to midpoint.
+		min_center_x = desired_x
+		max_center_x = desired_x
+	
+	var limit_min_x := limit_left + half_width
+	var limit_max_x := limit_right - half_width
+	desired_x = clampf(desired_x, min_center_x, max_center_x)
+	desired_x = clampf(desired_x, limit_min_x, limit_max_x)
+	
+	var desired_y := sum_y / float(count)
+	global_position = Vector2(desired_x, desired_y)
 
 ### -----------------------------------------------------------------------------------------------

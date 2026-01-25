@@ -68,7 +68,8 @@ func enter(msg: = {}) -> void:
 	super(msg)
 	_skin.transition_to(_skin_state)
 	
-	_release_action = "move_left" if _skin.skin_direction == 1 else "move_right"
+	_release_action = \
+		_action_name("move_left") if _skin.skin_direction == 1 else _action_name("move_right")
 	_is_holding_backwards = Input.is_action_pressed(_release_action)
 
 
@@ -88,7 +89,7 @@ func unhandled_input(event: InputEvent) -> void:
 		_is_holding_backwards = false
 		has_handled = true
 	
-	if event.is_action_pressed("attack"):
+	if event.is_action_pressed(_action_name("attack")):
 		if _is_holding_backwards:
 			_state_machine.transition_to(_path_throw_backwards)
 			has_handled = true

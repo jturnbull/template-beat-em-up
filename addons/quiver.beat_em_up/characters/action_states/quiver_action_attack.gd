@@ -93,7 +93,7 @@ func unhandled_input(event: InputEvent) -> void:
 	if not _can_combo:
 		return
 	
-	if event.is_action_pressed("attack"):
+	if event.is_action_pressed(_action_name("attack")):
 		attack()
 
 

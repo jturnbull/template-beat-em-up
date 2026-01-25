@@ -665,11 +665,16 @@ texture_sequence = Array[int]([0, 0, 0, 0, 0, 0, 0, 0, 0])
 
 [node name="Chad" parent="Level/Characters" index="0"]
 position = Vector2(824, 800)
+input_action_prefix = "p1"
 
 [node name="LevelCamera" parent="Level/Characters/Chad" index="4"]
 limit_right = 16070
 
-[node name="TaxMan" parent="Level/Characters" index="1" instance=ExtResource("59_jn7co")]
+[node name="Player2" parent="Level/Characters" index="1"]
+position = Vector2(724, 800)
+input_action_prefix = "p2"
+
+[node name="TaxMan" parent="Level/Characters" index="2" instance=ExtResource("59_jn7co")]
 unique_name_in_owner = true
 position = Vector2(15208, 861)
 should_start_seated = true

@@ -21,6 +21,7 @@ extends CharacterBody2D
 
 #--- public variables - order: export > normal var > onready --------------------------------------
 
+@export var input_action_prefix := ""
 var attributes: QuiverAttributes = null:
 	set(value):
 		attributes = value
@@ -97,6 +98,10 @@ func _ready() -> void:
 			scene_file_path != "res://addons/quiver.beat_em_up/characters/quiver_character_base.tscn"
 	assert(is_not_base_scene, ERROR_BASE_SCENE_USED_DIRECTLY)
 	
+	if attributes != null and is_in_group("players"):
+		# Players need unique attributes to avoid shared health/state.
+		attributes = attributes.duplicate(true) as QuiverAttributes
+	
 	if attributes != null:
 		attributes.character_node = self
 
@@ -130,6 +135,12 @@ func _get_configuration_warnings() -> PackedStringArray:
 ## Method to be overridden for character that can't be grabbed.
 func can_deny_grabs() -> bool:
 	return false
+
+## Returns an input action name scoped to this character's input prefix.
+func get_input_action(action: StringName) -> StringName:
+	if input_action_prefix.is_empty():
+		return action
+	return StringName("%s_%s" % [input_action_prefix, action])
 
 ### -----------------------------------------------------------------------------------------------
 
