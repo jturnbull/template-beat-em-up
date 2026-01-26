@@ -1,0 +1,424 @@
+[gd_resource type="SpriteFrames" load_steps=42 format=3]
+
+[ext_resource type="Texture2D" uid="uid://bvsjy8xgk4cnx" path="res://characters/playable/mark/resources/sprites/idle/idle_00.png" id="1_wrqq6"]
+[ext_resource type="Texture2D" uid="uid://dgc8iftho5l60" path="res://characters/playable/mark/resources/sprites/idle/idle_01.png" id="2_1xc7n"]
+[ext_resource type="Texture2D" uid="uid://b44mkiid6nke1" path="res://characters/playable/mark/resources/sprites/idle/idle_02.png" id="3_5djqb"]
+[ext_resource type="Texture2D" uid="uid://doy7ui6dy85q5" path="res://characters/playable/mark/resources/sprites/punches/punch1_00.png" id="3_48agj"]
+[ext_resource type="Texture2D" uid="uid://dpvkqbbeuqrlx" path="res://characters/playable/mark/resources/sprites/punches/punch1_01.png" id="4_oi4qv"]
+[ext_resource type="Texture2D" uid="uid://eqnijrnpafm5" path="res://characters/playable/mark/resources/sprites/walk/walk_00.png" id="6_ra0bq"]
+[ext_resource type="Texture2D" uid="uid://djal1tttw34iv" path="res://characters/playable/mark/resources/sprites/walk/walk_01.png" id="7_n4s3j"]
+[ext_resource type="Texture2D" uid="uid://db0y0ycx4sfkl" path="res://characters/playable/mark/resources/sprites/punches/punch3_00.png" id="7_ya88k"]
+[ext_resource type="Texture2D" uid="uid://2232mref1l71" path="res://characters/playable/mark/resources/sprites/punches/punch3_01.png" id="8_svxg8"]
+[ext_resource type="Texture2D" uid="uid://0gc258c1wb8b" path="res://characters/playable/mark/resources/sprites/walk/walk_02.png" id="8_ytmlj"]
+[ext_resource type="Texture2D" uid="uid://ddn1e7p4qwe1q" path="res://characters/playable/mark/resources/sprites/walk/walk_03.png" id="9_ur7d7"]
+[ext_resource type="Texture2D" uid="uid://xt85g2puqtqe" path="res://characters/playable/mark/resources/sprites/punches/punch3_02.png" id="9_x5mcd"]
+[ext_resource type="Texture2D" uid="uid://bjscum7crry04" path="res://characters/playable/mark/resources/sprites/punches/punch3_04.png" id="10_mesqx"]
+[ext_resource type="Texture2D" uid="uid://cn7cs0c34hfx6" path="res://characters/playable/mark/resources/sprites/walk/walk_04.png" id="10_vyrsa"]
+[ext_resource type="Texture2D" uid="uid://b7cf6s8oe73ok" path="res://characters/playable/mark/resources/sprites/walk/walk_05.png" id="11_5p56x"]
+[ext_resource type="Texture2D" uid="uid://d4gdikrrge1fb" path="res://characters/playable/mark/resources/sprites/walk/walk_06.png" id="12_sw7jw"]
+[ext_resource type="Texture2D" uid="uid://ct8aer8uakvum" path="res://characters/playable/mark/resources/sprites/walk/walk_07.png" id="13_wlfmd"]
+[ext_resource type="Texture2D" uid="uid://cak3x8y36omit" path="res://characters/playable/mark/resources/sprites/idle/idle_03.png" id="14_psawv"]
+[ext_resource type="Texture2D" uid="uid://xeuy0lqlnc84" path="res://characters/playable/mark/resources/sprites/walk/walk_08.png" id="14_ujcpq"]
+[ext_resource type="Texture2D" uid="uid://dlsdi7mi362ox" path="res://characters/playable/mark/resources/sprites/walk/walk_09.png" id="15_bany5"]
+[ext_resource type="Texture2D" uid="uid://xwc6l54otrc8" path="res://characters/playable/mark/resources/sprites/walk/walk_10.png" id="16_wr7m3"]
+[ext_resource type="Texture2D" uid="uid://bv5edst2ca6jb" path="res://characters/playable/mark/resources/sprites/walk/walk_11.png" id="17_j3734"]
+[ext_resource type="Texture2D" uid="uid://dqjdbs6bjijxn" path="res://characters/playable/mark/resources/sprites/punches/punch2_00.png" id="19_y1ame"]
+[ext_resource type="Texture2D" uid="uid://ckuht4pw416lo" path="res://characters/playable/mark/resources/sprites/punches/punch2_01.png" id="20_7jacw"]
+[ext_resource type="Texture2D" uid="uid://cfrmbi5a0smva" path="res://characters/playable/mark/resources/sprites/air_attack/air_attack_00.png" id="21_mbplx"]
+[ext_resource type="Texture2D" uid="uid://bw7ulkf8jdiyj" path="res://characters/playable/mark/resources/sprites/jump/jump_03.png" id="22_c167v"]
+[ext_resource type="Texture2D" uid="uid://b5orlh65nx7bg" path="res://characters/playable/mark/resources/sprites/air_attack/air_attack_01.png" id="22_o0cvf"]
+[ext_resource type="Texture2D" uid="uid://ddisqyo4a10um" path="res://characters/playable/mark/resources/sprites/jump/jump_01.png" id="23_trcrx"]
+[ext_resource type="Texture2D" uid="uid://cskwkalajq4a1" path="res://characters/playable/mark/resources/sprites/jump/jump_02.png" id="24_5taik"]
+[ext_resource type="Texture2D" uid="uid://giai7a22rqyj" path="res://characters/playable/mark/resources/sprites/jump/jump_04.png" id="25_bqngl"]
+[ext_resource type="Texture2D" uid="uid://b7u0a2r23bsdm" path="res://characters/playable/mark/resources/sprites/hurt/hurt_high.png" id="27_fdxwh"]
+[ext_resource type="Texture2D" uid="uid://dl45txlfjwfss" path="res://characters/playable/mark/resources/sprites/hurt/hurt_mid.png" id="28_niptm"]
+[ext_resource type="Texture2D" uid="uid://cxgdqgab6eqg7" path="res://characters/playable/mark/resources/sprites/knock_out/knockout_00.png" id="29_i7rbs"]
+[ext_resource type="Texture2D" uid="uid://pehngd25bdaa" path="res://characters/playable/mark/resources/sprites/knock_out/knockout_01.png" id="30_h1a1i"]
+[ext_resource type="Texture2D" uid="uid://k0hvtjlhaakw" path="res://characters/playable/mark/resources/sprites/knock_out/knockout_05.png" id="30_hd20p"]
+[ext_resource type="Texture2D" uid="uid://q67xqn1rkws2" path="res://characters/playable/mark/resources/sprites/knock_out/knockout_02.png" id="31_jaglq"]
+[ext_resource type="Texture2D" uid="uid://fj5wwrsd2nw" path="res://characters/playable/mark/resources/sprites/knock_out/knockout_03.png" id="32_2hkrc"]
+[ext_resource type="Texture2D" uid="uid://vbixjb2cw834" path="res://characters/playable/mark/resources/sprites/knock_out/knockout_04.png" id="33_j15rn"]
+[ext_resource type="Texture2D" uid="uid://cgvymw1sklq0" path="res://characters/playable/mark/resources/sprites/turn_around/turnaround_00.png" id="50_dcevi"]
+[ext_resource type="Texture2D" uid="uid://bisn0d5xq5ow1" path="res://characters/playable/mark/resources/sprites/turn_around/turnaround_01.png" id="51_5s74y"]
+[ext_resource type="Texture2D" uid="uid://d1xe52egp2xnj" path="res://characters/playable/mark/resources/sprites/turn_around/turnaround_02.png" id="52_xtm6s"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("21_mbplx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_mbplx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_mbplx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_o0cvf")
+}],
+"loop": false,
+"name": &"air_attack",
+"speed": 24.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_48agj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_48agj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_48agj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_48agj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_oi4qv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_oi4qv")
+}],
+"loop": false,
+"name": &"attack_1",
+"speed": 24.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("19_y1ame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_y1ame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_y1ame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_7jacw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_7jacw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_7jacw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_7jacw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_7jacw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_oi4qv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_oi4qv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_oi4qv")
+}],
+"loop": true,
+"name": &"attack_2",
+"speed": 24.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_ya88k")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_ya88k")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_ya88k")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_ya88k")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_ya88k")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_svxg8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_svxg8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_svxg8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_x5mcd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_x5mcd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_mesqx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_mesqx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_mesqx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_mesqx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_oi4qv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_oi4qv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_oi4qv")
+}],
+"loop": true,
+"name": &"attack_3",
+"speed": 24.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("25_bqngl")
+}],
+"loop": false,
+"name": &"falling",
+"speed": 24.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("27_fdxwh")
+}],
+"loop": true,
+"name": &"hurt_high",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("28_niptm")
+}],
+"loop": true,
+"name": &"hurt_middle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_wrqq6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_1xc7n")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_5djqb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_psawv")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("23_trcrx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_trcrx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_5taik")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_5taik")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_5taik")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_5taik")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_5taik")
+}],
+"loop": false,
+"name": &"jump",
+"speed": 24.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("32_2hkrc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_j15rn")
+}],
+"loop": false,
+"name": &"knockout_bounce",
+"speed": 24.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("31_jaglq")
+}],
+"loop": false,
+"name": &"knockout_falling",
+"speed": 24.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("30_hd20p")
+}],
+"loop": true,
+"name": &"knockout_landed",
+"speed": 24.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("29_i7rbs")
+}],
+"loop": false,
+"name": &"knockout_launch",
+"speed": 24.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("30_h1a1i")
+}],
+"loop": false,
+"name": &"knockout_rising",
+"speed": 24.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("24_5taik")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_5taik")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_5taik")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_trcrx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_trcrx")
+}],
+"loop": true,
+"name": &"landing",
+"speed": 24.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("22_c167v")
+}],
+"loop": false,
+"name": &"rising",
+"speed": 24.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("50_dcevi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("51_5s74y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("52_xtm6s")
+}],
+"loop": false,
+"name": &"turn_around",
+"speed": 24.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_ra0bq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_ra0bq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_n4s3j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_n4s3j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_n4s3j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_ytmlj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_ytmlj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_ur7d7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_ur7d7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_ur7d7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_vyrsa")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_vyrsa")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_5p56x")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_5p56x")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_sw7jw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_sw7jw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_sw7jw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_wlfmd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_wlfmd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_ujcpq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_ujcpq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_ujcpq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_bany5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_bany5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_wr7m3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_wr7m3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_j3734")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_j3734")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_j3734")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 24.0
+}]

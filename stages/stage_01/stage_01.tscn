@@ -1,6 +1,7 @@
 [gd_scene load_steps=105 format=3 uid="uid://bnoa0s3qnckt1"]
 
 [ext_resource type="PackedScene" path="res://stages/_base/base_stage.tscn" id="1_4lqd3"]
+[ext_resource type="PackedScene" path="res://characters/playable/mark/mark.tscn" id="1_mark"]
 [ext_resource type="Script" path="res://addons/quiver.beat_em_up/utilities/custom_nodes/quiver_sprite_repeater.gd" id="2_0ledp"]
 [ext_resource type="Script" path="res://stages/stage_01/stage_01.gd" id="2_08exp"]
 [ext_resource type="PackedScene" uid="uid://chmbp4a1d41k0" path="res://stages/stage_01/stage_elements/skyboxes/skybox.tscn" id="3_pnjnx"]
@@ -670,7 +671,7 @@ input_action_prefix = "p1"
 [node name="LevelCamera" parent="Level/Characters/Chad" index="4"]
 limit_right = 16070
 
-[node name="Player2" parent="Level/Characters" index="1"]
+[node name="Player2" parent="Level/Characters" index="1" instance=ExtResource("1_mark")]
 position = Vector2(724, 800)
 input_action_prefix = "p2"
 

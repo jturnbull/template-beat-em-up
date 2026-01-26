@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="QuiverAttributes" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://addons/quiver.beat_em_up/characters/quiver_attributes.gd" id="1_1ikth"]
+[ext_resource type="Texture2D" uid="uid://cqtsjmdjrqney" path="res://characters/playable/mark/resources/mark_gradient.tres" id="1_4dxsn"]
+[ext_resource type="Texture2D" uid="uid://bmmn7tps4woxq" path="res://characters/playable/mark/resources/sprites/mark_profile.png" id="2_g3jjg"]
+
+[resource]
+script = ExtResource("1_1ikth")
+display_name = "Mark"
+profile_texture = ExtResource("2_g3jjg")
+life_bar_gradient = ExtResource("1_4dxsn")
+health_max = 100
+speed_max = 500.0
+air_control = 0.6
+jump_force = -1200
+hit_lane_offset = 0
+is_invulnerable = false
+has_superarmor = false
+can_be_grabbed = true

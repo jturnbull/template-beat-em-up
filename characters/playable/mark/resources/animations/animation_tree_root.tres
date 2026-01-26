@@ -1,10 +1,10 @@
-[gd_resource type="AnimationNodeBlendTree" load_steps=100 format=3 uid="uid://dlfxsc1icfbdd"]
+[gd_resource type="AnimationNodeBlendTree" load_steps=100 format=3]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_3sxcf"]
-animation = &"Chad/air_attack_right"
+animation = &"Mark/air_attack_right"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_o5ftx"]
-animation = &"Chad/air_attack_left"
+animation = &"Mark/air_attack_left"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_5b8xh"]
 blend_point_0/node = SubResource("AnimationNodeAnimation_3sxcf")
@@ -13,10 +13,10 @@ blend_point_1/node = SubResource("AnimationNodeAnimation_o5ftx")
 blend_point_1/pos = -0.1
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wcjyt"]
-animation = &"Chad/attack1_right"
+animation = &"Mark/attack1_right"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_npp8b"]
-animation = &"Chad/attack1_left"
+animation = &"Mark/attack1_left"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_fadxe"]
 blend_point_0/node = SubResource("AnimationNodeAnimation_wcjyt")
@@ -25,10 +25,10 @@ blend_point_1/node = SubResource("AnimationNodeAnimation_npp8b")
 blend_point_1/pos = -0.1
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_osbbp"]
-animation = &"Chad/attack2_right"
+animation = &"Mark/attack2_right"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ix03y"]
-animation = &"Chad/attack2_left"
+animation = &"Mark/attack2_left"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_djwco"]
 blend_point_0/node = SubResource("AnimationNodeAnimation_osbbp")
@@ -37,10 +37,10 @@ blend_point_1/node = SubResource("AnimationNodeAnimation_ix03y")
 blend_point_1/pos = -0.1
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_m1pfe"]
-animation = &"Chad/attack3_right"
+animation = &"Mark/attack3_right"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_jtsl6"]
-animation = &"Chad/attack3_left"
+animation = &"Mark/attack3_left"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_2rl1i"]
 blend_point_0/node = SubResource("AnimationNodeAnimation_m1pfe")
@@ -49,10 +49,10 @@ blend_point_1/node = SubResource("AnimationNodeAnimation_jtsl6")
 blend_point_1/pos = -0.1
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_2cuw7"]
-animation = &"Chad/die_right"
+animation = &"Mark/die_right"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_jesgx"]
-animation = &"Chad/die_left"
+animation = &"Mark/die_left"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_vwtxw"]
 blend_point_0/node = SubResource("AnimationNodeAnimation_2cuw7")
@@ -61,10 +61,10 @@ blend_point_1/node = SubResource("AnimationNodeAnimation_jesgx")
 blend_point_1/pos = -0.1
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_3f5s4"]
-animation = &"Chad/falling_right"
+animation = &"Mark/falling_right"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_m8vhf"]
-animation = &"Chad/falling_left"
+animation = &"Mark/falling_left"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_0f5u6"]
 blend_point_0/node = SubResource("AnimationNodeAnimation_3f5s4")
@@ -73,10 +73,10 @@ blend_point_1/node = SubResource("AnimationNodeAnimation_m8vhf")
 blend_point_1/pos = -0.1
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ebat4"]
-animation = &"Chad/hurt_high_right"
+animation = &"Mark/hurt_high_right"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_7j5bx"]
-animation = &"Chad/hurt_high_left"
+animation = &"Mark/hurt_high_left"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_b43h3"]
 blend_point_0/node = SubResource("AnimationNodeAnimation_ebat4")
@@ -85,10 +85,10 @@ blend_point_1/node = SubResource("AnimationNodeAnimation_7j5bx")
 blend_point_1/pos = -0.1
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_o00qy"]
-animation = &"Chad/hurt_mid_right"
+animation = &"Mark/hurt_mid_right"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_d6ix7"]
-animation = &"Chad/hurt_mid_left"
+animation = &"Mark/hurt_mid_left"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_klb4a"]
 blend_point_0/node = SubResource("AnimationNodeAnimation_o00qy")
@@ -97,10 +97,10 @@ blend_point_1/node = SubResource("AnimationNodeAnimation_d6ix7")
 blend_point_1/pos = -0.1
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_6oicn"]
-animation = &"Chad/idle_left"
+animation = &"Mark/idle_left"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_vd5ew"]
-animation = &"Chad/idle_right"
+animation = &"Mark/idle_right"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_k7nfp"]
 blend_point_0/node = SubResource("AnimationNodeAnimation_6oicn")
@@ -109,10 +109,10 @@ blend_point_1/node = SubResource("AnimationNodeAnimation_vd5ew")
 blend_point_1/pos = 0.1
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_pnvq8"]
-animation = &"Chad/jump_right"
+animation = &"Mark/jump_right"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_hic0d"]
-animation = &"Chad/jump_left"
+animation = &"Mark/jump_left"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_j64u3"]
 blend_point_0/node = SubResource("AnimationNodeAnimation_pnvq8")
@@ -121,10 +121,10 @@ blend_point_1/node = SubResource("AnimationNodeAnimation_hic0d")
 blend_point_1/pos = -0.1
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_j410c"]
-animation = &"Chad/knockout_bounce_right"
+animation = &"Mark/knockout_bounce_right"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_oyvo0"]
-animation = &"Chad/knockout_bounce_left"
+animation = &"Mark/knockout_bounce_left"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_37dkv"]
 blend_point_0/node = SubResource("AnimationNodeAnimation_j410c")
@@ -133,10 +133,10 @@ blend_point_1/node = SubResource("AnimationNodeAnimation_oyvo0")
 blend_point_1/pos = -0.1
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_2jrh5"]
-animation = &"Chad/knockout_falling_right"
+animation = &"Mark/knockout_falling_right"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_88cd6"]
-animation = &"Chad/knockout_falling_left"
+animation = &"Mark/knockout_falling_left"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_op5hi"]
 blend_point_0/node = SubResource("AnimationNodeAnimation_2jrh5")
@@ -145,10 +145,10 @@ blend_point_1/node = SubResource("AnimationNodeAnimation_88cd6")
 blend_point_1/pos = -0.1
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wpecb"]
-animation = &"Chad/getting_up_right"
+animation = &"Mark/getting_up_right"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_6cdhp"]
-animation = &"Chad/getting_up_left"
+animation = &"Mark/getting_up_left"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_uhn10"]
 blend_point_0/node = SubResource("AnimationNodeAnimation_wpecb")
@@ -157,10 +157,10 @@ blend_point_1/node = SubResource("AnimationNodeAnimation_6cdhp")
 blend_point_1/pos = -0.1
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_0x0wd"]
-animation = &"Chad/knockout_landed_right"
+animation = &"Mark/knockout_landed_right"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_juj11"]
-animation = &"Chad/knockout_landed_left"
+animation = &"Mark/knockout_landed_left"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_tt8q6"]
 blend_point_0/node = SubResource("AnimationNodeAnimation_0x0wd")
@@ -186,10 +186,10 @@ states/knockout_landed/position = Vector2(431, 100)
 transitions = ["Start", "knockout_landed", SubResource("AnimationNodeStateMachineTransition_tlogh"), "knockout_landed", "getting_up", SubResource("AnimationNodeStateMachineTransition_pes0o"), "getting_up", "End", SubResource("AnimationNodeStateMachineTransition_74ry0")]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_7u1aw"]
-animation = &"Chad/knockout_launch_right"
+animation = &"Mark/knockout_launch_right"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_n5gsb"]
-animation = &"Chad/knockout_launch_left"
+animation = &"Mark/knockout_launch_left"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_rjdwd"]
 blend_point_0/node = SubResource("AnimationNodeAnimation_7u1aw")
@@ -198,10 +198,10 @@ blend_point_1/node = SubResource("AnimationNodeAnimation_n5gsb")
 blend_point_1/pos = -0.1
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_c0mdb"]
-animation = &"Chad/knockout_rising_right"
+animation = &"Mark/knockout_rising_right"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_mgytl"]
-animation = &"Chad/knockout_rising_left"
+animation = &"Mark/knockout_rising_left"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_y4gin"]
 blend_point_0/node = SubResource("AnimationNodeAnimation_c0mdb")
@@ -210,10 +210,10 @@ blend_point_1/node = SubResource("AnimationNodeAnimation_mgytl")
 blend_point_1/pos = -0.1
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_p2j18"]
-animation = &"Chad/landing_right"
+animation = &"Mark/landing_right"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_5a8aj"]
-animation = &"Chad/landing_left"
+animation = &"Mark/landing_left"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_w3olb"]
 blend_point_0/node = SubResource("AnimationNodeAnimation_p2j18")
@@ -222,10 +222,10 @@ blend_point_1/node = SubResource("AnimationNodeAnimation_5a8aj")
 blend_point_1/pos = -0.1
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_txy5g"]
-animation = &"Chad/rising_right"
+animation = &"Mark/rising_right"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_hshnq"]
-animation = &"Chad/rising_left"
+animation = &"Mark/rising_left"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_d6xi7"]
 blend_point_0/node = SubResource("AnimationNodeAnimation_txy5g")
@@ -234,10 +234,10 @@ blend_point_1/node = SubResource("AnimationNodeAnimation_hshnq")
 blend_point_1/pos = -0.1
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_8lfw2"]
-animation = &"Chad/turn_to_left"
+animation = &"Mark/turn_to_left"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_tfef5"]
-animation = &"Chad/turn_to_right"
+animation = &"Mark/turn_to_right"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_wrxcj"]
 blend_point_0/node = SubResource("AnimationNodeAnimation_8lfw2")
@@ -246,10 +246,10 @@ blend_point_1/node = SubResource("AnimationNodeAnimation_tfef5")
 blend_point_1/pos = -0.1
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_7rtfi"]
-animation = &"Chad/walk_left"
+animation = &"Mark/walk_left"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_uy7hu"]
-animation = &"Chad/walk_right"
+animation = &"Mark/walk_right"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_u2fb7"]
 blend_point_0/node = SubResource("AnimationNodeAnimation_7rtfi")

@@ -55,10 +55,8 @@ func load_resource(path: String) -> void:
 	var load_status := ResourceLoader.load_threaded_get_status(path, _progress[path])
 	while load_status == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
 		loading_progress.emit(path, _progress[path][0])
-		print("path: %s progress?: %s"%[path, _progress[path][0]])
 		await  get_tree().process_frame
 		load_status = ResourceLoader.load_threaded_get_status(path, _progress[path])
-	print("path: %s progress?: %s"%[path, _progress[path][0]])
 	
 	if load_status == ResourceLoader.THREAD_LOAD_LOADED:
 		loading_progress.emit(path, 1.0)

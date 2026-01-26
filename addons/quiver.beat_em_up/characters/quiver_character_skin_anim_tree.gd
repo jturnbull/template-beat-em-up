@@ -165,7 +165,8 @@ func _handle_animation_node(
 		ignore_groups := false
 ) -> void:
 	if node == null:
-		if property_name.find("Start") == -1 and property_name.find("End") == -1:
+		if Engine.is_editor_hint() and property_name.find("Start") == -1 \
+				and property_name.find("End") == -1:
 			push_warning("%s is null"%[property_name])
 		return
 	

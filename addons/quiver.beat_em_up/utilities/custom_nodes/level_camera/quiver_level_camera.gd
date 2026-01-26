@@ -115,8 +115,8 @@ func _update_player_tracking() -> void:
 	var sum_y := 0.0
 	var count := 0
 	for node in players:
-		var player := node as Node2D
-		if player == null:
+		var player := node as QuiverCharacter
+		if player == null or player.attributes == null or not player.attributes.is_alive():
 			continue
 		min_x = minf(min_x, player.global_position.x)
 		max_x = maxf(max_x, player.global_position.x)

@@ -15,6 +15,7 @@ extends VBoxContainer
 
 @onready var _player_life_bar := $PlayerLifeBar as QuiverLifeBar
 @onready var _enemy_life_bar := $EnemyHealthBar as QuiverLifeBar
+var _is_inactive := false
 
 ### -----------------------------------------------------------------------------------------------
 
@@ -31,6 +32,16 @@ func _ready() -> void:
 
 func set_player_attributes(p_attributes: QuiverAttributes) -> void:
 	_player_life_bar.attributes = p_attributes
+	_player_life_bar.set_inactive(_is_inactive)
+
+
+func set_player_inactive(is_inactive: bool) -> void:
+	_is_inactive = is_inactive
+	_player_life_bar.set_inactive(is_inactive)
+
+
+func set_player_name(name: String) -> void:
+	_player_life_bar.set_name_override(name)
 
 ### -----------------------------------------------------------------------------------------------
 
@@ -47,4 +58,3 @@ func _on_Events_enemy_data_sent(p_enemy: QuiverAttributes, p_player: QuiverAttri
 	_enemy_life_bar.attributes = p_enemy
 
 ### -----------------------------------------------------------------------------------------------
-

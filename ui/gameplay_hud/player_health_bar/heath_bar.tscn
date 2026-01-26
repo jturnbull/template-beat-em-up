@@ -27,6 +27,29 @@ texture = ExtResource("2_407v3")
 stretch_mode = 2
 script = ExtResource("3_6xonp")
 
+[node name="NameLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 200.0
+offset_top = 74.0
+offset_right = 620.0
+offset_bottom = 122.0
+text = "PLAYER"
+theme_type_variation = &"LifeBarLabel"
+horizontal_alignment = 0
+vertical_alignment = 1
+
+[node name="PromptLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 210.0
+offset_top = 6.0
+offset_right = 820.0
+offset_bottom = 58.0
+text = "PRESS START"
+theme_type_variation = &"LifeBarLabel"
+horizontal_alignment = 1
+vertical_alignment = 1
+visible = false
+
 [node name="Profile" type="TextureRect" parent="."]
 layout_mode = 0
 offset_left = 8.0
