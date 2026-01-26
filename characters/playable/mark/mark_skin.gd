@@ -17,7 +17,7 @@ signal sliding_stopped
 
 #--- private variables - order: export > normal var > onready -------------------------------------
 
-@onready var _suplex_landing := $Positions/SuplexLanding as Marker2D
+@onready var _suplex_landing := get_node_or_null("Positions/SuplexLanding") as Marker2D
 
 ### -----------------------------------------------------------------------------------------------
 
@@ -30,6 +30,8 @@ signal sliding_stopped
 ### Public Methods --------------------------------------------------------------------------------
 
 func get_suplex_landing_position() -> Vector2:
+	if _suplex_landing == null:
+		return global_position
 	return _suplex_landing.global_position
 
 

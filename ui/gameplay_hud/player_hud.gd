@@ -35,9 +35,9 @@ func set_player_attributes(p_attributes: QuiverAttributes) -> void:
 	_player_life_bar.set_inactive(_is_inactive)
 
 
-func set_player_inactive(is_inactive: bool) -> void:
+func set_player_inactive(is_inactive: bool, prompt_text: String = "PRESS START") -> void:
 	_is_inactive = is_inactive
-	_player_life_bar.set_inactive(is_inactive)
+	_player_life_bar.set_inactive(is_inactive, prompt_text)
 
 
 func set_player_name(name: String) -> void:
