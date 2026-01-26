@@ -25,6 +25,8 @@ extends Node2D
 var _player_two_active := false
 var _player_one_active := true
 var _player_two_dead := false
+var _player_two_joined := false
+var _has_finished_run := false
 
 ### -----------------------------------------------------------------------------------------------
 
@@ -33,6 +35,7 @@ var _player_two_dead := false
 
 func _ready() -> void:
 	randomize()
+	ScoreManager.start_run()
 	if is_instance_valid(_player_one):
 		_player_hud.set_player_attributes(_player_one.attributes)
 		_player_hud.set_player_name(_get_player_display_name(_player_one, "Player 1"))
@@ -76,9 +79,11 @@ func reload_prototype() -> void:
 ### Private Methods -------------------------------------------------------------------------------
 
 func _on_Events_player_died() -> void:
-	if _is_player_alive(_player_one) or _is_player_alive(_player_two):
+	var p1_alive := _is_player_alive(_player_one)
+	var p2_alive := _player_two_joined and _is_player_alive(_player_two)
+	if p1_alive or p2_alive:
 		return
-	_end_screen.open_end_screen(false)
+	finish_run(false)
 
 
 func _limit_player_separation() -> void:
@@ -116,14 +121,20 @@ func _set_player_two_active(is_active: bool) -> void:
 	if _player_two == null:
 		_player_two_hud.visible = false
 		return
+	if is_active and _player_two_dead:
+		_player_two_active = false
+		_player_two_hud.visible = true
+		_player_two_hud.set_player_inactive(true, "")
+		return
 	
 	_player_two_active = is_active
 	_player_two_hud.visible = true
 	_player_two_hud.set_player_inactive(not is_active, "" if _player_two_dead else "PRESS START")
 	
 	if is_active:
-		if _player_two_dead:
-			return
+		if not _player_two_joined:
+			_player_two_joined = true
+			ScoreManager.set_p2_joined()
 		_player_two.visible = true
 		_player_two.set_process(true)
 		_player_two.set_physics_process(true)
@@ -132,7 +143,7 @@ func _set_player_two_active(is_active: bool) -> void:
 		_player_two.add_to_group("players")
 		var collision := _player_two.get_node_or_null("Collision") as CollisionShape2D
 		if collision != null:
-			collision.disabled = false
+			collision.set_deferred("disabled", false)
 		if _player_two.attributes != null:
 			_player_two.attributes.reset()
 		if _player_one != null:
@@ -143,11 +154,12 @@ func _set_player_two_active(is_active: bool) -> void:
 		_player_two.set_physics_process(false)
 		_player_two.set_process_input(false)
 		_player_two.set_process_unhandled_input(false)
-		if _player_two.is_in_group("players"):
+		var can_remove := _player_two.attributes == null or _player_two.attributes.is_alive()
+		if can_remove and _player_two.is_in_group("players"):
 			_player_two.remove_from_group("players")
 		var collision := _player_two.get_node_or_null("Collision") as CollisionShape2D
 		if collision != null:
-			collision.disabled = true
+			collision.set_deferred("disabled", true)
 
 
 func _set_player_one_active(is_active: bool) -> void:
@@ -165,11 +177,12 @@ func _set_player_one_active(is_active: bool) -> void:
 	if is_active:
 		_player_one.add_to_group("players")
 	else:
-		if _player_one.is_in_group("players"):
+		var can_remove := _player_one.attributes == null or _player_one.attributes.is_alive()
+		if can_remove and _player_one.is_in_group("players"):
 			_player_one.remove_from_group("players")
 		var collision := _player_one.get_node_or_null("Collision") as CollisionShape2D
 		if collision != null:
-			collision.disabled = true
+			collision.set_deferred("disabled", true)
 
 
 func _on_player_health_depleted(player: QuiverCharacter) -> void:
@@ -178,6 +191,14 @@ func _on_player_health_depleted(player: QuiverCharacter) -> void:
 		_set_player_two_active(false)
 	elif player == _player_one:
 		_set_player_one_active(false)
+
+
+func finish_run(is_victory: bool) -> void:
+	if _has_finished_run:
+		return
+	_has_finished_run = true
+	ScoreManager.finish_run(_player_one, _player_two, _player_two_joined)
+	_end_screen.open_end_screen(is_victory)
 
 
 func _get_alive_players() -> Array:

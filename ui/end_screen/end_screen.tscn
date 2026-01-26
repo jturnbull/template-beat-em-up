@@ -15,6 +15,7 @@
 [ext_resource type="Texture2D" uid="uid://b844gyrlhn4nj" path="res://ui/pause_menu/pngs/buttons/quit_hover.png" id="13_mkvkm"]
 [ext_resource type="BitMap" uid="uid://c54ps7mf67b0b" path="res://ui/pause_menu/pngs/buttons/quit_mask_normal.png" id="14_xd73w"]
 [ext_resource type="BitMap" uid="uid://c3n1563und8fe" path="res://ui/pause_menu/pngs/buttons/quit_mask_big.png" id="15_o8nli"]
+[ext_resource type="PackedScene" path="res://ui/leaderboard/leaderboard.tscn" id="16_lead"]
 
 [sub_resource type="Animation" id="Animation_8g40m"]
 length = 0.001
@@ -259,3 +260,6 @@ mask_hover = ExtResource("15_o8nli")
 
 [connection signal="pressed" from="PanelContainer/Buttons/MarginContainer/Replay" to="." method="_on_replay_pressed"]
 [connection signal="pressed" from="PanelContainer/Buttons/MarginContainer2/Quit" to="." method="_on_quit_pressed"]
+
+[node name="Leaderboard" parent="." instance=ExtResource("16_lead")]
+visible = false

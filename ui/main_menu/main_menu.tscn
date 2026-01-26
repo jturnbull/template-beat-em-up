@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://cl5t3fr12656g"]
+[gd_scene load_steps=31 format=3 uid="uid://cl5t3fr12656g"]
 
 [ext_resource type="Texture2D" uid="uid://dgru1cbuc5jyy" path="res://ui/main_menu/pngs/bg.png" id="1_3ligk"]
 [ext_resource type="Script" path="res://ui/main_menu/main_menu.gd" id="1_xf06u"]
@@ -24,6 +24,7 @@
 [ext_resource type="Texture2D" uid="uid://cuq1x0yy3plk5" path="res://ui/main_menu/pngs/buttons/quit_hover.png" id="22_qrv77"]
 [ext_resource type="BitMap" uid="uid://ypgrjkvrf2x4" path="res://ui/main_menu/pngs/buttons/quit_mask_normal.png" id="22_vs4uq"]
 [ext_resource type="BitMap" uid="uid://b82vv7y25nrwr" path="res://ui/main_menu/pngs/buttons/quit_mask_big.png" id="23_giihp"]
+[ext_resource type="PackedScene" path="res://ui/leaderboard/leaderboard.tscn" id="24_lead"]
 
 [sub_resource type="Animation" id="Animation_bamca"]
 length = 0.001
@@ -436,6 +437,10 @@ texture_click_mask = ExtResource("22_vs4uq")
 script = ExtResource("13_wno6g")
 mask_normal = ExtResource("22_vs4uq")
 mask_hover = ExtResource("23_giihp")
+
+[node name="Leaderboard" parent="." instance=ExtResource("24_lead")]
+visible = false
+layout_mode = 1
 
 [node name="HowToPlay" parent="." instance=ExtResource("9_ohwlc")]
 visible = false

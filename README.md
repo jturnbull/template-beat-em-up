@@ -27,6 +27,19 @@ Created by [Quiver](https://quiver.dev).
 ## Documentation
 Coming soon!
 
+## Spawner logic (Stage 01)
+The game uses `QuiverEnemySpawner` nodes triggered by `QuiverPlayerDetector` areas:
+- Player enters a detector → fight room camera limits apply and spawners start.
+- Each spawner runs waves in order and emits `all_waves_completed` when done.
+- FightRoom2 uses two spawners; the stage script waits for both to complete before unlocking.
+- FightRoom1/FightRoom3 unlock immediately after their single spawner completes.
+- FightRoom4 triggers the boss reveal; FightRoom5 starts after FightRoom4 waves complete.
+
+Core implementation:
+- Spawner: `addons/quiver.beat_em_up/utilities/custom_nodes/enemy_spawner/quiver_enemy_spawner.gd`
+- Player detector: `addons/quiver.beat_em_up/utilities/custom_nodes/quiver_player_detector.gd`
+- Stage orchestration: `stages/stage_01/stage_01.gd` and `stages/stage_01/stage_01.tscn`
+
 ## Requirements
 * Godot 4.0 RC6 or higher
 

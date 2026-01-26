@@ -69,10 +69,10 @@ func set_inactive(is_inactive: bool, prompt_text: String = "PRESS START") -> voi
 	_name_label.modulate = Color(1, 1, 1, alpha)
 
 
-func set_name_override(name: String) -> void:
-	_name_override = name
+func set_name_override(display_name: String) -> void:
+	_name_override = display_name
 	if is_inside_tree():
-		_name_label.text = name
+		_name_label.text = display_name
 
 
 func _update_lifebar_visuals() -> void:

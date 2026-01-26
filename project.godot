@@ -24,6 +24,7 @@ BackgroundLoader="*res://addons/quiver.beat_em_up/utilities/helpers/autoload/bac
 HitFreeze="*res://addons/quiver.beat_em_up/utilities/helpers/autoload/hit_freeze/hit_freeze.tscn"
 CombatSystem="*res://addons/quiver.beat_em_up/utilities/helpers/autoload/quiver_combat_system.gd"
 ScreenTransitions="*res://addons/quiver.beat_em_up/utilities/helpers/autoload/transitions/screen_transitions.tscn"
+ScoreManager="*res://addons/quiver.beat_em_up/utilities/helpers/autoload/score_manager.gd"
 
 [debug]
 

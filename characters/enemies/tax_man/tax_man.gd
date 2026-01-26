@@ -7,6 +7,7 @@ extends QuiverEnemyCharacter
 ### Member Variables and Dependencies -------------------------------------------------------------
 #--- signals --------------------------------------------------------------------------------------
 
+@warning_ignore("unused_signal")
 signal phase_changed_to(phase: int)
 signal tax_man_revealed
 signal tax_man_laughed
