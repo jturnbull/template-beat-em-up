@@ -53,3 +53,5 @@
 
 export_project.sh
 .DS_Store
+.venv/
+outputs/
