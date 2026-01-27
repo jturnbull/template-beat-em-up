@@ -132,6 +132,14 @@ def download_file(url: str, dest: Path) -> None:
         dest.write_bytes(response.read())
 
 
+def backup_existing(path: Path) -> None:
+    if not path.exists():
+        return
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
+    backup = path.with_name(f"{path.stem}_prev_{timestamp}{path.suffix}")
+    path.rename(backup)
+
+
 def main() -> int:
     args = parse_args()
     if "FAL_KEY" not in os.environ:
@@ -235,6 +243,7 @@ def main() -> int:
                     if not url:
                         continue
                     out_path = out_dir / task_path.stem / f"option_{i}.{OUTPUT_FORMAT}"
+                    backup_existing(out_path)
                     download_file(url, out_path)
                     print(f"Saved {out_path}")
             break

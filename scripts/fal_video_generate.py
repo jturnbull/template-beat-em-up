@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate an animation clip with fal-ai/kling-video/v2.6/pro/image-to-video."""
+"""Generate an animation clip with fal-ai/kling-video/o1/image-to-video."""
 from __future__ import annotations
 
 import argparse
@@ -11,10 +11,11 @@ from pathlib import Path
 
 import fal_client
 
-MODEL = "fal-ai/kling-video/v2.6/pro/image-to-video"
+MODEL = "fal-ai/kling-video/o1/image-to-video"
 DEFAULT_RESOLUTION = "1080p"
-DEFAULT_DURATION = "5"
+DEFAULT_DURATION = "3"
 DEFAULT_NEGATIVE = "low resolution, error, worst quality, low quality, defects"
+ALLOWED_DURATIONS = {3, 4, 5}
 POLL_SECONDS = 2.0
 MAX_UPLOAD_BYTES = 10_485_760
 DEFAULT_MAX_DIM = 1024
@@ -33,7 +34,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--prompt", required=True, help="Video prompt")
     parser.add_argument("--negative", default=DEFAULT_NEGATIVE, help="Negative prompt")
     parser.add_argument("--resolution", default=DEFAULT_RESOLUTION, help="Resolution (e.g., 1080p)")
-    parser.add_argument("--duration", default=DEFAULT_DURATION, help="Duration in seconds")
+    parser.add_argument("--duration", default=DEFAULT_DURATION, help="Duration in seconds (3, 4, or 5)")
     parser.add_argument(
         "--preset",
         choices=sorted(PRESET_CONSTRAINTS.keys()),
@@ -53,6 +54,14 @@ def download_file(url: str, dest: Path) -> None:
     dest.parent.mkdir(parents=True, exist_ok=True)
     with urllib.request.urlopen(url) as response:
         dest.write_bytes(response.read())
+
+
+def backup_existing(path: Path) -> None:
+    if not path.exists():
+        return
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
+    backup = path.with_name(f"{path.stem}_prev_{timestamp}{path.suffix}")
+    path.rename(backup)
 
 
 def ensure_size_limit(image_path: Path, max_bytes: int, max_dim: int) -> Path:
@@ -105,11 +114,27 @@ def main() -> int:
     if args.constraints:
         prompt = f"{prompt}. {args.constraints}"
 
+    try:
+        duration_value = int(float(args.duration))
+    except ValueError:
+        duration_value = int(DEFAULT_DURATION)
+    if duration_value not in ALLOWED_DURATIONS:
+        if duration_value <= 3:
+            duration_value = 3
+        elif duration_value <= 4:
+            duration_value = 4
+        else:
+            duration_value = 5
+        print(f"Duration not supported; using {duration_value}s.")
+    duration = str(duration_value)
+
     arguments = {
         "prompt": prompt,
-        "image_url": image_url,
+        "start_image_url": image_url,
+        "end_image_url": image_url,
         "resolution": args.resolution,
-        "duration": args.duration,
+        "duration": duration,
+        "generate_audio": False,
     }
     if args.negative:
         arguments["negative_prompt"] = args.negative
@@ -135,6 +160,7 @@ def main() -> int:
             if not args.no_download:
                 out_dir = Path(args.output_dir)
                 out_path = out_dir / f"{image_path.stem}.mp4"
+                backup_existing(out_path)
                 download_file(url, out_path)
                 print(f"Saved {out_path}")
             else:

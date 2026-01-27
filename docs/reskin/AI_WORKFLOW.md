@@ -48,6 +48,18 @@ FAL_KEY=... python3 scripts/fal_video_generate.py \
 
 Note: this model does not expose fps control; extract fewer frames with ffmpeg to match target frame counts.
 
+## Batch Config Workflow (Nova)
+Config:
+- `docs/reskin/nova_animations.toml`
+
+Runner:
+- `scripts/nova_batch.py`
+
+Example (walk only):
+```bash
+FAL_KEY=... python3 scripts/nova_batch.py --only walk --apply-sprites
+```
+
 ## Background Removal (bria)
 Helper script:
 - `scripts/fal_bg_remove.py`

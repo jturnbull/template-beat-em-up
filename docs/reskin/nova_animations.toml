@@ -1,0 +1,138 @@
+[global]
+# Base anchor still (greenscreen) used for all animations.
+anchor_image = "outputs/fal/idle_00/option_3.png"
+# Defaults
+resolution = "1080p"
+negative = "low resolution, error, worst quality, low quality, defects"
+extract_fps = 6
+bg_remove = true
+contact_cols = 10
+contact_scale = 0.25
+# Where to write extracted frames
+frames_dir = "outputs/fal/frames"
+# Global prompt constraints appended to every animation prompt
+constraints = "no camera movement, no zoom, solid #00b140 background"
+# Greenscreen pad color for per-animation canvas padding
+pad_color = "#00b140"
+
+# =============================
+# Playable character (Nova/P1)
+# =============================
+# Fill in each prompt. Enable only what you want to run.
+
+[[animation]]
+name = "idle"
+enabled = true
+prompt = "Character stands in a relaxed idle loop with subtle breathing, grounded, feet on ground, not flying, same outfit/proportions/lighting, side-view 2D sprite, start and end in matching idle pose for seamless loop"
+duration = 3
+frame_count = 4
+start_index = 0
+prefix = "idle_"
+dest_dir = "characters/playable/chad/resources/sprites/idle"
+
+[[animation]]
+name = "walk"
+enabled = false
+prompt = "Character walks forward in a smooth loop, grounded, feet on the same baseline, same outfit/proportions/lighting, side-view 2D sprite, start and end in matching walk pose for seamless loop"
+duration = 3
+# Optional override for walk-only constraints
+# constraints = "walks straight left-to-right on a flat horizontal ground line, no diagonal drift, feet stay on the same baseline"
+frame_count = 12
+start_index = 0
+prefix = "walk_"
+dest_dir = "characters/playable/chad/resources/sprites/walk"
+
+[[animation]]
+name = "turn"
+enabled = true
+prompt = "Character turns around in place from facing right to facing left, grounded, feet planted on the same baseline, same outfit/proportions/lighting, side-view 2D sprite, quick 2–3 frame turn"
+duration = 3
+frame_count = 3
+start_index = 0
+prefix = "turnaround_"
+dest_dir = "characters/playable/chad/resources/sprites/turn_around"
+
+[[animation]]
+name = "hurt_mid"
+enabled = true
+prompt = "Character flinches from a mid hit, quick single-frame recoil, grounded, feet on ground, same outfit/proportions/lighting, side-view 2D sprite"
+duration = 3
+frame_count = 1
+start_index = 0
+prefix = "hurt_mid"
+dest_dir = "characters/playable/chad/resources/sprites/hurt"
+
+[[animation]]
+name = "hurt_high"
+enabled = true
+prompt = "Character reacts to a high hit, quick single-frame recoil, grounded, feet on ground, same outfit/proportions/lighting, side-view 2D sprite"
+duration = 3
+frame_count = 1
+start_index = 0
+prefix = "hurt_high"
+dest_dir = "characters/playable/chad/resources/sprites/hurt"
+
+[[animation]]
+name = "jump"
+enabled = true
+prompt = "Character performs a jump (takeoff → rising → falling → landing), quick burst of pink smoke from backpack, grounded takeoff and landing, same outfit/proportions/lighting, side-view 2D sprite, start and end grounded"
+duration = 3
+frame_count = 4
+start_index = 0
+pad_top_pct = 0.5
+prefix = "jump_"
+dest_dir = "characters/playable/chad/resources/sprites/jump"
+
+[[animation]]
+name = "air_attack"
+enabled = true
+prompt = "Character performs a flying kick, same outfit/proportions/lighting, side-view 2D sprite, brief aerial strike with clear silhouette"
+duration = 3
+frame_count = 2
+start_index = 0
+pad_top_pct = 0.25
+prefix = "air_attack_"
+dest_dir = "characters/playable/chad/resources/sprites/air_attack"
+
+[[animation]]
+name = "punch1"
+enabled = true
+prompt = "Character performs a quick light punch, grounded, same outfit/proportions/lighting, side-view 2D sprite, start and end in neutral stance"
+duration = 3
+frame_count = 2
+start_index = 0
+prefix = "punch1_"
+dest_dir = "characters/playable/chad/resources/sprites/punches"
+
+[[animation]]
+name = "punch2"
+enabled = true
+prompt = "Character performs a medium mid punch, grounded, same outfit/proportions/lighting, side-view 2D sprite, start and end in neutral stance"
+duration = 3
+frame_count = 2
+start_index = 0
+prefix = "punch2_"
+dest_dir = "characters/playable/chad/resources/sprites/punches"
+
+[[animation]]
+name = "punch3"
+enabled = true
+prompt = "Starting from a neutral standing pose, the character performs a strong uppercut punch while launching upward using her backpack rather than jumping. Pink booster smoke emits downwards from the backpack thrusters (thick mechanical exhaust, not clouds). Same character, same outfit, same proportions and lighting. Side-view 2D sprite animation, ending back in a neutral stance."
+duration = 3
+frame_count = 4
+start_index = 0
+pad_top_pct = 0.5
+pad_right_pct = 0.15
+prefix = "punch3_"
+dest_dir = "characters/playable/chad/resources/sprites/punches"
+
+[[animation]]
+name = "knockout"
+enabled = false
+prompt = "Character gets knocked out: launch → rise → fall → bounce → land, same outfit/proportions/lighting, side-view 2D sprite, start grounded and end lying on ground"
+duration = 3
+frame_count = 6
+start_index = 0
+pad_left_pct = 0.3
+prefix = "knockout_"
+dest_dir = "characters/playable/chad/resources/sprites/knock_out"
