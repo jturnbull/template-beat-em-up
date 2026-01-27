@@ -1,6 +1,6 @@
 [gd_scene load_steps=21 format=3]
 
-[ext_resource type="PackedScene" uid="uid://bkfvltx0n6b8y" path="res://addons/quiver.beat_em_up/characters/quiver_character_skin_base.tscn" id="1_neyaj"]
+[ext_resource type="PackedScene" path="res://addons/quiver.beat_em_up/characters/quiver_character_skin_base.tscn" id="1_neyaj"]
 [ext_resource type="AnimationLibrary" path="res://characters/playable/mark/resources/anim_library_mark.tres" id="3_uxodg"]
 [ext_resource type="AnimationNodeBlendTree" path="res://characters/playable/mark/resources/animations/animation_tree_root.tres" id="4_6ugt2"]
 [ext_resource type="SpriteFrames" path="res://characters/playable/mark/resources/spriteframes_mark.tres" id="4_l5bf7"]
