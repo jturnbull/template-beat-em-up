@@ -15,7 +15,8 @@ MODEL = "fal-ai/kling-video/o1/image-to-video"
 DEFAULT_RESOLUTION = "1080p"
 DEFAULT_DURATION = "3"
 DEFAULT_NEGATIVE = "low resolution, error, worst quality, low quality, defects"
-ALLOWED_DURATIONS = {3, 4, 5}
+ALLOWED_DURATIONS_WITH_END = {3, 4, 5}
+ALLOWED_DURATIONS_NO_END = {5, 10}
 POLL_SECONDS = 2.0
 MAX_UPLOAD_BYTES = 10_485_760
 DEFAULT_MAX_DIM = 1024
@@ -31,6 +32,11 @@ PRESET_CONSTRAINTS = {
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--image", required=True, help="Path to base image (anchor still)")
+    parser.add_argument(
+        "--end-image",
+        default="same",
+        help="Path to end image, or 'same' to reuse start, or 'none' to omit end image",
+    )
     parser.add_argument("--prompt", required=True, help="Video prompt")
     parser.add_argument("--negative", default=DEFAULT_NEGATIVE, help="Negative prompt")
     parser.add_argument("--resolution", default=DEFAULT_RESOLUTION, help="Resolution (e.g., 1080p)")
@@ -107,6 +113,16 @@ def main() -> int:
 
     safe_path = ensure_size_limit(image_path, args.max_bytes, args.max_dim)
     image_url = fal_client.upload_file(str(safe_path))
+    end_image_url = None
+    if args.end_image and args.end_image != "same":
+        if args.end_image == "none":
+            end_image_url = None
+        else:
+            end_path = Path(args.end_image)
+            if not end_path.exists():
+                raise SystemExit(f"End image not found: {end_path}")
+            safe_end = ensure_size_limit(end_path, args.max_bytes, args.max_dim)
+            end_image_url = fal_client.upload_file(str(safe_end))
 
     prompt = args.prompt
     if args.preset:
@@ -114,28 +130,38 @@ def main() -> int:
     if args.constraints:
         prompt = f"{prompt}. {args.constraints}"
 
+    end_image_mode = args.end_image
+    allowed_durations = (
+        ALLOWED_DURATIONS_NO_END if end_image_mode == "none" else ALLOWED_DURATIONS_WITH_END
+    )
     try:
         duration_value = int(float(args.duration))
     except ValueError:
         duration_value = int(DEFAULT_DURATION)
-    if duration_value not in ALLOWED_DURATIONS:
-        if duration_value <= 3:
-            duration_value = 3
-        elif duration_value <= 4:
-            duration_value = 4
+    if duration_value not in allowed_durations:
+        if end_image_mode == "none":
+            duration_value = 5 if duration_value < 10 else 10
         else:
-            duration_value = 5
-        print(f"Duration not supported; using {duration_value}s.")
+            if duration_value <= 3:
+                duration_value = 3
+            elif duration_value <= 4:
+                duration_value = 4
+            else:
+                duration_value = 5
+        print(f"Duration not supported for end_image={end_image_mode}; using {duration_value}s.")
     duration = str(duration_value)
 
     arguments = {
         "prompt": prompt,
         "start_image_url": image_url,
-        "end_image_url": image_url,
         "resolution": args.resolution,
         "duration": duration,
         "generate_audio": False,
     }
+    if end_image_url is None and args.end_image == "same":
+        arguments["end_image_url"] = image_url
+    elif end_image_url is not None:
+        arguments["end_image_url"] = end_image_url
     if args.negative:
         arguments["negative_prompt"] = args.negative
 

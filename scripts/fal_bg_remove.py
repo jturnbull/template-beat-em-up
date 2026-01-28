@@ -19,6 +19,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--input", required=True, help="Image file or directory")
     parser.add_argument("--output-dir", default="outputs/fal/bg_removed", help="Output directory")
     parser.add_argument("--no-download", action="store_true", help="Skip downloading images")
+    parser.add_argument("--max-inflight", type=int, default=10, help="Max concurrent Fal requests")
     parser.add_argument("--poll", type=float, default=POLL_SECONDS, help="Polling interval seconds")
     return parser.parse_args()
 
@@ -44,13 +45,29 @@ def main() -> int:
     if not input_path.exists():
         raise SystemExit(f"Input not found: {input_path}")
 
-    for image_path in iter_images(input_path):
+    images = iter_images(input_path)
+    pending: dict[str, Path] = {}
+    remaining = iter(images)
+    max_inflight = max(1, args.max_inflight)
+
+    def submit_next() -> bool:
+        try:
+            image_path = next(remaining)
+        except StopIteration:
+            return False
         image_url = fal_client.upload_file(str(image_path))
         handler = fal_client.submit(MODEL, arguments={"image_url": image_url})
         request_id = handler.request_id
+        pending[request_id] = image_path
         print(f"Submitted {request_id} for {image_path.name}")
+        return True
 
-        while True:
+    while len(pending) < max_inflight and submit_next():
+        pass
+
+    while pending:
+        completed: list[str] = []
+        for request_id, image_path in list(pending.items()):
             status = fal_client.status(MODEL, request_id, with_logs=False)
             if isinstance(status, fal_client.Completed):
                 result = fal_client.result(MODEL, request_id)
@@ -70,10 +87,17 @@ def main() -> int:
                     print(f"Saved {out_path}")
                 else:
                     print(f"Image URL: {url}")
-                break
-            if isinstance(status, (fal_client.Queued, fal_client.InProgress)):
-                time.sleep(args.poll)
+                completed.append(request_id)
+            elif isinstance(status, (fal_client.Queued, fal_client.InProgress)):
                 continue
+
+        for request_id in completed:
+            pending.pop(request_id, None)
+
+        while len(pending) < max_inflight and submit_next():
+            pass
+
+        if pending:
             time.sleep(args.poll)
 
     return 0
