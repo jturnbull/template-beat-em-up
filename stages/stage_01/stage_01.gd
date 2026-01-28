@@ -44,9 +44,7 @@ func _on_fight_2_spawner_all_waves_completed() -> void:
 			has_completed_all_waves = false
 			break
 	
-	if has_completedaaaaaaaaaaa
-	
-	_all_waves:
+	if has_completed_all_waves:
 		_fight_room_2.setup_after_fight_room()
 
 
