@@ -18,9 +18,10 @@ import fal_client
 
 MODEL = "fal-ai/nano-banana-pro/edit"
 OUTPUT_FORMAT = "png"
-NUM_IMAGES = 3
+NUM_IMAGES = 4
 RESOLUTION = "4K"
-REF_DIR = "source_images"
+REF_DIR = None
+DEFAULT_NEGATIVE = "blurry, cropped, background, watermark, extra limbs, multiple characters"
 POLL_SECONDS = 2.0
 ALLOWED_ASPECT_RATIOS = {
     "21:9": 21 / 9,
@@ -162,7 +163,7 @@ def main() -> int:
     prompt = resolve_prompt(args.prompt) or resolve_prompt(task.get("prompt"))
     if not prompt:
         raise SystemExit("No prompt provided. Use --prompt or set - Prompt: in the task file.")
-    negative = resolve_prompt(args.negative) or resolve_prompt(task.get("negative"))
+    negative = resolve_prompt(args.negative) or resolve_prompt(task.get("negative")) or DEFAULT_NEGATIVE
 
     task_size = parse_size(task.get("size"))
     if args.aspect_ratio:
@@ -182,11 +183,6 @@ def main() -> int:
         reference_paths.append(ref_path)
 
     ref_dir = args.ref_dir
-    if not ref_dir:
-        default_ref_dir = (project_root / REF_DIR).resolve()
-        if default_ref_dir.exists():
-            ref_dir = str(default_ref_dir)
-
     if ref_dir:
         ref_dir_path = Path(ref_dir).expanduser()
         if not ref_dir_path.is_absolute():

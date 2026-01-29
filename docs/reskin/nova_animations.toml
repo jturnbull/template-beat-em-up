@@ -13,9 +13,14 @@ scale_ref = "outputs/fal/frames/idle_selected_bg/frame_004.png"
 # Where to write extracted frames
 frames_dir = "outputs/fal/frames"
 # Global prompt constraints appended to every animation prompt
-constraints = "no camera movement, no zoom, solid #00b140 background"
+constraints = "no camera movement, no zoom, solid #00b140 background, keep character centered within the bordered frame and never cross the white border"
 # Greenscreen pad color for per-animation canvas padding
 pad_color = "#00b140"
+# Frame guide settings (fixed canvas + white border).
+frame_guide = true
+frame_guide_color = "#ffffff"
+frame_guide_thickness = 2
+frame_guide_match = "characters/playable/mark/resources/sprites/idle/idle_00.png"
 # Output filename zero-pad width for numbered sprites
 output_width = 2
 # Global scale multiplier (1.25 = 25% larger)
@@ -87,7 +92,7 @@ dest_dir = "characters/playable/chad/resources/sprites/hurt"
 [[animation]]
 name = "jump"
 enabled = true
-prompt = "Character performs a jump (takeoff → rising → falling → landing). Pink booster smoke emits downwards from the backpack thrusters (thick mechanical exhaust, not clouds). grounded takeoff and landing, same outfit/proportions/lighting, side-view 2D sprite, start and end grounded"
+prompt = "Character performs a jump in-place (takeoff → rising → falling → landing) without translating within the frame: convey height via squash/stretch, leg tucking, hair/clothing motion, and expanding booster smoke trails downward. grounded takeoff and landing, same outfit/proportions/lighting, side-view 2D sprite, start and end grounded"
 duration = 3
 frame_count = 4
 pad_top_pct = 0.5
@@ -133,7 +138,7 @@ dest_dir = "characters/playable/chad/resources/sprites/punches"
 [[animation]]
 name = "punch3"
 enabled = true
-prompt = "Starting from a neutral standing pose, the character goes low to perform a strong high uppercut punch while launching upward using her backpack rather than jumping. Pink booster smoke emits downwards from the backpack thrusters (thick mechanical exhaust, not clouds). Same character, same outfit, same proportions and lighting. Side-view 2D sprite animation, ending back in a neutral stance."
+prompt = "Starting from a neutral standing pose, the character performs a strong uppercut in-place without translating within the frame: sell vertical motion via pose deformation (crouch → extend), limb arcs, hair/clothing motion, and expanding booster smoke trails downward. Same character, same outfit, same proportions and lighting. Side-view 2D sprite animation, ending back in a neutral stance."
 duration = 3
 frame_count = 4
 frame_indices = "5,6,9,10,12,13,16"

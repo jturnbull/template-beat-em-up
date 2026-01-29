@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://c458txd7nffgy" path="res://ui/main_menu/pngs/tax_man.png" id="3_mg0gr"]
 [ext_resource type="Texture2D" uid="uid://cmihodax0beki" path="res://ui/main_menu/pngs/sarge.png" id="4_3eqwa"]
 [ext_resource type="Texture2D" uid="uid://cbb080fgbbibm" path="res://ui/main_menu/pngs/chad.png" id="5_0rlna"]
-[ext_resource type="Texture2D" uid="uid://go8x140wwobw" path="res://ui/main_menu/pngs/logo.png" id="6_xunx4"]
+[ext_resource type="Texture2D" uid="uid://cerk27x4ni128" path="res://debug_tools/movie_scenes/background/Adventures logo_navy text.png" id="7_abcvk"]
 [ext_resource type="Texture2D" uid="uid://dn4cgulexbpd8" path="res://ui/main_menu/pngs/buttons/start_game_normal.png" id="9_ds5cc"]
 [ext_resource type="PackedScene" uid="uid://55q23muar30r" path="res://ui/how_to_play/how_to_play.tscn" id="9_ohwlc"]
 [ext_resource type="Texture2D" uid="uid://c57jdcqsvpc47" path="res://ui/main_menu/pngs/buttons/start_game_pressed.png" id="10_jjw2h"]
@@ -361,10 +361,12 @@ texture = ExtResource("5_0rlna")
 
 [node name="Logo" type="TextureRect" parent="MenuArt"]
 layout_mode = 0
-offset_top = 474.0
-offset_right = 1920.0
-offset_bottom = 1070.0
-texture = ExtResource("6_xunx4")
+offset_left = 104.0
+offset_top = 664.0
+offset_right = 1696.0
+offset_bottom = 990.0
+texture = ExtResource("7_abcvk")
+stretch_mode = 4
 
 [node name="MenuButtons" type="ReferenceRect" parent="."]
 layout_mode = 0

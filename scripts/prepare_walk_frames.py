@@ -42,6 +42,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--output-width", type=int, default=2, help="Zero-pad width for output indices")
     parser.add_argument("--single-frame", action="store_true", help="Write a single file named <prefix>.png")
+    parser.add_argument("--flip-h", action="store_true", help="Flip frames horizontally before writing")
+    parser.add_argument(
+        "--use-canvas",
+        action="store_true",
+        help="Skip bbox/scale and write frames on the full canvas size",
+    )
     return parser.parse_args()
 
 
@@ -137,6 +143,72 @@ def main() -> int:
             )
         output_indices = [f"{label:0{args.output_width}d}" for label in labels]
 
+    if args.single_frame:
+        if len(selected_files) != 1:
+            raise SystemExit("single-frame mode requires exactly one selected frame")
+        src = selected_files[0]
+        dest = dest_dir / f"{args.prefix}.png"
+        img = Image.open(src).convert("RGBA")
+        if args.use_canvas:
+            if img.size != (target_w, target_h):
+                img = img.resize((target_w, target_h), Image.LANCZOS)
+            if args.flip_h:
+                img = img.transpose(Image.FLIP_LEFT_RIGHT)
+            out = img
+        else:
+            key_color = DEFAULT_KEY_COLOR
+            tol = DEFAULT_TOL
+            match_bbox = visible_bbox(match_img, key_color, tol)
+            if not match_bbox:
+                raise SystemExit("No visible pixels found in match sprite.")
+            match_visible_h = match_bbox[3] - match_bbox[1]
+            if match_visible_h <= 0:
+                raise SystemExit("Match sprite visible height is invalid.")
+            match_bottom = match_bbox[3] - 1
+            baseline_pad = (target_h - 1) - match_bottom
+
+            scale_ref_img = Image.open(scale_ref_path).convert("RGBA")
+            scale_ref_bbox = visible_bbox(scale_ref_img, key_color, tol)
+            if not scale_ref_bbox:
+                raise SystemExit("No visible pixels found in scale reference.")
+            scale_ref_visible_h = scale_ref_bbox[3] - scale_ref_bbox[1]
+            if scale_ref_visible_h <= 0:
+                raise SystemExit("Scale reference visible height is invalid.")
+            scale_factor = (match_visible_h / scale_ref_visible_h) * args.scale_mult
+
+            bbox = visible_bbox(img, key_color, tol)
+            if not bbox:
+                raise SystemExit("No visible pixels after green-screen mask.")
+            img = img.crop(bbox)
+            new_w = max(1, int(round(img.width * scale_factor)))
+            new_h = max(1, int(round(img.height * scale_factor)))
+            img = img.resize((new_w, new_h), Image.LANCZOS)
+            if img.height > match_visible_h:
+                shrink = match_visible_h / img.height
+                img = img.resize(
+                    (max(1, int(round(img.width * shrink))), match_visible_h),
+                    Image.LANCZOS,
+                )
+            if img.width > target_w:
+                left = int((img.width - target_w) / 2)
+                img = img.crop((left, 0, left + target_w, img.height))
+            if img.height > target_h:
+                top = img.height - target_h
+                img = img.crop((0, top, img.width, img.height))
+            out = Image.new("RGBA", (target_w, target_h), (0, 0, 0, 0))
+            x = int((target_w - img.width) / 2)
+            y = (target_h - baseline_pad) - img.height
+            if args.flip_h:
+                img = img.transpose(Image.FLIP_LEFT_RIGHT)
+            out.paste(img, (x, y))
+        tmp = dest_dir / f".{dest.name}.tmp.png"
+        out.save(tmp)
+        if dest.exists():
+            dest.unlink()
+        tmp.replace(dest)
+        print(f"Wrote 1 frame to {dest_dir}")
+        return 0
+
     key_color = DEFAULT_KEY_COLOR
     tol = DEFAULT_TOL
     match_bbox = visible_bbox(match_img, key_color, tol)
@@ -157,37 +229,6 @@ def main() -> int:
         raise SystemExit("Scale reference visible height is invalid.")
     scale_factor = (match_visible_h / scale_ref_visible_h) * args.scale_mult
 
-    if args.single_frame:
-        if len(selected_files) != 1:
-            raise SystemExit("single-frame mode requires exactly one selected frame")
-        src = selected_files[0]
-        dest = dest_dir / f"{args.prefix}.png"
-        img = Image.open(src).convert("RGBA")
-        bbox = visible_bbox(img, key_color, tol)
-        if not bbox:
-            raise SystemExit("No visible pixels after green-screen mask.")
-        img = img.crop(bbox)
-        new_w = max(1, int(round(img.width * scale_factor)))
-        new_h = max(1, int(round(img.height * scale_factor)))
-        img = img.resize((new_w, new_h), Image.LANCZOS)
-        if img.width > target_w:
-            left = int((img.width - target_w) / 2)
-            img = img.crop((left, 0, left + target_w, img.height))
-        if img.height > target_h:
-            top = img.height - target_h
-            img = img.crop((0, top, img.width, img.height))
-        out = Image.new("RGBA", (target_w, target_h), (0, 0, 0, 0))
-        x = int((target_w - img.width) / 2)
-        y = (target_h - baseline_pad) - img.height
-        out.paste(img, (x, y))
-        tmp = dest_dir / f".{dest.name}.tmp.png"
-        out.save(tmp)
-        if dest.exists():
-            dest.unlink()
-        tmp.replace(dest)
-        print(f"Wrote 1 frame to {dest_dir}")
-        return 0
-
     for out_index, src in enumerate(selected_files):
         if output_indices:
             suffix = output_indices[out_index]
@@ -196,23 +237,38 @@ def main() -> int:
         dest_name = f"{args.prefix}{suffix}.png"
         dest = dest_dir / dest_name
         img = Image.open(src).convert("RGBA")
-        bbox = visible_bbox(img, key_color, tol)
-        if not bbox:
-            raise SystemExit("No visible pixels after green-screen mask.")
-        img = img.crop(bbox)
-        new_w = max(1, int(round(img.width * scale_factor)))
-        new_h = max(1, int(round(img.height * scale_factor)))
-        img = img.resize((new_w, new_h), Image.LANCZOS)
-        if img.width > target_w:
-            left = int((img.width - target_w) / 2)
-            img = img.crop((left, 0, left + target_w, img.height))
-        if img.height > target_h:
-            top = img.height - target_h
-            img = img.crop((0, top, img.width, img.height))
-        out = Image.new("RGBA", (target_w, target_h), (0, 0, 0, 0))
-        x = int((target_w - img.width) / 2)
-        y = (target_h - baseline_pad) - img.height
-        out.paste(img, (x, y))
+        if args.use_canvas:
+            if img.size != (target_w, target_h):
+                img = img.resize((target_w, target_h), Image.LANCZOS)
+            if args.flip_h:
+                img = img.transpose(Image.FLIP_LEFT_RIGHT)
+            out = img
+        else:
+            bbox = visible_bbox(img, key_color, tol)
+            if not bbox:
+                raise SystemExit("No visible pixels after green-screen mask.")
+            img = img.crop(bbox)
+            new_w = max(1, int(round(img.width * scale_factor)))
+            new_h = max(1, int(round(img.height * scale_factor)))
+            img = img.resize((new_w, new_h), Image.LANCZOS)
+            if img.height > match_visible_h:
+                shrink = match_visible_h / img.height
+                img = img.resize(
+                    (max(1, int(round(img.width * shrink))), match_visible_h),
+                    Image.LANCZOS,
+                )
+            if img.width > target_w:
+                left = int((img.width - target_w) / 2)
+                img = img.crop((left, 0, left + target_w, img.height))
+            if img.height > target_h:
+                top = img.height - target_h
+                img = img.crop((0, top, img.width, img.height))
+            out = Image.new("RGBA", (target_w, target_h), (0, 0, 0, 0))
+            x = int((target_w - img.width) / 2)
+            y = (target_h - baseline_pad) - img.height
+            if args.flip_h:
+                img = img.transpose(Image.FLIP_LEFT_RIGHT)
+            out.paste(img, (x, y))
         tmp = dest_dir / f".{dest_name}.tmp.png"
         out.save(tmp)
         if dest.exists():

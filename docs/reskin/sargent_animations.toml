@@ -1,0 +1,152 @@
+[global]
+# Base anchor still (greenscreen) used for all animations.
+anchor_image = "outputs/fal/idle_00/sargent_anchor_base.png"
+# Scale reference used to compute a single scale factor for all frames.
+scale_ref = "outputs/fal/idle_00/sargent_anchor_base.png"
+# Defaults
+resolution = "1080p"
+negative = "low resolution, error, worst quality, low quality, defects"
+extract_fps = 6
+bg_remove = true
+contact_cols = 10
+contact_scale = 0.25
+# Where to write extracted frames
+frames_dir = "outputs/fal/frames/sargent"
+# Global prompt constraints appended to every animation prompt
+constraints = "no camera movement, no zoom, solid #00b140 background, keep character centered within the bordered frame and never cross the white border"
+# Greenscreen pad color for per-animation canvas padding
+pad_color = "#00b140"
+# Frame guide settings (fixed canvas + white border).
+frame_guide = true
+frame_guide_color = "#ffffff"
+frame_guide_thickness = 2
+frame_guide_match = "characters/enemies/sargent/resources/sprites/idle/idle_00.png"
+# Output filename zero-pad width for numbered sprites
+output_width = 2
+# Global scale multiplier (1.0 = match Sarge size)
+scale_multiplier = 1
+
+# Active list (if non-empty, only these run).
+active = [
+ "idle",
+ "walk",
+ "turn",
+ "hurt",
+ "jump",
+ "knockout",
+ "punch1",
+ "punch2",
+ "punch3",
+]
+
+# =============================
+# Enemy: Sargent
+# =============================
+
+[[animation]]
+name = "idle"
+prompt = "Enemy stands in a ready idle, shifting weight subtly, same outfit/proportions/lighting, side-view 2D sprite, start and end in matching idle pose for seamless loop"
+duration = 3
+frame_count = 4
+frame_indices = "5-8"
+prefix = "idle_"
+output_start = 0
+dest_dir = "characters/enemies/sargent/resources/sprites/idle"
+match = "characters/enemies/sargent/resources/sprites/idle/idle_00.png"
+
+[[animation]]
+name = "walk"
+prompt = "Enemy walks in-place on the spot (treadmill walk), feet on the same baseline, no horizontal translation, same outfit/proportions/lighting, side-view 2D sprite, start and end in matching walk pose for seamless loop"
+duration = 3
+frame_count = 12
+frame_indices = "2-14"
+prefix = "walk_"
+output_start = 0
+dest_dir = "characters/enemies/sargent/resources/sprites/walk"
+match = "characters/enemies/sargent/resources/sprites/idle/idle_00.png"
+
+[[animation]]
+name = "turn"
+prompt = "Enemy steps around to turn from facing right to facing left in-place (small footwork pivot), no teleporting, no horizontal translation, same outfit/proportions/lighting, side-view 2D sprite"
+duration = 3
+frame_count = 3
+end_image = "flip"
+frame_indices = "6,8,10"
+prefix = "turnaround_"
+output_start = 0
+dest_dir = "characters/enemies/sargent/resources/sprites/turn_around"
+match = "characters/enemies/sargent/resources/sprites/idle/idle_00.png"
+
+[[animation]]
+name = "hurt"
+prompt = "Enemy flinches from a mid hit, quick recoil, feet on ground, same outfit/proportions/lighting, side-view 2D sprite"
+duration = 3
+frame_count = 2
+frame_indices = "6,10"
+prefix = "injured_"
+output_start = 0
+dest_dir = "characters/enemies/sargent/resources/sprites/hurt"
+match = "characters/enemies/sargent/resources/sprites/idle/idle_00.png"
+
+[[animation]]
+name = "jump"
+prompt = "Enemy performs a jump in-place without translating within the frame: convey height via squash/stretch, leg tucking, hair/clothing motion, and impact dust on landing. grounded takeoff and landing, same outfit/proportions/lighting, side-view 2D sprite, start and end grounded"
+duration = 3
+frame_count = 8
+pad_top_pct = 0.35
+frame_indices = "4-11"
+prefix = "jump_"
+output_start = 1
+dest_dir = "characters/enemies/sargent/resources/sprites/jump"
+match = "characters/enemies/sargent/resources/sprites/idle/idle_00.png"
+
+[[animation]]
+name = "knockout"
+prompt_variations = [
+  "Robot enemy gets knocked out and ends lying still on the floor. Keep the character centered in frame (no translation of the character's center), but allow rotation/pose change to fall over. No dust, no smoke, no debris, no particles. Same outfit/proportions/lighting, side-view 2D sprite, start grounded and end lying on the floor.",
+  "Robot enemy is stunned and falls to the floor, ending motionless. Keep the character centered in frame (no translation of the character's center), but allow rotation/pose change to fall over. No dust, no smoke, no debris, no particles. Same outfit/proportions/lighting, side-view 2D sprite, start grounded and end lying on the floor.",
+  "Robot enemy takes a knockout hit and drops to the floor, ending still. Keep the character centered in frame (no translation of the character's center), but allow rotation/pose change to fall over. No dust, no smoke, no debris, no particles. Same outfit/proportions/lighting, side-view 2D sprite, start grounded and end lying on the floor.",
+  "Robot enemy loses power and collapses to the floor, ending still. Keep the character centered in frame (no translation of the character's center), but allow rotation/pose change to fall over. No dust, no smoke, no debris, no particles. Same outfit/proportions/lighting, side-view 2D sprite, start grounded and end lying on the floor."
+]
+duration = 3
+frame_count = 6
+end_image = "none"
+frame_indices = "7,9,10,12,18,23"
+pad_left_pct = 0.25
+prefix = "ko_"
+output_start = 0
+dest_dir = "characters/enemies/sargent/resources/sprites/knockout"
+match = "characters/enemies/sargent/resources/sprites/idle/idle_00.png"
+
+[[animation]]
+name = "punch1"
+prompt = "Enemy performs a light claw swipe (short, quick), same outfit/proportions/lighting, side-view 2D sprite, start and end in neutral stance"
+duration = 3
+frame_count = 4
+frame_indices = "3,5,8,12"
+prefix = "punch_1_"
+output_start = 0
+dest_dir = "characters/enemies/sargent/resources/sprites/attacks/punch_1"
+match = "characters/enemies/sargent/resources/sprites/idle/idle_00.png"
+
+[[animation]]
+name = "punch2"
+prompt = "Enemy performs a heavy claw swipe with both hands, same outfit/proportions/lighting, side-view 2D sprite, start and end in neutral stance"
+duration = 3
+frame_count = 9
+frame_indices = "4,5,7,10,11,12,13,15,16"
+prefix = "punch_2_"
+output_start = 1
+dest_dir = "characters/enemies/sargent/resources/sprites/attacks/punch_2"
+match = "characters/enemies/sargent/resources/sprites/idle/idle_00.png"
+
+[[animation]]
+name = "punch3"
+prompt = "Enemy performs a heavy finishing claw swipe with a brief fire trail, in-place without translating within the frame: sell impact via pose deformation and recoil. Same character, same outfit, same proportions and lighting. Side-view 2D sprite animation, ending back in a neutral stance."
+duration = 3
+frame_count = 7
+frame_indices = "3,4,5,6,8,10,12"
+prefix = "punch_3_"
+output_start = 0
+dest_dir = "characters/enemies/sargent/resources/sprites/attacks/punch_3"
+match = "characters/enemies/sargent/resources/sprites/idle/idle_00.png"

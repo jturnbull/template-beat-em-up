@@ -16,6 +16,12 @@ Global fields you should understand:
 - `global.frames_dir`: defaults to `outputs/fal/frames`.
 - `global.constraints`: appended to each prompt (baseline, no zoom, etc).
 - `global.extract_fps`: frame extraction rate for contact sheets.
+- `global.frame_guide`: enable fixed canvas + border constraint for video.
+- `global.frame_guide_color`: border color (use `#ffffff`).
+- `global.frame_guide_thickness`: border thickness in px (use `2`).
+- `global.frame_guide_match`: sprite whose **size + baseline** define the frame (use Mark idle).
+- `global.active`: optional list to limit which animations run (e.g. `["walk", "punch1"]`).
+- `prompt_variations` (per animation): list of full prompt strings. If present, multiple video jobs are submitted at once.
 
 Per‑animation fields you should edit:
 - `enabled`: only run the ones you need.
@@ -32,6 +38,40 @@ Per‑animation fields you should edit:
 
 ---
 
+## 0.5) Preparing the Anchor (Start) Image
+
+Use **`scripts/fal_reskin_generate.py`** to generate the base idle still. Source images
+(e.g., `source_images/Sentries.png`) should be passed as references.
+
+Steps:
+1. **Generate candidates** with `fal_reskin_generate.py` using the source sheet as reference.
+2. **Pick a single character** (no extra characters/props).
+3. **Ensure greenscreen** (`#00b140`) behind the character.
+4. **Match the frame** to the target sprite size and baseline:
+   - Use the Mark idle sprite as the reference size (`characters/playable/mark/resources/sprites/idle/idle_00.png`).
+   - Center the character horizontally.
+   - Align the feet to the same baseline (bottom padding should match Mark).
+5. **Add the frame guide**:
+   - 2px white border on all edges.
+   - The character should not touch or cross the border.
+6. Run `scripts/prepare_anchor_image.py` to size + baseline the anchor:
+   ```
+   python3 scripts/prepare_anchor_image.py
+   ```
+   Defaults:
+   - input: `outputs/fal/idle_00/option_1.png`
+   - match: `characters/playable/mark/resources/sprites/idle/idle_00.png`
+   - outputs: `outputs/fal/idle_00/anchor_base.png` + `anchor_framed.png`
+   - bg: `#00b140`, border: white 2px
+   - note: the script uses **fal-ai/bria/background/remove** to key the anchor
+     before compositing onto solid green. Requires `FAL_KEY`.
+7. Set `global.anchor_image` to `outputs/fal/idle_00/anchor_base.png` and
+   `global.scale_ref` to the same file.
+
+This anchor is the **source of truth** for scale and framing across all animations.
+
+---
+
 ## 1) Generate Videos (AI)
 
 Model used: `fal-ai/kling-video/o1/image-to-video`
@@ -43,6 +83,8 @@ python3 scripts/nova_batch.py --make-videos
 
 Notes:
 - The script auto‑builds padded seed images when `pad_*` fields are set.
+- If `global.frame_guide = true`, the seed image is framed to the **Mark sprite size**
+  with a **2px white border**. This is the hard constraint for the video model.
 - Prompts always append `global.constraints`.
 
 ---
@@ -59,6 +101,8 @@ Outputs:
 - `outputs/fal/frames/<anim>_contact.png` → contact sheet
 
 **Frame indices are 1‑based labels** from the contact sheet (top‑left is `001`).
+
+If frame‑guide is enabled, the **border is auto‑removed** from raw frames right after extraction.
 
 Examples:
 - `2,4-6,8` → 5 frames
@@ -130,6 +174,28 @@ This is what prevents “floating” or “sinking” in‑game.
 
 **Changed only scale/placement:**  
 → `--apply-sprites` only.
+
+**Only want a subset of animations:**  
+→ set `global.active` in the TOML and run as normal.
+
+**Avoid clobbering another character’s frames:**  
+→ set `global.frames_dir = "outputs/fal/frames/<character>"`.
+
+**Using multiple prompt variations (prompt_variations):**  
+Pick the best video and ensure it lives in `outputs/fal/video` as `<animation>_*.mp4`.  
+If there are multiple matches, the newest file by modified time is used.
+
+**Final selected frames location:**  
+BG‑removed selected frames are written to `outputs/fal/frames/<character>/final/<animation>/`.
+
+**Frame guide note:**  
+Extracted frames are resized to the `frame_guide_match` sprite size before the border is removed. This normalizes resolution so scaling doesn’t explode (no “just feet” crops).
+
+**Frame guide + apply step:**  
+When `frame_guide` is enabled, sprite application uses the full frame canvas (`--use-canvas`). This preserves consistent scale across actions instead of re‑scaling per frame.
+
+**Uniform canvas per character:**  
+Point every animation’s `match` at the same reference sprite (usually the idle frame). This forces all outputs to the same canvas size, preventing walk/punch frames from “growing” due to legacy sprite sizes.
 
 ---
 
