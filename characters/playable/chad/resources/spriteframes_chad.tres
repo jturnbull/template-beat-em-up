@@ -12,7 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://0gc258c1wb8b" path="res://characters/playable/chad/resources/sprites/walk/walk_02.png" id="8_ytmlj"]
 [ext_resource type="Texture2D" uid="uid://ddn1e7p4qwe1q" path="res://characters/playable/chad/resources/sprites/walk/walk_03.png" id="9_ur7d7"]
 [ext_resource type="Texture2D" uid="uid://xt85g2puqtqe" path="res://characters/playable/chad/resources/sprites/punches/punch3_02.png" id="9_x5mcd"]
-[ext_resource type="Texture2D" uid="uid://bjscum7crry04" path="res://characters/playable/chad/resources/sprites/punches/punch3_04.png" id="10_mesqx"]
+[ext_resource type="Texture2D" uid="uid://dhkhioekk1g66" path="res://characters/playable/chad/resources/sprites/punches/punch3_03.png" id="10_mesqx"]
 [ext_resource type="Texture2D" uid="uid://cn7cs0c34hfx6" path="res://characters/playable/chad/resources/sprites/walk/walk_04.png" id="10_vyrsa"]
 [ext_resource type="Texture2D" uid="uid://b7cf6s8oe73ok" path="res://characters/playable/chad/resources/sprites/walk/walk_05.png" id="11_5p56x"]
 [ext_resource type="Texture2D" uid="uid://d4gdikrrge1fb" path="res://characters/playable/chad/resources/sprites/walk/walk_06.png" id="12_sw7jw"]

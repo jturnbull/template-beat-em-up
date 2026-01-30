@@ -143,6 +143,30 @@ def main() -> int:
             )
         output_indices = [f"{label:0{args.output_width}d}" for label in labels]
 
+    expected_names: set[str] = set()
+    if args.single_frame:
+        expected_names.add(f"{args.prefix}.png")
+    else:
+        for out_index in range(len(selected_files)):
+            if output_indices:
+                suffix = output_indices[out_index]
+            else:
+                suffix = f"{out_index:0{args.output_width}d}"
+            expected_names.add(f"{args.prefix}{suffix}.png")
+
+        # Prune stale frames for this prefix before writing new ones.
+        pattern = re.compile(rf"^{re.escape(args.prefix)}\\d{{{args.output_width}}}\\.png$")
+        for p in dest_dir.iterdir():
+            if p.is_file() and pattern.match(p.name) and p.name not in expected_names:
+                p.unlink()
+
+    if args.single_frame:
+        # Remove any numbered leftovers for single-frame outputs.
+        pattern = re.compile(rf"^{re.escape(args.prefix)}\\d+\\.png$")
+        for p in dest_dir.iterdir():
+            if p.is_file() and pattern.match(p.name):
+                p.unlink()
+
     if args.single_frame:
         if len(selected_files) != 1:
             raise SystemExit("single-frame mode requires exactly one selected frame")

@@ -132,6 +132,7 @@ This step does all of the following:
 1. Copies the chosen raw frames into `outputs/fal/frames/<character>/<anim>_selected`.
 2. Background‑removes **only those frames** into `outputs/fal/frames/<character>/final/<anim>/`.
 3. Scales, crops, and places into the final sprite folder.
+4. Prunes old frames for the same prefix so leftovers don’t persist.
 
 No backups are created in the character folders.
 

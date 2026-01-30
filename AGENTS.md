@@ -41,4 +41,5 @@
 - With `frame_guide` enabled, `--apply-sprites` uses the full frame canvas (no per-frame bbox scaling) to keep size consistent across actions.
 - For consistent size per character, set every animation `match` to the same reference sprite (typically the idle frame) so all outputs share one canvas size.
 - Normalize animation offsets per character after sprite replacement: set `AnimatedSprite2D:position` **X = 0** for idle/walk/turn/attacks/hurt; set **Y = idle baseline** for those same actions. Keep offsets for jump/air/knockout/die/getting_up where motion is intentional.
+- Apply-sprites prunes old frames for the same prefix to avoid leftover sprites when frame counts change.
   - Iterate prompts/frames; do not resize canvases post‑hoc.

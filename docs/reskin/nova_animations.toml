@@ -156,13 +156,13 @@ prompt_variations = [
   "Character floating in place, then flying ninja kick, stays centered in frame, no translation and lands"
 ]
 duration = 5
-extract_fps = 12
+extract_fps = 24
 extract_start = "00:01"
 extract_end = "00:03"
 frame_count = 2
 pad_top_pct = 0.25
 prefix = "air_attack_"
-frame_indices = "1"
+frame_indices = "24,28"
 output_start = 0
 dest_dir = "characters/playable/chad/resources/sprites/air_attack"
 match = "characters/playable/chad/resources/sprites/idle/idle_00.png"
@@ -177,7 +177,7 @@ prompt_variations = [
 ]
 duration = 3
 frame_count = 2
-frame_indices = "1"
+frame_indices = "4,6"
 prefix = "punch1_"
 output_start = 0
 dest_dir = "characters/playable/chad/resources/sprites/punches"
@@ -192,8 +192,9 @@ prompt_variations = [
   "Character high roundhouse in place, no translation, end neutral"
 ]
 duration = 3
+extract_fps = 24
 frame_count = 2
-frame_indices = "1"
+frame_indices = "25,33"
 prefix = "punch2_"
 output_start = 0
 dest_dir = "characters/playable/chad/resources/sprites/punches"
@@ -211,7 +212,7 @@ prompt_variations = [
 ]
 duration = 5
 frame_count = 4
-frame_indices = "1"
+frame_indices = "9,12,13,14"
 pad_top_pct = 0.5
 pad_right_pct = 0.15
 prefix = "punch3_"
@@ -230,7 +231,7 @@ prompt_variations = [
 duration = 3
 frame_count = 6
 end_image = "none"
-frame_indices = "1"
+frame_indices = "6,8,9,10,12,16"
 pad_left_pct = 0.3
 prefix = "knockout_"
 output_start = 0
