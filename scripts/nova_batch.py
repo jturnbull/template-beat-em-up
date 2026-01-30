@@ -14,7 +14,8 @@ from PIL import Image, ImageDraw
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-VIDEO_DIR = PROJECT_ROOT / "outputs" / "fal" / "video"
+DEFAULT_VIDEO_DIR = PROJECT_ROOT / "outputs" / "fal" / "video"
+DEFAULT_PADDED_DIR = PROJECT_ROOT / "outputs" / "fal" / "padded"
 
 
 def run(cmd: list[str]) -> None:
@@ -30,12 +31,12 @@ def backup_existing(path: Path) -> None:
     path.rename(backup)
 
 
-def find_video_for_action(name: str) -> Path:
-    candidates = sorted(VIDEO_DIR.glob(f"{name}_*.mp4"))
+def find_video_for_action(name: str, video_dir: Path) -> Path:
+    candidates = sorted(video_dir.glob(f"{name}_framed*.mp4"))
     if not candidates:
         raise SystemExit(
-            f"Video not found for {name} in {VIDEO_DIR}. "
-            f"Expected a file named {name}_*.mp4."
+            f"Video not found for {name} in {video_dir}. "
+            f"Expected a file named {name}_framed*.mp4."
         )
     chosen = max(candidates, key=lambda p: (p.stat().st_mtime, p.name))
     if len(candidates) > 1:
@@ -98,6 +99,22 @@ def parse_indices(value: str) -> list[int]:
         else:
             indices.append(int(part))
     return indices
+
+
+def parse_time_seconds(value: str) -> float:
+    raw = value.strip()
+    if raw == "":
+        raise ValueError("Empty time value")
+    if ":" not in raw:
+        return float(raw)
+    parts = [p.strip() for p in raw.split(":")]
+    if len(parts) > 3:
+        raise ValueError(f"Invalid time format: {value}")
+    parts = [float(p) for p in parts]
+    while len(parts) < 3:
+        parts.insert(0, 0.0)
+    hours, minutes, seconds = parts
+    return hours * 3600 + minutes * 60 + seconds
 
 
 def frame_label(path: Path) -> int:
@@ -246,6 +263,15 @@ def main() -> int:
 
     frames_dir = PROJECT_ROOT / global_cfg.get("frames_dir", "outputs/fal/frames")
     frames_dir.mkdir(parents=True, exist_ok=True)
+    video_dir = Path(global_cfg.get("video_dir", str(DEFAULT_VIDEO_DIR)))
+    if not video_dir.is_absolute():
+        video_dir = (PROJECT_ROOT / video_dir).resolve()
+    if not video_dir.exists():
+        raise SystemExit(f"Video directory not found: {video_dir}")
+    padded_dir = Path(global_cfg.get("padded_dir", str(DEFAULT_PADDED_DIR)))
+    if not padded_dir.is_absolute():
+        padded_dir = (PROJECT_ROOT / padded_dir).resolve()
+    padded_dir.mkdir(parents=True, exist_ok=True)
 
     selected_anims: list[dict] = []
     for anim in animations:
@@ -275,8 +301,6 @@ def main() -> int:
             "pad_right_px",
         )
         has_padding = any(anim.get(k) for k in pad_keys)
-        padded_dir = PROJECT_ROOT / "outputs" / "fal" / "padded"
-        padded_dir.mkdir(parents=True, exist_ok=True)
         padded_path = padded_dir / f"{name}.png"
         backup_existing(padded_path)
         if has_padding:
@@ -371,9 +395,7 @@ def main() -> int:
 
             src = Image.open(image_for_video).convert("RGBA")
             flipped = src.transpose(Image.FLIP_LEFT_RIGHT)
-            end_dir = PROJECT_ROOT / "outputs" / "fal" / "padded"
-            end_dir.mkdir(parents=True, exist_ok=True)
-            end_path = end_dir / f"{name}_end_flip.png"
+            end_path = padded_dir / f"{name}_end_flip.png"
             backup_existing(end_path)
             flipped.save(end_path)
             return str(end_path)
@@ -384,13 +406,13 @@ def main() -> int:
             return str(end_path)
         return None
 
-    def run_video(anim: dict) -> None:
+    def build_video_jobs(anim: dict) -> list[list[str]]:
         name = anim.get("name")
         prompt = anim.get("prompt")
         prompt_variations = anim.get("prompt_variations") or anim.get("prompt_variants")
         if not prompt and not prompt_variations:
             print(f"Skipping {name} (missing prompt)")
-            return
+            return []
         constraints = anim.get("constraints") or global_cfg.get("constraints")
         negative = anim.get("negative") or global_cfg.get("negative")
         resolution = anim.get("resolution") or global_cfg.get("resolution") or "1080p"
@@ -406,8 +428,8 @@ def main() -> int:
             prompts = [str(prompt)]
         if not prompts:
             print(f"Skipping {name} (empty prompt list)")
-            return
-
+            return []
+        jobs: list[list[str]] = []
         for idx, base_prompt in enumerate(prompts, start=1):
             final_prompt = base_prompt
             if constraints:
@@ -425,6 +447,8 @@ def main() -> int:
                 "scripts/fal_video_generate.py",
                 "--image",
                 str(image_path),
+                "--output-dir",
+                str(video_dir),
             ]
             if end_image_arg is not None:
                 cmd += ["--end-image", end_image_arg]
@@ -438,13 +462,19 @@ def main() -> int:
                 "--duration",
                 duration,
             ]
-            run(cmd)
+            jobs.append(cmd)
+        return jobs
 
     if not args.skip_video and selected_anims:
+        video_jobs: list[list[str]] = []
+        for anim in selected_anims:
+            video_jobs.extend(build_video_jobs(anim))
         with ThreadPoolExecutor(max_workers=max(1, args.parallel)) as executor:
-            futures = [executor.submit(run_video, anim) for anim in selected_anims]
+            futures = [executor.submit(run, cmd) for cmd in video_jobs]
             for future in as_completed(futures):
                 future.result()
+        if args.make_videos:
+            return 0
 
     for anim in selected_anims:
         name = anim.get("name")
@@ -454,11 +484,14 @@ def main() -> int:
             continue
 
         extract_fps = anim.get("extract_fps") or global_cfg.get("extract_fps") or 6
+        extract_start = anim.get("extract_start") or global_cfg.get("extract_start")
+        extract_end = anim.get("extract_end") or global_cfg.get("extract_end")
+        extract_duration = anim.get("extract_duration") or global_cfg.get("extract_duration")
         bg_remove = anim.get("bg_remove")
         if bg_remove is None:
             bg_remove = bool(global_cfg.get("bg_remove", True))
 
-        video_path = find_video_for_action(name)
+        video_path = find_video_for_action(name, video_dir)
         raw_dir = frames_dir / f"{name}_raw"
         no_bg_dir = frames_dir / f"{name}_no_bg"
         contact_path = frames_dir / f"{name}_contact.png"
@@ -467,11 +500,25 @@ def main() -> int:
             raw_dir.mkdir(parents=True, exist_ok=True)
             for p in raw_dir.glob("*.png"):
                 p.unlink()
-            cmd = [
-                "ffmpeg",
-                "-y",
-                "-i",
-                str(video_path),
+            cmd = ["ffmpeg", "-y", "-i", str(video_path)]
+            start_seconds = None
+            end_seconds = None
+            duration_seconds = None
+            if extract_start:
+                start_seconds = parse_time_seconds(str(extract_start))
+                cmd += ["-ss", f"{start_seconds:.3f}"]
+            if extract_end:
+                end_seconds = parse_time_seconds(str(extract_end))
+            if extract_duration:
+                duration_seconds = float(extract_duration)
+            if start_seconds is not None and end_seconds is not None:
+                duration_seconds = max(0.0, end_seconds - start_seconds)
+                end_seconds = None
+            if duration_seconds is not None:
+                cmd += ["-t", f"{duration_seconds:.3f}"]
+            elif end_seconds is not None:
+                cmd += ["-to", f"{end_seconds:.3f}"]
+            cmd += [
                 "-vf",
                 f"fps={extract_fps}",
                 str(raw_dir / "frame_%03d.png"),

@@ -1,162 +1,238 @@
 [global]
 # Base anchor still (greenscreen) used for all animations.
-anchor_image = "outputs/fal/idle_00/option_3.png"
+anchor_image = "outputs/fal/idle_00/nova_anchor_base.png"
+# Scale reference used to compute a single scale factor for all frames.
+scale_ref = "outputs/fal/idle_00/nova_anchor_base.png"
 # Defaults
 resolution = "1080p"
-negative = "low resolution, error, worst quality, low quality, defects"
+negative = "blurry, cropped, background, watermark, extra limbs, multiple characters"
 extract_fps = 6
 bg_remove = true
 contact_cols = 10
-contact_scale = 0.25
-# Scale reference frame (greenscreen or transparent) used to set global scale.
-scale_ref = "outputs/fal/frames/idle_selected_bg/frame_004.png"
+contact_scale = 1
 # Where to write extracted frames
-frames_dir = "outputs/fal/frames"
+frames_dir = "outputs/fal/frames/nova"
+video_dir = "outputs/fal/video/nova"
+padded_dir = "outputs/fal/padded/nova"
 # Global prompt constraints appended to every animation prompt
-constraints = "no camera movement, no zoom, solid #00b140 background, keep character centered within the bordered frame and never cross the white border"
+constraints = "side-view 2D sprite, no camera movement, no zoom, solid #00b140 background, keep character centered within the bordered frame and never cross the white border"
 # Greenscreen pad color for per-animation canvas padding
 pad_color = "#00b140"
 # Frame guide settings (fixed canvas + white border).
 frame_guide = true
 frame_guide_color = "#ffffff"
 frame_guide_thickness = 2
-frame_guide_match = "characters/playable/mark/resources/sprites/idle/idle_00.png"
+# Use current P1 idle sprite for size + baseline
+frame_guide_match = "characters/playable/chad/resources/sprites/idle/idle_00.png"
 # Output filename zero-pad width for numbered sprites
 output_width = 2
-# Global scale multiplier (1.25 = 25% larger)
+# Global scale multiplier (1.0 = match baseline size)
 scale_multiplier = 1
+
+# Active list (if non-empty, only these run).
+# active = ["idle", "walk"]
+active = [
+ "idle",
+ "walk",
+ "turn",
+ "hurt_mid",
+ "hurt_high",
+ "jump",
+ "air_attack",
+ "punch1",
+ "punch2",
+ "punch3",
+  "knockout",
+]
 
 # =============================
 # Playable character (Nova/P1)
 # =============================
-# Fill in each prompt. Enable only what you want to run.
 
 [[animation]]
 name = "idle"
-enabled = true
-prompt = "Character stands ready, shifting weight from one foot to another,  same outfit/proportions/lighting, side-view 2D sprite, start and end in matching idle pose for seamless loop"
+prompt_variations = [
+  "Character stands ready in a grounded stance, subtle breathing, in-place without translation, start and end matching idle pose for seamless loop",
+  "Character idle in place with slight weight shift, feet planted, no translation, seamless loop",
+  "Character idle in place, small hand or shoulder motion, no translation, start and end matching idle",
+  "Character idle in place, minimal sway, feet on baseline, no translation, seamless loop"
+]
 duration = 3
 frame_count = 4
-frame_indices = "4,8,11,15"
+frame_indices = "4,7,8,9"
 prefix = "idle_"
 output_start = 0
 dest_dir = "characters/playable/chad/resources/sprites/idle"
+match = "characters/playable/chad/resources/sprites/idle/idle_00.png"
 
 [[animation]]
 name = "walk"
-enabled = true
-prompt = "Character walks forward in a smooth loop, feet on the same baseline, same outfit/proportions/lighting, side-view 2D sprite, start and end in matching walk pose for seamless loop"
+prompt_variations = [
+  "Character walks on a treadmill in place, feet on the same baseline, no translation, start and end matching walk pose",
+  "Character treadmill walk in place, natural arm swing, no translation, seamless loop",
+  "Character walks on a treadmill in place, clear silhouette, feet stay grounded, no translation",
+  "Character treadmill walk in place, grounded, start and end matching walk pose, no translation"
+]
 duration = 3
-# Optional override for walk-only constraints
-# constraints = "walks straight left-to-right on a flat horizontal ground line, no diagonal drift, feet stay on the same baseline"
 frame_count = 12
-frame_indices = "4-15"
+frame_indices = "1-12"
 prefix = "walk_"
 output_start = 0
 dest_dir = "characters/playable/chad/resources/sprites/walk"
+match = "characters/playable/chad/resources/sprites/idle/idle_00.png"
 
 [[animation]]
 name = "turn"
-enabled = true
-prompt = "Character quickly steps to turn around from facing right to facing left, same outfit/proportions/lighting, side-view 2D sprite"
+prompt_variations = [
+  "Character pivots in place to turn from facing right to facing left, small footwork pivot, no translation",
+  "Character quick step-turn in place, feet stay on baseline, no translation",
+  "Character turns in place without translation, grounded stance",
+  "Character turns in place with minimal foot shuffle, no translation"
+]
 duration = 3
 frame_count = 3
 end_image = "flip"
-frame_indices = "4,7,10,11"
+frame_indices = "6,10,13"
 prefix = "turnaround_"
 output_start = 0
 dest_dir = "characters/playable/chad/resources/sprites/turn_around"
+match = "characters/playable/chad/resources/sprites/idle/idle_00.png"
 
 [[animation]]
 name = "hurt_mid"
-enabled = true
-prompt = "Character flinches from an invisable mid hit, quick single-frame recoil, feet on ground, same outfit/proportions/lighting, side-view 2D sprite"
+prompt_variations = [
+  "Character flinches from a mid hit, quick recoil, feet planted, in place with no translation",
+  "Character reacts to a mid hit, short sharp recoil, grounded, no translation",
+  "Character mid-hit flinch, brief recoil, in place with no translation",
+  "Character recoils from a mid strike, grounded stance, no translation"
+]
 duration = 3
 frame_count = 1
-frame_indices = "8"
+frame_indices = "6"
 prefix = "hurt_mid"
 single_frame = true
 dest_dir = "characters/playable/chad/resources/sprites/hurt"
+match = "characters/playable/chad/resources/sprites/idle/idle_00.png"
 
 [[animation]]
 name = "hurt_high"
-enabled = true
-prompt = "Character reacts to an invisable high hit, quick single-frame recoil, feet on ground, same outfit/proportions/lighting, side-view 2D sprite"
+prompt_variations = [
+  "Character flinches from a high hit, quick recoil, feet planted, in place with no translation",
+  "Character reacts to a high hit, brief recoil, grounded, no translation",
+  "Character high-hit flinch, short recoil, in place with no translation",
+  "Character recoils from a high strike, grounded stance, no translation"
+]
 duration = 3
 frame_count = 1
-frame_indices = "9"
+frame_indices = "5"
 prefix = "hurt_high"
 single_frame = true
 dest_dir = "characters/playable/chad/resources/sprites/hurt"
+match = "characters/playable/chad/resources/sprites/idle/idle_00.png"
 
 [[animation]]
 name = "jump"
-enabled = true
-prompt = "Character performs a jump in-place (takeoff → rising → falling → landing) without translating within the frame: convey height via squash/stretch, leg tucking, hair/clothing motion, and expanding booster smoke trails downward. grounded takeoff and landing, same outfit/proportions/lighting, side-view 2D sprite, start and end grounded"
-duration = 3
+prompt_variations = [
+  "Character levitates in-place without translating within the frame: lift, hover, descend, land",
+  "Character levitates in-place without translating within the frame: slow rise, brief hover, gentle drop, land",
+  "Character levitate-jump in place without translating within the frame: squat, lift, hover, land",
+  "Character levitates in-place without translating within the frame: subtle floating arc and landing"
+]
+duration = 5
 frame_count = 4
 pad_top_pct = 0.5
-frame_indices = "5,7-11,13"
+frame_indices = "6,7,8,10"
 prefix = "jump_"
 output_start = 1
 dest_dir = "characters/playable/chad/resources/sprites/jump"
+match = "characters/playable/chad/resources/sprites/idle/idle_00.png"
 
 [[animation]]
 name = "air_attack"
-enabled = true
-prompt = "Character performs a flying kick, same outfit/proportions/lighting, side-view 2D sprite, brief aerial strike with clear silhouette"
-duration = 3
+prompt_variations = [
+  "Character starts levitating in place, then performs a flying ninja kick, remains off the ground, no translation and lands",
+  "Character levitates in place and executes a flying ninja kick, clear silhouette, no translation and lands",
+  "Character hovers in place, then performs a flying ninja kick, remains airborne, no translation and lands",
+  "Character floating in place, then flying ninja kick, stays centered in frame, no translation and lands"
+]
+duration = 5
+extract_fps = 12
+extract_start = "00:01"
+extract_end = "00:03"
 frame_count = 2
 pad_top_pct = 0.25
 prefix = "air_attack_"
-frame_indices = "12,13"
+frame_indices = "1"
 output_start = 0
 dest_dir = "characters/playable/chad/resources/sprites/air_attack"
+match = "characters/playable/chad/resources/sprites/idle/idle_00.png"
 
 [[animation]]
 name = "punch1"
-enabled = true
-prompt = "Character performs a quick light punch, same outfit/proportions/lighting, side-view 2D sprite, start and end in neutral stance"
+prompt_variations = [
+  "Character performs a quick light punch in place without translation, start and end in neutral stance",
+  "Character quick jab in place, grounded, no translation, start and end neutral",
+  "Character light punch in place, slight shoulder twist, no translation",
+  "Character quick light punch in place, grounded, no translation"
+]
 duration = 3
 frame_count = 2
-frame_indices = "5,9,10,13"
+frame_indices = "1"
 prefix = "punch1_"
 output_start = 0
 dest_dir = "characters/playable/chad/resources/sprites/punches"
+match = "characters/playable/chad/resources/sprites/idle/idle_00.png"
 
 [[animation]]
 name = "punch2"
-enabled = true
-prompt = "Character performs a medium mid punch, same outfit/proportions/lighting, side-view 2D sprite, start and end in neutral stance"
+prompt_variations = [
+  "Character performs a high kick in place without translation, start and end in neutral stance",
+  "Character high kick in place, grounded, no translation, start and end neutral",
+  "Character quick high kick in place, no translation, end neutral",
+  "Character high roundhouse in place, no translation, end neutral"
+]
 duration = 3
 frame_count = 2
-frame_indices = "5,10,11,13"
+frame_indices = "1"
 prefix = "punch2_"
 output_start = 0
 dest_dir = "characters/playable/chad/resources/sprites/punches"
+match = "characters/playable/chad/resources/sprites/idle/idle_00.png"
 
 [[animation]]
 name = "punch3"
-enabled = true
-prompt = "Starting from a neutral standing pose, the character performs a strong uppercut in-place without translating within the frame: sell vertical motion via pose deformation (crouch → extend), limb arcs, hair/clothing motion, and expanding booster smoke trails downward. Same character, same outfit, same proportions and lighting. Side-view 2D sprite animation, ending back in a neutral stance."
-duration = 3
+prompt_variations = [
+  "Character performs a strong uppercut with blue fire; allow a small stance shift/step while keeping the character centered and within the frame; crouch, extend, recover",
+  "Character performs a dragon punch with blue fire; allow foot repositioning and hip rotation while keeping the character centered and within the frame",
+  "Character performs a spinning kick with blue fire; allow a small pivot while keeping the character centered and within the frame",
+  "Character performs a powerful rising uppercut; allow a small stance shift while keeping the character centered and within the frame",
+  "Character performs a short-range fireball cast with blue fire; allow a small step or weight shift while keeping the character centered and within the frame",
+  "Character performs a high spinning kick with blue fire; allow a small pivot while keeping the character centered and within the frame"
+]
+duration = 5
 frame_count = 4
-frame_indices = "5,6,9,10,12,13,16"
+frame_indices = "1"
 pad_top_pct = 0.5
 pad_right_pct = 0.15
 prefix = "punch3_"
 output_start = 0
 dest_dir = "characters/playable/chad/resources/sprites/punches"
+match = "characters/playable/chad/resources/sprites/idle/idle_00.png"
 
 [[animation]]
 name = "knockout"
-enabled = true
-prompt = "Character gets knocked out: launch → rise → fall → bounce → land, same outfit/proportions/lighting, side-view 2D sprite, start grounded and end lying on ground"
+prompt_variations = [
+  "Character gets knocked out and collapses to the floor, ending still, no dust or debris, in place within the frame",
+  "Character takes a knockout hit and drops to the floor, ending motionless, no smoke or particles, in place within the frame",
+  "Character is knocked out and falls to the ground, ending still, no debris, in place within the frame",
+  "Character loses power and collapses to the floor, ending still, no dust, in place within the frame"
+]
 duration = 3
 frame_count = 6
 end_image = "none"
-frame_indices = "4,9,17,18,21,23,25"
+frame_indices = "1"
 pad_left_pct = 0.3
 prefix = "knockout_"
 output_start = 0
 dest_dir = "characters/playable/chad/resources/sprites/knock_out"
+match = "characters/playable/chad/resources/sprites/idle/idle_00.png"

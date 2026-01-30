@@ -7,24 +7,26 @@ This is the **repeatable, strict** pipeline for reskinning a character. It assum
 ## 0) Files You Will Edit
 
 ### Config
-- `docs/reskin/nova_animations.toml`
+- `docs/reskin/<character>_animations.toml`
 
 Global fields you should understand:
 - `global.anchor_image`: base still used to seed videos.
 - `global.scale_ref`: **single frame** (greenscreen or transparent) used to compute the **global scale factor** for all poses.
 - `global.scale_multiplier`: tweak knob (e.g. `1.05` to slightly enlarge).
 - `global.frames_dir`: defaults to `outputs/fal/frames`.
+- `global.video_dir`: per‑character video folder (recommended), defaults to `outputs/fal/video`.
+- `global.padded_dir`: per‑character padded image folder (recommended), defaults to `outputs/fal/padded`.
 - `global.constraints`: appended to each prompt (baseline, no zoom, etc).
 - `global.extract_fps`: frame extraction rate for contact sheets.
+- `global.extract_start` / `global.extract_end` / `global.extract_duration`: optional time window (seconds or `MM:SS`) for frame extraction.
 - `global.frame_guide`: enable fixed canvas + border constraint for video.
 - `global.frame_guide_color`: border color (use `#ffffff`).
 - `global.frame_guide_thickness`: border thickness in px (use `2`).
-- `global.frame_guide_match`: sprite whose **size + baseline** define the frame (use Mark idle).
+- `global.frame_guide_match`: sprite whose **size + baseline** define the frame (use the **current character’s idle**).
 - `global.active`: optional list to limit which animations run (e.g. `["walk", "punch1"]`).
 - `prompt_variations` (per animation): list of full prompt strings. If present, multiple video jobs are submitted at once.
 
 Per‑animation fields you should edit:
-- `enabled`: only run the ones you need.
 - `prompt`: action description.
 - `duration`: video length for the model (3/4/5 seconds for kling).
 - `frame_count`: guidance only (not used for selection).
@@ -35,6 +37,7 @@ Per‑animation fields you should edit:
 - `pad_*`: optional per‑animation padding for video seed.
 - `end_image`: `same` / `flip` / `none`.
 - `single_frame`: for hurt/one‑shot poses.
+- `match`: reference sprite for **all** outputs. For consistent size, set this to the same idle sprite for every action.
 
 ---
 
@@ -48,7 +51,7 @@ Steps:
 2. **Pick a single character** (no extra characters/props).
 3. **Ensure greenscreen** (`#00b140`) behind the character.
 4. **Match the frame** to the target sprite size and baseline:
-   - Use the Mark idle sprite as the reference size (`characters/playable/mark/resources/sprites/idle/idle_00.png`).
+   - Use the **current character’s idle sprite** as the reference size/baseline.
    - Center the character horizontally.
    - Align the feet to the same baseline (bottom padding should match Mark).
 5. **Add the frame guide**:
@@ -60,12 +63,12 @@ Steps:
    ```
    Defaults:
    - input: `outputs/fal/idle_00/option_1.png`
-   - match: `characters/playable/mark/resources/sprites/idle/idle_00.png`
-   - outputs: `outputs/fal/idle_00/anchor_base.png` + `anchor_framed.png`
+   - match: `<character idle sprite>`
+   - outputs: `outputs/fal/idle_00/<character>_anchor_base.png` + `<character>_anchor_framed.png`
    - bg: `#00b140`, border: white 2px
    - note: the script uses **fal-ai/bria/background/remove** to key the anchor
      before compositing onto solid green. Requires `FAL_KEY`.
-7. Set `global.anchor_image` to `outputs/fal/idle_00/anchor_base.png` and
+7. Set `global.anchor_image` to your `<character>_anchor_base.png` and
    `global.scale_ref` to the same file.
 
 This anchor is the **source of truth** for scale and framing across all animations.
@@ -97,8 +100,8 @@ python3 scripts/nova_batch.py --make-frames
 ```
 
 Outputs:
-- `outputs/fal/frames/<anim>_raw/` → raw PNG frames
-- `outputs/fal/frames/<anim>_contact.png` → contact sheet
+- `outputs/fal/frames/<character>/<anim>_raw/` → raw PNG frames
+- `outputs/fal/frames/<character>/<anim>_contact.png` → contact sheet
 
 **Frame indices are 1‑based labels** from the contact sheet (top‑left is `001`).
 
@@ -126,8 +129,8 @@ python3 scripts/nova_batch.py --apply-sprites
 ```
 
 This step does all of the following:
-1. Copies the chosen raw frames into `outputs/fal/frames/<anim>_selected`.
-2. Background‑removes **only those frames** into `<anim>_selected_bg`.
+1. Copies the chosen raw frames into `outputs/fal/frames/<character>/<anim>_selected`.
+2. Background‑removes **only those frames** into `outputs/fal/frames/<character>/final/<anim>/`.
 3. Scales, crops, and places into the final sprite folder.
 
 No backups are created in the character folders.
@@ -152,8 +155,8 @@ Where:
 The output canvas size and baseline padding are taken from the **reference sprite**.
 
 Rules:
-- If `dest_dir` is `characters/playable/chad/...`, the script automatically uses the matching **Mark** sprite as the reference.
-- Otherwise, set `match = "path/to/reference.png"` per animation in the TOML.
+- **Always** set `match` per animation (no fallbacks).
+- For consistent size, point **every** `match` at the **same idle sprite** for that character.
 
 ### Placement
 Each output frame is:
@@ -178,11 +181,14 @@ This is what prevents “floating” or “sinking” in‑game.
 **Only want a subset of animations:**  
 → set `global.active` in the TOML and run as normal.
 
+**Want higher/lower sampling or a specific time slice:**  
+→ set per‑animation `extract_fps`, `extract_start`, `extract_end` (or `extract_duration`).
+
 **Avoid clobbering another character’s frames:**  
 → set `global.frames_dir = "outputs/fal/frames/<character>"`.
 
 **Using multiple prompt variations (prompt_variations):**  
-Pick the best video and ensure it lives in `outputs/fal/video` as `<animation>_*.mp4`.  
+Pick the best video and ensure it lives in `global.video_dir` as `<animation>_framed*.mp4`.  
 If there are multiple matches, the newest file by modified time is used.
 
 **Final selected frames location:**  
@@ -196,6 +202,13 @@ When `frame_guide` is enabled, sprite application uses the full frame canvas (`-
 
 **Uniform canvas per character:**  
 Point every animation’s `match` at the same reference sprite (usually the idle frame). This forces all outputs to the same canvas size, preventing walk/punch frames from “growing” due to legacy sprite sizes.
+
+**Normalize animation offsets (once per character):**  
+Legacy animation `.tres` files often compensate for off‑center art by shifting `AnimatedSprite2D:position`.  
+When using centered, consistent sprites, zero out X offsets and normalize Y for ground actions:
+- **Set X = 0** for idle/walk/turn/attacks/hurt (and other non‑special ground actions).
+- **Set Y = idle baseline** for idle/walk/turn/attacks/hurt.
+- **Keep X/Y offsets** for jump/air/knockout/die/getting_up where motion is intentional.
 
 ---
 

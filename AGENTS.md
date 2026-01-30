@@ -9,18 +9,19 @@
   - Character must stay centered within the border; no translation across the frame.
 - Global scale rules:
   - Use `global.scale_ref` to compute a single scale factor for all frames.
-  - `global.frame_guide_match` (Mark idle) defines the target canvas size + baseline.
+  - `global.frame_guide_match` (current character idle) defines the target canvas size + baseline.
   - `global.scale_multiplier` is the only size tweak knob; avoid per-frame scaling.
 - Frame selection rules:
   - `frame_indices` are 1-based labels from the contact sheet.
   - Selected frames keep their original `frame_###.png` names.
   - Apply-sprites uses the selected labels for lookup and output indices only for naming.
+- Per-animation extraction controls: `extract_fps`, `extract_start`, `extract_end`, `extract_duration` (seconds or `MM:SS`) to target a time window.
 - `global.active` in the TOML overrides `enabled`. If `active` is non-empty, only those names run.
 - Background removal happens only for selected frames during apply-sprites; do not re-run BG removal when only scaling changes.
 - No backups inside character sprite folders; Git history is the source of truth.
 - For jump/uppercut: convey vertical motion via pose deformation and effects; the character stays centered in the frame.
 - Knockout must stay within the frame; convey motion with pose deformation and effects, not translation.
-- Enemy Sargent attacks should be pulse‑cannon (Iron Man style) instead of punches; keep attack animation names but change prompts.
+- Enemy Sargent attacks use claw swipes (light/heavy) with a fire‑trail finisher; keep attack animation names but change prompts.
 - Reskin docs are authoritative; reflect them here:
   - `docs/reskin/SPRITE_PIPELINE.md`: exact command flow (`--make-videos`, `--make-frames`, `--apply-sprites`), frame selection is from contact sheets (1-based labels), frame guide border is removed before BG removal, and only selected frames are BG-removed.
   - `docs/reskin/AI_WORKFLOW.md`: do not commit API keys; use `FAL_KEY` env; scripts are `fal_reskin_generate.py` (image), `fal_video_generate.py` (video), and `fal_bg_remove.py` (background removal). Use `fal_reskin_generate.py` to generate the **anchor** still from `source_images/` references.
@@ -31,10 +32,13 @@
   - Set `global.anchor_image` + `global.scale_ref` in the character TOML to the prepared anchor.
   - Keep `global.frame_guide` enabled (white 2px border) so the video model stays in-frame.
   - Use `global.active` to limit which actions run while iterating.
-- Run `--make-videos` → review videos → keep chosen in `outputs/fal/video` as `<animation>_*.mp4` (newest wins) → `--make-frames` → select `frame_indices` → `--apply-sprites`. No `video_source` in config.
+- Run `--make-videos` → review videos → keep chosen in `global.video_dir` as `<animation>_framed*.mp4` (newest wins) → `--make-frames` → select `frame_indices` → `--apply-sprites`. No `video_source` in config.
 - Use a per-character `global.frames_dir` (e.g. `outputs/fal/frames/sargent`) to avoid clobbering another character’s frames.
+- Use a per-character `global.video_dir` (e.g. `outputs/fal/video/nova`) so the `<animation>_*.mp4` lookup doesn’t pick another character’s video.
+- Use a per-character `global.padded_dir` (e.g. `outputs/fal/padded/nova`) so seed images don’t leak between characters.
 - When `frame_guide` is enabled, extracted frames are resized to the `frame_guide_match` sprite size before border removal. This keeps scale consistent and avoids “only feet” crops.
 - BG‑removed selected frames live under `outputs/fal/frames/<character>/final/<animation>/`.
 - With `frame_guide` enabled, `--apply-sprites` uses the full frame canvas (no per-frame bbox scaling) to keep size consistent across actions.
 - For consistent size per character, set every animation `match` to the same reference sprite (typically the idle frame) so all outputs share one canvas size.
+- Normalize animation offsets per character after sprite replacement: set `AnimatedSprite2D:position` **X = 0** for idle/walk/turn/attacks/hurt; set **Y = idle baseline** for those same actions. Keep offsets for jump/air/knockout/die/getting_up where motion is intentional.
   - Iterate prompts/frames; do not resize canvases post‑hoc.
