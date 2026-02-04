@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import subprocess
 import time
 import urllib.request
 from pathlib import Path
@@ -214,6 +215,7 @@ def main() -> int:
         framed.save(framed_path)
         print(f"Saved framed anchor: {framed_path}")
 
+    subprocess.run(["open", str(output_path.parent)], check=True)
     return 0
 
 

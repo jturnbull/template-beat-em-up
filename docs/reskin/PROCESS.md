@@ -148,6 +148,11 @@ The reskin is “complete” when:
   - “same outfit/proportions/lighting”
   - “no camera movement, no zoom”
   - “start and end in matching pose” (for loops)
+  - **Workaround language to keep in‑place motion**:
+    - “treadmill walk in place” for walk
+    - “pivot/turn in place” for turn
+    - “levitate/jump in place without translating within the frame” for jump/air/uppercut
+    - “fall in place, keep centered; motion via pose change, not translation” for knockout
 
 ### C) Extract Frames
 - Split the video into frames at the target FPS.

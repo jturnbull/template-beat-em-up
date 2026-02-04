@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import subprocess
 from pathlib import Path
 from PIL import Image, ImageDraw
 
@@ -43,6 +44,7 @@ def main() -> int:
         tmp = path.with_suffix(".tmp.png")
         img.save(tmp)
         tmp.replace(path)
+    subprocess.run(["open", str(input_dir)], check=True)
     return 0
 
 

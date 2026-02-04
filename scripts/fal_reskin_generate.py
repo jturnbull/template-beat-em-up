@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import os
 import re
+import subprocess
 import time
 import urllib.request
 from pathlib import Path
@@ -141,6 +142,10 @@ def backup_existing(path: Path) -> None:
     path.rename(backup)
 
 
+def open_folder(path: Path) -> None:
+    subprocess.run(["open", str(path)], check=True)
+
+
 def main() -> int:
     args = parse_args()
     if "FAL_KEY" not in os.environ:
@@ -234,14 +239,16 @@ def main() -> int:
             print(f"Completed: {len(images)} image(s)")
             if not args.no_download:
                 out_dir = Path(args.output_dir)
+                task_dir = out_dir / task_path.stem
                 for i, item in enumerate(images, start=1):
                     url = item.get("url")
                     if not url:
                         continue
-                    out_path = out_dir / task_path.stem / f"option_{i}.{OUTPUT_FORMAT}"
+                    out_path = task_dir / f"option_{i}.{OUTPUT_FORMAT}"
                     backup_existing(out_path)
                     download_file(url, out_path)
                     print(f"Saved {out_path}")
+                open_folder(task_dir)
             break
         if isinstance(status, fal_client.Queued):
             time.sleep(args.poll)

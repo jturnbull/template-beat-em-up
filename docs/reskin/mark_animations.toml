@@ -1,0 +1,243 @@
+[global]
+# Base anchor still (greenscreen) used for all animations.
+anchor_image = "outputs/fal/idle_00/mark_anchor_base.png"
+# Scale reference used to compute a single scale factor for all frames.
+scale_ref = "outputs/fal/idle_00/mark_anchor_base.png"
+# Defaults
+resolution = "1080p"
+negative = "blurry, cropped, background, watermark, extra limbs, multiple characters"
+extract_fps = 6
+bg_remove = true
+contact_cols = 10
+contact_scale = 1
+# Where to write extracted frames
+frames_dir = "outputs/fal/frames/mark"
+video_dir = "outputs/fal/video/mark"
+padded_dir = "outputs/fal/padded/mark"
+# Global prompt constraints appended to every animation prompt
+constraints = "side-view 2D sprite, no camera movement, no zoom, solid #00b140 background, keep character centered within the bordered frame and never cross the white border"
+# Greenscreen pad color for per-animation canvas padding
+pad_color = "#00b140"
+# Frame guide settings (fixed canvas + white border).
+frame_guide = true
+frame_guide_color = "#ffffff"
+frame_guide_thickness = 2
+# Use current P2 idle sprite for size + baseline
+frame_guide_match = "characters/playable/mark/resources/sprites/idle/idle_00.png"
+# Output filename zero-pad width for numbered sprites
+output_width = 2
+# Global scale multiplier (1.0 = match baseline size)
+scale_multiplier = 1
+
+# Active list (if non-empty, only these run).
+active = [
+ "idle",
+ "walk",
+ "turn",
+ "hurt_mid",
+ "hurt_high",
+ "jump",
+ "air_attack",
+ "punch1",
+ "punch2",
+ "punch3",
+ "knockout",
+]
+
+# =============================
+# Playable character (Groc/P2)
+# =============================
+
+[[animation]]
+name = "idle"
+prompt_variations = [
+  "Character stands in a heavy brawler stance, subtle breathing, in-place without translation, start and end matching idle pose for seamless loop",
+  "Character idle in place with a wide, powerful stance, slight weight shift, no translation, seamless loop",
+  "Character idle in place, big chest/shoulder rise, grounded and steady, no translation, start and end matching idle",
+  "Character idle in place, slow brawler sway, feet planted, no translation, seamless loop"
+]
+duration = 3
+frame_count = 4
+frame_indices = "4,7,8,9"
+prefix = "idle_"
+output_start = 0
+dest_dir = "characters/playable/mark/resources/sprites/idle"
+match = "characters/playable/mark/resources/sprites/idle/idle_00.png"
+
+[[animation]]
+name = "walk"
+# Workaround language: "treadmill" keeps in-place motion for walk cycles.
+prompt_variations = [
+  "Character walks on a treadmill in place, heavy brawler steps, feet on the same baseline, no translation, start and end matching walk pose",
+  "Character treadmill walk in place, powerful arm swing, no translation, seamless loop",
+  "Character walks on a treadmill in place, heavy stomp cadence, no translation",
+  "Character treadmill walk in place, grounded and weighty, start and end matching walk pose, no translation"
+]
+duration = 3
+frame_count = 12
+frame_indices = "1-12"
+prefix = "walk_"
+output_start = 0
+dest_dir = "characters/playable/mark/resources/sprites/walk"
+match = "characters/playable/mark/resources/sprites/idle/idle_00.png"
+
+[[animation]]
+name = "turn"
+# Workaround language: "pivot in place" avoids side translation.
+prompt_variations = [
+  "Character pivots in place to turn from facing right to facing left, heavy footwork pivot, no translation",
+  "Character quick step-turn in place, feet stay on baseline, no translation",
+  "Character turns in place without translation, grounded brawler stance",
+  "Character turns in place with minimal foot shuffle, no translation"
+]
+duration = 3
+frame_count = 3
+end_image = "flip"
+frame_indices = "6,10,13"
+prefix = "turnaround_"
+output_start = 0
+dest_dir = "characters/playable/mark/resources/sprites/turn_around"
+match = "characters/playable/mark/resources/sprites/idle/idle_00.png"
+
+[[animation]]
+name = "hurt_mid"
+prompt_variations = [
+  "Character flinches from a mid hit, quick recoil, feet planted, in place with no translation",
+  "Character reacts to a mid hit, short sharp recoil, grounded, no translation",
+  "Character mid-hit flinch, brief recoil, in place with no translation",
+  "Character recoils from a mid strike, heavy stance, no translation"
+]
+duration = 3
+frame_count = 1
+frame_indices = "6"
+prefix = "hurt_mid"
+single_frame = true
+dest_dir = "characters/playable/mark/resources/sprites/hurt"
+match = "characters/playable/mark/resources/sprites/idle/idle_00.png"
+
+[[animation]]
+name = "hurt_high"
+prompt_variations = [
+  "Character flinches from a high hit, quick recoil, feet planted, in place with no translation",
+  "Character reacts to a high hit, brief recoil, grounded, no translation",
+  "Character high-hit flinch, short recoil, in place with no translation",
+  "Character recoils from a high strike, heavy stance, no translation"
+]
+duration = 3
+frame_count = 1
+frame_indices = "5"
+prefix = "hurt_high"
+single_frame = true
+dest_dir = "characters/playable/mark/resources/sprites/hurt"
+match = "characters/playable/mark/resources/sprites/idle/idle_00.png"
+
+[[animation]]
+name = "jump"
+# Workaround language: "levitate in place" keeps center-of-mass stable in frame.
+prompt_variations = [
+  "Character levitates in-place without translating within the frame: squat, lift, hover, land, heavy brawler style",
+  "Character levitates in-place without translating within the frame: slow rise, brief hover, gentle drop, land",
+  "Character levitate-jump in place without translating within the frame: compress, lift, hover, land",
+  "Character levitates in-place without translating within the frame: subtle floating arc and landing"
+]
+duration = 5
+frame_count = 4
+pad_top_pct = 0.5
+frame_indices = "6,7,8,10"
+prefix = "jump_"
+output_start = 1
+dest_dir = "characters/playable/mark/resources/sprites/jump"
+match = "characters/playable/mark/resources/sprites/idle/idle_00.png"
+
+[[animation]]
+name = "air_attack"
+# Workaround language: "starts levitating" keeps airborne pose without translation.
+prompt_variations = [
+  "Character starts levitating in place, then performs a heavy flying kick, remains off the ground, no translation and lands",
+  "Character levitates in place and executes a heavy flying kick, clear silhouette, no translation and lands",
+  "Character hovers in place, then performs a flying kick, remains airborne, no translation and lands",
+  "Character floating in place, then flying kick, stays centered in frame, no translation and lands"
+]
+duration = 5
+extract_fps = 24
+extract_start = "00:01"
+extract_end = "00:03"
+frame_count = 2
+pad_top_pct = 0.25
+prefix = "air_attack_"
+frame_indices = "24,28"
+output_start = 0
+dest_dir = "characters/playable/mark/resources/sprites/air_attack"
+match = "characters/playable/mark/resources/sprites/idle/idle_00.png"
+
+[[animation]]
+name = "punch1"
+prompt_variations = [
+  "Character performs a quick heavy jab in place without translation, start and end in neutral stance",
+  "Character short body jab in place, grounded, no translation, start and end neutral",
+  "Character light brawler punch in place, slight shoulder twist, no translation",
+  "Character quick heavy jab in place, grounded, no translation"
+]
+duration = 3
+frame_count = 2
+frame_indices = "4,6"
+prefix = "punch1_"
+output_start = 0
+dest_dir = "characters/playable/mark/resources/sprites/punches"
+match = "characters/playable/mark/resources/sprites/idle/idle_00.png"
+
+[[animation]]
+name = "punch2"
+prompt_variations = [
+  "Character performs a high kick in place without translation, start and end in neutral stance",
+  "Character high kick in place, grounded, no translation, start and end neutral",
+  "Character quick high kick in place, no translation, end neutral",
+  "Character high roundhouse in place, no translation, end neutral"
+]
+duration = 3
+extract_fps = 24
+frame_count = 2
+frame_indices = "25,33"
+prefix = "punch2_"
+output_start = 0
+dest_dir = "characters/playable/mark/resources/sprites/punches"
+match = "characters/playable/mark/resources/sprites/idle/idle_00.png"
+
+[[animation]]
+name = "punch3"
+# Workaround language: "in place" for big brawler finisher to keep center stable.
+prompt_variations = [
+  "Character executes a heavy uppercut in place, no translation, start grounded and end grounded",
+  "Character performs a brawler finisher in place (overhand smash), no translation, start and end grounded",
+  "Character does a spinning power punch in place, no translation, start and end grounded",
+  "Character unleashes a heavy hook in place, no translation, end grounded",
+  "Character does a brawler dragon-punch style uppercut in place, no translation, end grounded",
+  "Character performs a heavy spinning kick in place, no translation, end grounded"
+]
+duration = 5
+frame_count = 4
+pad_top_pct = 0.4
+frame_indices = "6,9,12,14"
+prefix = "punch3_"
+output_start = 0
+dest_dir = "characters/playable/mark/resources/sprites/punches"
+match = "characters/playable/mark/resources/sprites/idle/idle_00.png"
+
+[[animation]]
+name = "knockout"
+# Workaround language: keep center-of-mass stable; fall via pose change, not translation.
+prompt_variations = [
+  "Character takes a knockout hit and collapses in place, ending motionless on the floor; keep the character centered in frame (no translation), no dust or debris",
+  "Character is stunned and drops to the floor in place, ending still; keep the character centered in frame (no translation), no dust or debris",
+  "Character loses balance and falls in place, ending motionless; keep the character centered in frame (no translation), no dust or debris",
+  "Character gets knocked out and lands on the floor in place, ending still; keep the character centered in frame (no translation), no dust or debris"
+]
+duration = 3
+frame_count = 6
+end_image = "none"
+frame_indices = "7,9,10,12,18,23"
+pad_left_pct = 0.25
+prefix = "ko_"
+output_start = 0
+dest_dir = "characters/playable/mark/resources/sprites/knockout"
+match = "characters/playable/mark/resources/sprites/idle/idle_00.png"

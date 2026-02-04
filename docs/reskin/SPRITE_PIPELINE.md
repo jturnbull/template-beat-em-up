@@ -90,6 +90,15 @@ Notes:
   with a **2px white border**. This is the hard constraint for the video model.
 - Prompts always append `global.constraints`.
 
+### Prompt Workarounds (Keep Character In‑Frame)
+We use specific phrasing to keep the character centered and avoid translation:
+- **Walk:** include “treadmill walk in place” / “no translation”.
+- **Turn:** include “pivot/turn in place” / “no translation”.
+- **Jump/Uppercut/Air:** include “levitate/jump in place without translating within the frame”.
+- **Knockout:** “fall in place, keep centered; motion via pose change, not translation”.
+
+Call these out in your per‑animation prompts (see the comments in `docs/reskin/mark_animations.toml`).
+
 ---
 
 ## 2) Extract Frames + Contact Sheets

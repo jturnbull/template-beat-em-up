@@ -70,6 +70,10 @@ def backup_existing(path: Path) -> None:
     path.rename(backup)
 
 
+def open_folder(path: Path) -> None:
+    subprocess.run(["open", str(path)], check=True)
+
+
 def ensure_size_limit(image_path: Path, max_bytes: int, max_dim: int) -> Path:
     if image_path.stat().st_size <= max_bytes:
         return image_path
@@ -189,6 +193,7 @@ def main() -> int:
                 backup_existing(out_path)
                 download_file(url, out_path)
                 print(f"Saved {out_path}")
+                open_folder(out_dir)
             else:
                 print(f"Video URL: {url}")
             break

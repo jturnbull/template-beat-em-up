@@ -170,6 +170,7 @@ def main() -> int:
     write_text(out_root / "SPRITE_TASKS_INDEX.md", "\n".join(index_lines) + "\n")
 
     print(f"Generated {len(index_lines)-4} task files in {normalize_rel(out_root, root)}")
+    subprocess.run(["open", str(out_root)], check=True)
     return 0
 
 

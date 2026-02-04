@@ -121,6 +121,12 @@ def frame_label(path: Path) -> int:
     match = re.search(r"(\d+)", path.stem)
     if match:
         return int(match.group(1))
+    if args.make_videos:
+        subprocess.run(["open", str(video_dir)], check=True)
+    elif args.make_frames:
+        subprocess.run(["open", str(frames_dir)], check=True)
+    else:
+        subprocess.run(["open", str(frames_dir / "final")], check=True)
     return 0
 
 
@@ -266,8 +272,7 @@ def main() -> int:
     video_dir = Path(global_cfg.get("video_dir", str(DEFAULT_VIDEO_DIR)))
     if not video_dir.is_absolute():
         video_dir = (PROJECT_ROOT / video_dir).resolve()
-    if not video_dir.exists():
-        raise SystemExit(f"Video directory not found: {video_dir}")
+    video_dir.mkdir(parents=True, exist_ok=True)
     padded_dir = Path(global_cfg.get("padded_dir", str(DEFAULT_PADDED_DIR)))
     if not padded_dir.is_absolute():
         padded_dir = (PROJECT_ROOT / padded_dir).resolve()

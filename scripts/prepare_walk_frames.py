@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import datetime
 import re
+import subprocess
 from PIL import Image
 from pathlib import Path
 
@@ -300,6 +301,7 @@ def main() -> int:
         tmp.replace(dest)
 
     print(f"Wrote {len(selected_files)} frames to {dest_dir}")
+    subprocess.run(["open", str(dest_dir)], check=True)
     return 0
 
 

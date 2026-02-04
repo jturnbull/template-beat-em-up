@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import subprocess
 import time
 import urllib.request
 from pathlib import Path
@@ -34,6 +35,10 @@ def iter_images(path: Path) -> list[Path]:
     if path.is_dir():
         return [p for p in sorted(path.iterdir()) if p.suffix.lower() in {".png", ".jpg", ".jpeg"}]
     return [path]
+
+
+def open_folder(path: Path) -> None:
+    subprocess.run(["open", str(path)], check=True)
 
 
 def main() -> int:
@@ -99,6 +104,9 @@ def main() -> int:
 
         if pending:
             time.sleep(args.poll)
+
+    if not args.no_download:
+        open_folder(Path(args.output_dir))
 
     return 0
 

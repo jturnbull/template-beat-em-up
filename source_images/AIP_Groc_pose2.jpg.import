@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://iser814wghpw"
-path="res://.godot/imported/slap_2_02.png-428e5ba7cf13138471924be5a523e8b4.ctex"
+uid="uid://d3mhey5ux0ub6"
+path="res://.godot/imported/AIP_Groc_pose2.jpg-a52a04ad4b893f1ef2ccde41d732c36e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://characters/enemies/tax_man/resources/sprites/attacks/slap/slap_2_02.png"
-dest_files=["res://.godot/imported/slap_2_02.png-428e5ba7cf13138471924be5a523e8b4.ctex"]
+source_file="res://source_images/AIP_Groc_pose2.jpg"
+dest_files=["res://.godot/imported/AIP_Groc_pose2.jpg-a52a04ad4b893f1ef2ccde41d732c36e.ctex"]
 
 [params]
 

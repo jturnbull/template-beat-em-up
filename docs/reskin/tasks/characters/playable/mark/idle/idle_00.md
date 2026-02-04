@@ -2,7 +2,7 @@
 
 Status: TODO
 Category: Character
-Source: characters/playable/mark/resources/sprites/idle/idle_00.png
+Source: source_images/AIP_Groc.png
 Target: characters/playable/mark/resources/sprites/idle/idle_00.png
 Size(px): 304x392
 Group/Set: idle
@@ -12,12 +12,12 @@ Group/Set: idle
 - Keep consistent style with the reskin art bible.
 
 ## AI Generation (fal.ai)
-- Model: TBD
-- Prompt: TBD
-- Negative Prompt: TBD
+- Model: fal-ai/nano-banana-pro/edit
+- Prompt: Character in a ready-for-adventure pose, side-view 2D sprite, clean silhouette, consistent lighting, centered, grounded stance, green screen background #00b140, no extra characters, no props.
+- Negative Prompt: blurry, cropped, background, watermark, extra limbs, multiple characters
 - Seed(s): TBD
 - Guidance/CFG: TBD
-- Reference Images: TBD
+- Reference Images: source_images/AIP_Groc_pose2.jpg
 - Variations: TBD (A/B/C)
 
 ## Consistency Checks
@@ -34,4 +34,3 @@ Group/Set: idle
 - [ ] Option C
 
 ## Notes
-

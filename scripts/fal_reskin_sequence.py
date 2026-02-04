@@ -55,6 +55,7 @@ def main() -> int:
                 print(f"Warning: chained reference not found: {candidate}")
                 chained_ref = None
 
+    subprocess.run(["open", str(output_root)], check=True)
     return 0
 
 
