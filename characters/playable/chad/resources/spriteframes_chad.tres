@@ -188,6 +188,20 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": ExtResource("30_hd20p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_5taik")
+}, {
+"duration": 1.0,
+"texture": ExtResource("1_wrqq6")
+}],
+"loop": false,
+"name": &"getting_up",
+"speed": 24.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": ExtResource("27_fdxwh")
 }],
 "loop": true,
@@ -290,21 +304,15 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("24_5taik")
+"texture": ExtResource("22_c167v")
 }, {
 "duration": 1.0,
 "texture": ExtResource("24_5taik")
 }, {
 "duration": 1.0,
-"texture": ExtResource("24_5taik")
-}, {
-"duration": 1.0,
-"texture": ExtResource("23_trcrx")
-}, {
-"duration": 1.0,
-"texture": ExtResource("23_trcrx")
+"texture": ExtResource("1_wrqq6")
 }],
-"loop": true,
+"loop": false,
 "name": &"landing",
 "speed": 24.0
 }, {

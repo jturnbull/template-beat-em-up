@@ -1,25 +1,24 @@
 extends Node2D
 
-const STEP_IDLE := ^"Ground/Move/Idle"
-const STEP_WALK := ^"Ground/Move/Walk"
+const STEP_IDLE := ^"Ground/Move/IdleAi"
+const STEP_WALK := ^"Ground/Move/Follow"
 const STEP_HURT := ^"Ground/Hurt"
-const STEP_COMBO_1 := ^"Ground/Combo1"
-const STEP_COMBO_2 := ^"Ground/Combo2"
-const STEP_COMBO_3 := ^"Ground/Combo3"
+const STEP_ATTACK_1 := ^"Ground/Attack1"
+const STEP_ATTACK_2 := ^"Ground/Attack2"
+const STEP_ATTACK_3 := ^"Ground/Attack3"
 const STEP_JUMP := ^"Air/Jump/Impulse"
-const STEP_AIR_ATTACK := ^"Air/Jump/Attack"
 const STEP_KO := ^"Air/Knockout/Launch"
-const STEP_DIE := ^"Die"
+const STEP_DIE := ^"DieAi"
 const KO_LAUNCH_VECTOR := Vector2(1.0, -0.9)
 const KO_PREVIEW_KNOCKBACK := 1200.0
 const TIME_SCALE_NORMAL := 1.0
 const TIME_SCALE_SLOW := 0.25
 
-@onready var _state_machine := $Mark/StateMachine as QuiverStateMachine
-@onready var _mark := $Mark as QuiverCharacter
+@onready var _state_machine := $Sarge/StateMachine as QuiverStateMachine
+@onready var _character := $Sarge as QuiverCharacter
 @onready var _help := $CanvasLayer/Help as Label
-@onready var _anim_tree := $Mark/MarkSkin/AnimationTree as AnimationTree
-@onready var _sprite := $Mark/MarkSkin/AnimatedSprite2D as AnimatedSprite2D
+@onready var _anim_tree := $Sarge/SargeSkin/AnimationTree as AnimationTree
+@onready var _sprite := $Sarge/SargeSkin/AnimatedSprite2D as AnimatedSprite2D
 
 var _auto_cycle := false
 var _cycle_running := false
@@ -35,8 +34,7 @@ func _ready() -> void:
 	_render_help()
 	await _await_state_machine_ready()
 	if _state_machine != null:
-		# Preview scene owns keyboard input. Prevent state scripts from
-		# consuming keys and triggering transitions without payloads.
+		# Preview scene owns keyboard input.
 		_state_machine.should_process_input = false
 		_state_machine.transitioned.connect(_on_state_transitioned)
 	_transition_to(STEP_IDLE)
@@ -61,15 +59,13 @@ func _input(event: InputEvent) -> void:
 		KEY_H:
 			_transition_to(STEP_HURT)
 		KEY_1:
-			_transition_to(STEP_COMBO_1)
+			_transition_to(STEP_ATTACK_1)
 		KEY_2:
-			_transition_to(STEP_COMBO_2)
+			_transition_to(STEP_ATTACK_2)
 		KEY_3:
-			_transition_to(STEP_COMBO_3)
+			_transition_to(STEP_ATTACK_3)
 		KEY_J:
 			_transition_to(STEP_JUMP)
-		KEY_A:
-			_transition_to(STEP_AIR_ATTACK)
 		KEY_K:
 			_trigger_knockout()
 		KEY_D:
@@ -97,17 +93,15 @@ func _run_cycle() -> void:
 		await get_tree().create_timer(0.8).timeout
 		_transition_to(STEP_WALK)
 		await get_tree().create_timer(1.0).timeout
-		_transition_to(STEP_COMBO_1)
+		_transition_to(STEP_ATTACK_1)
 		await get_tree().create_timer(0.6).timeout
-		_transition_to(STEP_COMBO_2)
+		_transition_to(STEP_ATTACK_2)
 		await get_tree().create_timer(0.6).timeout
-		_transition_to(STEP_COMBO_3)
+		_transition_to(STEP_ATTACK_3)
 		await get_tree().create_timer(0.8).timeout
 		_transition_to(STEP_HURT)
 		await get_tree().create_timer(0.6).timeout
 		_transition_to(STEP_JUMP)
-		await get_tree().create_timer(0.8).timeout
-		_transition_to(STEP_AIR_ATTACK)
 		await get_tree().create_timer(0.9).timeout
 		_trigger_knockout()
 		await get_tree().create_timer(2.2).timeout
@@ -124,23 +118,16 @@ func _transition_to(path: NodePath, msg := {}) -> void:
 	if _state_machine.state == null:
 		push_warning("State machine not ready yet.")
 		return
-	_set_walk_input(path == STEP_WALK)
+	if path == STEP_WALK and msg.is_empty():
+		msg = {"target_node": _character}
 	_state_machine.transition_to(path, msg)
 
 
 func _trigger_knockout() -> void:
-	if _state_machine == null:
-		push_error("Missing state machine in preview scene.")
+	if _character == null or _character.attributes == null:
+		push_error("Missing character attributes in preview scene.")
 		return
-	if _state_machine.state == null:
-		push_warning("State machine not ready yet.")
-		return
-	if _mark == null or _mark.attributes == null:
-		push_error("Missing mark attributes in preview scene.")
-		return
-	# Knockout launch speed is based on accumulated knockback in gameplay.
-	# Preview key K injects a representative value so motion matches real fights.
-	_mark.attributes.knockback_amount = KO_PREVIEW_KNOCKBACK
+	_character.attributes.knockback_amount = KO_PREVIEW_KNOCKBACK
 	_transition_to(STEP_KO, {"launch_vector": KO_LAUNCH_VECTOR.normalized()})
 
 
@@ -170,7 +157,7 @@ func _render_help() -> void:
 	if _sprite != null:
 		anim_name = str(_sprite.animation)
 		frame = _sprite.frame
-	_help.text = "SPACE start/stop cycle | I idle | W walk | H hurt | 1/2/3 combos | J jump | A air attack | K knockout | D die | T 1/4 speed\nState: %s | Tree: %s | Anim: %s #%d | TimeScale: %.2f" % [_last_state, tree_active, anim_name, frame, speed]
+	_help.text = "SPACE start/stop cycle | I idle | W walk | H hurt | 1/2/3 attacks | J jump | K knockout | D die | T 1/4 speed\nState: %s | Tree: %s | Anim: %s #%d | TimeScale: %.2f" % [_last_state, tree_active, anim_name, frame, speed]
 
 
 func _process(_delta: float) -> void:
@@ -187,25 +174,4 @@ func _toggle_slow_motion() -> void:
 
 
 func _exit_tree() -> void:
-	_set_walk_input(false)
 	Engine.time_scale = TIME_SCALE_NORMAL
-
-
-func _walk_action_name() -> StringName:
-	if _mark != null:
-		var scoped_action := _mark.get_input_action(&"move_right")
-		if InputMap.has_action(scoped_action):
-			return scoped_action
-	if InputMap.has_action(&"move_right"):
-		return &"move_right"
-	return StringName("")
-
-
-func _set_walk_input(enabled: bool) -> void:
-	var action := _walk_action_name()
-	if action.is_empty():
-		return
-	if enabled:
-		Input.action_press(action)
-	else:
-		Input.action_release(action)

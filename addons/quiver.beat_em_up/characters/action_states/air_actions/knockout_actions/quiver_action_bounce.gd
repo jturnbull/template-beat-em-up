@@ -88,7 +88,12 @@ func _disconnect_signals() -> void:
 
 func _on_skin_animation_finished() -> void:
 	if not _attributes.is_alive():
-		_state_machine.transition_to(_path_die)
+		if _character.is_in_group("players"):
+			# Keep player death grounded: reset air offset before die flash animation.
+			_has_landed = true
+			_knockout_state._air_state._handle_landing(_path_die)
+		else:
+			_state_machine.transition_to(_path_die)
 	elif _attributes.knockback_amount > 0:
 		_knockout_state._launch_charater(_bounce_direction)
 		_state_machine.transition_to(_path_air_mid_air)

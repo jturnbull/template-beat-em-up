@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3 uid="uid://ckqympx0q7t51"]
+
+[ext_resource type="PackedScene" uid="uid://dwgxqe6h48x4e" path="res://characters/enemies/tax_man/tax_man.tscn" id="1_xyvns"]
+[ext_resource type="Script" uid="uid://de6fqlsc7o70q" path="res://debug_tools/test_scenes/tax_man/tax_man_animation_preview.gd" id="2_hkhhl"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_8tv0h"]
+line_spacing = 4.0
+font_size = 22
+
+[node name="TaxManAnimationPreview" type="Node2D"]
+script = ExtResource("2_hkhhl")
+
+[node name="TaxMan" parent="." instance=ExtResource("1_xyvns")]
+position = Vector2(0, 260)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(0, -220)
+zoom = Vector2(0.7, 0.7)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Help" type="Label" parent="CanvasLayer"]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 1500.0
+offset_bottom = 70.0
+label_settings = SubResource("LabelSettings_8tv0h")
+
+[node name="DashMarkerRight" type="Marker2D" parent="." groups=["tax_man_dash_positions"]]
+position = Vector2(500, 260)
+
+[node name="DashMarkerLeft" type="Marker2D" parent="." groups=["tax_man_dash_positions"]]
+position = Vector2(-500, 260)

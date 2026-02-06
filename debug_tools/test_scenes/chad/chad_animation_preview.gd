@@ -15,11 +15,11 @@ const KO_PREVIEW_KNOCKBACK := 1200.0
 const TIME_SCALE_NORMAL := 1.0
 const TIME_SCALE_SLOW := 0.25
 
-@onready var _state_machine := $Mark/StateMachine as QuiverStateMachine
-@onready var _mark := $Mark as QuiverCharacter
+@onready var _state_machine := $Chad/StateMachine as QuiverStateMachine
+@onready var _character := $Chad as QuiverCharacter
 @onready var _help := $CanvasLayer/Help as Label
-@onready var _anim_tree := $Mark/MarkSkin/AnimationTree as AnimationTree
-@onready var _sprite := $Mark/MarkSkin/AnimatedSprite2D as AnimatedSprite2D
+@onready var _anim_tree := $Chad/ChadSkin/AnimationTree as AnimationTree
+@onready var _sprite := $Chad/ChadSkin/AnimatedSprite2D as AnimatedSprite2D
 
 var _auto_cycle := false
 var _cycle_running := false
@@ -35,8 +35,7 @@ func _ready() -> void:
 	_render_help()
 	await _await_state_machine_ready()
 	if _state_machine != null:
-		# Preview scene owns keyboard input. Prevent state scripts from
-		# consuming keys and triggering transitions without payloads.
+		# Preview scene owns keyboard input.
 		_state_machine.should_process_input = false
 		_state_machine.transitioned.connect(_on_state_transitioned)
 	_transition_to(STEP_IDLE)
@@ -129,18 +128,10 @@ func _transition_to(path: NodePath, msg := {}) -> void:
 
 
 func _trigger_knockout() -> void:
-	if _state_machine == null:
-		push_error("Missing state machine in preview scene.")
+	if _character == null or _character.attributes == null:
+		push_error("Missing character attributes in preview scene.")
 		return
-	if _state_machine.state == null:
-		push_warning("State machine not ready yet.")
-		return
-	if _mark == null or _mark.attributes == null:
-		push_error("Missing mark attributes in preview scene.")
-		return
-	# Knockout launch speed is based on accumulated knockback in gameplay.
-	# Preview key K injects a representative value so motion matches real fights.
-	_mark.attributes.knockback_amount = KO_PREVIEW_KNOCKBACK
+	_character.attributes.knockback_amount = KO_PREVIEW_KNOCKBACK
 	_transition_to(STEP_KO, {"launch_vector": KO_LAUNCH_VECTOR.normalized()})
 
 
@@ -192,8 +183,8 @@ func _exit_tree() -> void:
 
 
 func _walk_action_name() -> StringName:
-	if _mark != null:
-		var scoped_action := _mark.get_input_action(&"move_right")
+	if _character != null:
+		var scoped_action := _character.get_input_action(&"move_right")
 		if InputMap.has_action(scoped_action):
 			return scoped_action
 	if InputMap.has_action(&"move_right"):
