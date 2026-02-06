@@ -12,9 +12,9 @@ Group/Set: stage_01/stage_elements/buildings
 - Keep consistent style with the reskin art bible.
 
 ## AI Generation (fal.ai)
-- Model: TBD
-- Prompt: TBD
-- Negative Prompt: TBD
+- Model: fal-ai/nano-banana-pro/edit
+- Prompt: Dockside spaceport restaurant storefront conversion: turn this facade into a space‑sushi spot called RAW INSIGHTS. Keep the exact same building silhouette/alpha edge, perspective, lighting direction, and overall composition as the source; only change surface textures/signage. Replace “Fire Tiger” branding with space‑sushi details (neon sign, sushi iconography, subtle sci‑fi panels, vents/antennae). Text must be legible and spelled exactly: RAW INSIGHTS. Transparent PNG; no added background behind the building; no extra objects outside the original silhouette.
+- Negative Prompt: blurry, low-res, cropped, background, sky, stars, watermark, misspelled text, illegible text, extra text, extra buildings, extra props, photorealistic, 3D render
 - Seed(s): TBD
 - Guidance/CFG: TBD
 - Reference Images: TBD
@@ -34,4 +34,3 @@ Group/Set: stage_01/stage_elements/buildings
 - [ ] Option C
 
 ## Notes
-

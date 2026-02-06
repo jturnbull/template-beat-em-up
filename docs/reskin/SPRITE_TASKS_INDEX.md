@@ -400,6 +400,8 @@ Generated task files for every sprite/background/title asset.
 - docs/reskin/tasks/characters/playable/mark/walk/walk_11.md
 - docs/reskin/tasks/backgrounds/stage_01/stage_elements/buildings/area_2_fire_tiger_steakhouse_all.md
 - docs/reskin/tasks/backgrounds/stage_01/stage_elements/buildings/area_2_java_bean_dream_all.md
+- docs/reskin/tasks/backgrounds/stage_01/combined/brick_building1_shop_body.md
+- docs/reskin/tasks/backgrounds/stage_01/combined/brick_building1_banner_adventurers_tools.md
 - docs/reskin/tasks/backgrounds/stage_01/stage_elements/buildings/chicken_king/pngs/chicken_king_base.md
 - docs/reskin/tasks/backgrounds/stage_01/stage_elements/buildings/chicken_king/pngs/chicken_king_billboard.md
 - docs/reskin/tasks/backgrounds/stage_01/stage_elements/buildings/chicken_king/pngs/chicken_king_front_banner.md

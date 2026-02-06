@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import datetime
+import os
 import re
 import subprocess
 from PIL import Image
@@ -93,6 +94,34 @@ def visible_bbox(img: Image.Image, key_color: tuple[int, int, int], tol: int) ->
     return mask.getbbox()
 
 
+def canvas_scale_on_baseline(
+    img: Image.Image,
+    *,
+    scale: float,
+    baseline_y: int,
+    target_w: int,
+    target_h: int,
+) -> Image.Image:
+    """Scale a full-canvas frame around the baseline (keeps feet on the same ground line).
+
+    This avoids per-frame bbox jitter while still allowing a single global size knob.
+    """
+    if scale == 1.0:
+        return img
+    new_w = max(1, int(round(target_w * scale)))
+    new_h = max(1, int(round(target_h * scale)))
+    scaled = img.resize((new_w, new_h), Image.LANCZOS)
+
+    # Keep the baseline line at the same Y after scaling.
+    baseline_scaled = int(round(baseline_y * scale))
+    x0 = int(round((target_w - new_w) / 2))
+    y0 = int(round(baseline_y - baseline_scaled))
+
+    out = Image.new("RGBA", (target_w, target_h), (0, 0, 0, 0))
+    out.paste(scaled, (x0, y0), scaled)
+    return out
+
+
 def main() -> int:
     args = parse_args()
     input_dir = Path(args.input)
@@ -117,6 +146,19 @@ def main() -> int:
 
     match_img = Image.open(match_path).convert("RGBA")
     target_w, target_h = match_img.size
+
+    # Baseline derived from the reference sprite (used in both bbox and canvas modes).
+    key_color = DEFAULT_KEY_COLOR
+    tol = DEFAULT_TOL
+    match_bbox = visible_bbox(match_img, key_color, tol)
+    if not match_bbox:
+        raise SystemExit("No visible pixels found in match sprite.")
+    match_visible_h = match_bbox[3] - match_bbox[1]
+    if match_visible_h <= 0:
+        raise SystemExit("Match sprite visible height is invalid.")
+    match_bottom = match_bbox[3] - 1
+    baseline_pad = (target_h - 1) - match_bottom
+    baseline_y = (target_h - baseline_pad) - 1
 
     if args.backup:
         stamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -179,19 +221,14 @@ def main() -> int:
                 img = img.resize((target_w, target_h), Image.LANCZOS)
             if args.flip_h:
                 img = img.transpose(Image.FLIP_LEFT_RIGHT)
-            out = img
+            out = canvas_scale_on_baseline(
+                img,
+                scale=float(args.scale_mult),
+                baseline_y=baseline_y,
+                target_w=target_w,
+                target_h=target_h,
+            )
         else:
-            key_color = DEFAULT_KEY_COLOR
-            tol = DEFAULT_TOL
-            match_bbox = visible_bbox(match_img, key_color, tol)
-            if not match_bbox:
-                raise SystemExit("No visible pixels found in match sprite.")
-            match_visible_h = match_bbox[3] - match_bbox[1]
-            if match_visible_h <= 0:
-                raise SystemExit("Match sprite visible height is invalid.")
-            match_bottom = match_bbox[3] - 1
-            baseline_pad = (target_h - 1) - match_bottom
-
             scale_ref_img = Image.open(scale_ref_path).convert("RGBA")
             scale_ref_bbox = visible_bbox(scale_ref_img, key_color, tol)
             if not scale_ref_bbox:
@@ -208,12 +245,6 @@ def main() -> int:
             new_w = max(1, int(round(img.width * scale_factor)))
             new_h = max(1, int(round(img.height * scale_factor)))
             img = img.resize((new_w, new_h), Image.LANCZOS)
-            if img.height > match_visible_h:
-                shrink = match_visible_h / img.height
-                img = img.resize(
-                    (max(1, int(round(img.width * shrink))), match_visible_h),
-                    Image.LANCZOS,
-                )
             if img.width > target_w:
                 left = int((img.width - target_w) / 2)
                 img = img.crop((left, 0, left + target_w, img.height))
@@ -233,17 +264,6 @@ def main() -> int:
         tmp.replace(dest)
         print(f"Wrote 1 frame to {dest_dir}")
         return 0
-
-    key_color = DEFAULT_KEY_COLOR
-    tol = DEFAULT_TOL
-    match_bbox = visible_bbox(match_img, key_color, tol)
-    if not match_bbox:
-        raise SystemExit("No visible pixels found in match sprite.")
-    match_visible_h = match_bbox[3] - match_bbox[1]
-    if match_visible_h <= 0:
-        raise SystemExit("Match sprite visible height is invalid.")
-    match_bottom = match_bbox[3] - 1
-    baseline_pad = (target_h - 1) - match_bottom
 
     scale_ref_img = Image.open(scale_ref_path).convert("RGBA")
     scale_ref_bbox = visible_bbox(scale_ref_img, key_color, tol)
@@ -267,7 +287,13 @@ def main() -> int:
                 img = img.resize((target_w, target_h), Image.LANCZOS)
             if args.flip_h:
                 img = img.transpose(Image.FLIP_LEFT_RIGHT)
-            out = img
+            out = canvas_scale_on_baseline(
+                img,
+                scale=float(args.scale_mult),
+                baseline_y=baseline_y,
+                target_w=target_w,
+                target_h=target_h,
+            )
         else:
             bbox = visible_bbox(img, key_color, tol)
             if not bbox:
@@ -276,12 +302,6 @@ def main() -> int:
             new_w = max(1, int(round(img.width * scale_factor)))
             new_h = max(1, int(round(img.height * scale_factor)))
             img = img.resize((new_w, new_h), Image.LANCZOS)
-            if img.height > match_visible_h:
-                shrink = match_visible_h / img.height
-                img = img.resize(
-                    (max(1, int(round(img.width * shrink))), match_visible_h),
-                    Image.LANCZOS,
-                )
             if img.width > target_w:
                 left = int((img.width - target_w) / 2)
                 img = img.crop((left, 0, left + target_w, img.height))
@@ -301,7 +321,8 @@ def main() -> int:
         tmp.replace(dest)
 
     print(f"Wrote {len(selected_files)} frames to {dest_dir}")
-    subprocess.run(["open", str(dest_dir)], check=True)
+    if os.environ.get("RESKIN_BATCH") != "1":
+        subprocess.run(["open", str(dest_dir)], check=True)
     return 0
 
 

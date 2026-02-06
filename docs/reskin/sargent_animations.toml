@@ -1,17 +1,22 @@
 [global]
+# Task used to generate the initial idle still (4 options) via fal_reskin_generate.py.
+base_task = "docs/reskin/tasks/characters/enemies/sargent/idle/idle_00.md"
 # Base anchor still (greenscreen) used for all animations.
-anchor_image = "outputs/fal/idle_00/sargent_anchor_base.png"
+anchor_image = "outputs/reskin/sargent/anchor/anchor_base.png"
+# Framed anchor used for video seeding (has 2px white border).
+anchor_framed = "outputs/reskin/sargent/anchor/anchor_framed.png"
 # Scale reference used to compute a single scale factor for all frames.
-scale_ref = "outputs/fal/idle_00/sargent_anchor_base.png"
+scale_ref = "outputs/reskin/sargent/anchor/anchor_base.png"
 # Defaults
 resolution = "1080p"
 negative = "low resolution, error, worst quality, low quality, defects"
 extract_fps = 6
-bg_remove = true
 contact_cols = 10
 contact_scale = 0.25
 # Where to write extracted frames
-frames_dir = "outputs/fal/frames/sargent"
+frames_dir = "outputs/reskin/sargent/frames"
+video_dir = "outputs/reskin/sargent/videos"
+padded_dir = "outputs/reskin/sargent/seeds"
 # Global prompt constraints appended to every animation prompt
 constraints = "no camera movement, no zoom, solid #00b140 background, keep character centered within the bordered frame and never cross the white border"
 # Greenscreen pad color for per-animation canvas padding
@@ -93,7 +98,6 @@ name = "jump"
 prompt = "Enemy performs a jump in-place without translating within the frame: convey height via squash/stretch, leg tucking, hair/clothing motion, and impact dust on landing. grounded takeoff and landing, same outfit/proportions/lighting, side-view 2D sprite, start and end grounded"
 duration = 3
 frame_count = 8
-pad_top_pct = 0.35
 frame_indices = "4-11"
 prefix = "jump_"
 output_start = 1
@@ -112,7 +116,6 @@ duration = 3
 frame_count = 6
 end_image = "none"
 frame_indices = "7,9,10,12,18,23"
-pad_left_pct = 0.25
 prefix = "ko_"
 output_start = 0
 dest_dir = "characters/enemies/sargent/resources/sprites/knockout"

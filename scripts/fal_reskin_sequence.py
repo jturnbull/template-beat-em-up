@@ -13,6 +13,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--tasks", nargs="+", required=True, help="Task .md files in order")
     parser.add_argument("--prompt", required=True, help="Prompt for all tasks")
     parser.add_argument("--negative", default=None, help="Negative prompt for all tasks")
+    parser.add_argument("--model", default=None, help="Fal model id (passed through)")
     parser.add_argument("--num-images", type=int, default=None, help="Override num images")
     parser.add_argument("--aspect-ratio", default=None, help="Override aspect ratio")
     parser.add_argument("--chain", action="store_true", help="Use previous output as extra reference")
@@ -32,6 +33,8 @@ def main() -> int:
         cmd = ["python3", "scripts/fal_reskin_generate.py", "--task", task, "--prompt", args.prompt]
         if args.negative:
             cmd.extend(["--negative", args.negative])
+        if args.model:
+            cmd.extend(["--model", args.model])
         if args.num_images is not None:
             cmd.extend(["--num-images", str(args.num_images)])
         if args.aspect_ratio:

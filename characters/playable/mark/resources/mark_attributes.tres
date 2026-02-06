@@ -1,8 +1,8 @@
-[gd_resource type="Resource" script_class="QuiverAttributes" load_steps=4 format=3]
+[gd_resource type="Resource" script_class="QuiverAttributes" load_steps=4 format=3 uid="uid://cc716wxjtlp4s"]
 
-[ext_resource type="Script" path="res://addons/quiver.beat_em_up/characters/quiver_attributes.gd" id="1_1ikth"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/mark_gradient.tres" id="1_4dxsn"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/mark_profile.png" id="2_g3jjg"]
+[ext_resource type="Script" uid="uid://bk47oolmixehn" path="res://addons/quiver.beat_em_up/characters/quiver_attributes.gd" id="1_1ikth"]
+[ext_resource type="Texture2D" uid="uid://by73mk453l8nh" path="res://characters/playable/mark/resources/mark_gradient.tres" id="1_4dxsn"]
+[ext_resource type="Texture2D" uid="uid://bs3vqr4gjknlc" path="res://characters/playable/mark/resources/sprites/mark_profile.png" id="2_g3jjg"]
 
 [resource]
 script = ExtResource("1_1ikth")

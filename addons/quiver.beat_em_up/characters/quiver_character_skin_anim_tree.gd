@@ -27,12 +27,12 @@ extends QuiverCharacterSkin
 ## Use this to point to the correct path if you structure your [AnimationTree] in a different way. 
 ## [br][br]
 ## See [member _path_animation_tree] for "private" reasoning.
-@export var _path_playback := "parameters/StateMachine/playback"
+@export var _path_playback := "parameters/state_machine/playback"
 
 var _blend_positions := []
 
 @onready var _animation_tree := get_node(_path_animation_tree) as AnimationTree
-@onready var _playback := _animation_tree.get(_path_playback) as AnimationNodeStateMachinePlayback
+var _playback: AnimationNodeStateMachinePlayback = null
 
 ### -----------------------------------------------------------------------------------------------
 
@@ -44,7 +44,13 @@ func _get_configuration_warnings() -> PackedStringArray:
 	
 	if not _animation_tree:
 		msgs.append("Invalid _path_animation_tree: %s"%[_path_animation_tree])
+		return msgs
 	
+	if _animation_tree.tree_root == null:
+		msgs.append("AnimationTree has no tree_root.")
+		return msgs
+	
+	_refresh_playback()
 	if not _playback:
 		msgs.append(
 				"Invalid _path_playback: %s. Could not find playback in AnimationTree"%[
@@ -61,11 +67,21 @@ func _get_configuration_warnings() -> PackedStringArray:
 
 ## Main public method for the skin, it will check if the parameter is valid and transition to it.
 func transition_to(anim_state: StringName) -> void:
+	_refresh_playback()
+	if not _playback:
+		push_error("Could not transition. Invalid _path_playback: %s"%[_path_playback])
+		return
+	
 	if _is_valid_state(anim_state):
 		_playback.travel(anim_state)
 
 
 func end_of_skin_animation(_animation_name := "") -> void:
+	_refresh_playback()
+	if not _playback:
+		super()
+		return
+	
 	# I really don't remember why this is here, or if it is still necessary. I think I added this
 	# as a workaround for some AnimationTree bug, but really don't know it I need it. Maybe to help
 	# with the method being triggered more than once??
@@ -91,11 +107,13 @@ func _skin_direction_updated() -> void:
 
 func _in_editor_ready() -> void:
 	QuiverEditorHelper.disable_all_processing(self)
+	_refresh_playback()
 	_animation_tree.set_deferred("active", false)
 
 
 func _runtime_ready() -> void:
 	super()
+	_refresh_playback()
 	_animation_tree.active = true
 
 
@@ -202,5 +220,12 @@ func _filter_main_playback_path(animation_name: String, path: String) -> StringN
 func _get_actual_parameter_name(property_name: String) -> String:
 	var parameter_name = property_name.split("/")[1]
 	return parameter_name
+
+
+func _refresh_playback() -> void:
+	if not _animation_tree:
+		_playback = null
+		return
+	_playback = _animation_tree.get(_path_playback) as AnimationNodeStateMachinePlayback
 
 ### -----------------------------------------------------------------------------------------------

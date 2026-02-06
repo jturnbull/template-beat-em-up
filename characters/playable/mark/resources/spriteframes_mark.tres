@@ -1,46 +1,46 @@
-[gd_resource type="SpriteFrames" load_steps=42 format=3]
+[gd_resource type="SpriteFrames" load_steps=42 format=3 uid="uid://cuurue22rmsb2"]
 
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/idle/idle_00.png" id="1_wrqq6"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/idle/idle_01.png" id="2_1xc7n"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/idle/idle_02.png" id="3_5djqb"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/punches/punch1_00.png" id="3_48agj"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/punches/punch1_01.png" id="4_oi4qv"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/walk/walk_00.png" id="6_ra0bq"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/walk/walk_01.png" id="7_n4s3j"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/punches/punch3_00.png" id="7_ya88k"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/punches/punch3_01.png" id="8_svxg8"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/walk/walk_02.png" id="8_ytmlj"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/walk/walk_03.png" id="9_ur7d7"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/punches/punch3_02.png" id="9_x5mcd"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/punches/punch3_03.png" id="10_mesqx"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/walk/walk_04.png" id="10_vyrsa"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/walk/walk_05.png" id="11_5p56x"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/walk/walk_06.png" id="12_sw7jw"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/walk/walk_07.png" id="13_wlfmd"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/idle/idle_03.png" id="14_psawv"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/walk/walk_08.png" id="14_ujcpq"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/walk/walk_09.png" id="15_bany5"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/walk/walk_10.png" id="16_wr7m3"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/walk/walk_11.png" id="17_j3734"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/punches/punch2_00.png" id="19_y1ame"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/punches/punch2_01.png" id="20_7jacw"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/air_attack/air_attack_00.png" id="21_mbplx"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/jump/jump_03.png" id="22_c167v"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/air_attack/air_attack_01.png" id="22_o0cvf"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/jump/jump_01.png" id="23_trcrx"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/jump/jump_02.png" id="24_5taik"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/jump/jump_04.png" id="25_bqngl"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/hurt/hurt_high.png" id="27_fdxwh"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/hurt/hurt_mid.png" id="28_niptm"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/knock_out/knockout_00.png" id="29_i7rbs"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/knock_out/knockout_01.png" id="30_h1a1i"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/knock_out/knockout_05.png" id="30_hd20p"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/knock_out/knockout_02.png" id="31_jaglq"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/knock_out/knockout_03.png" id="32_2hkrc"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/knock_out/knockout_04.png" id="33_j15rn"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/turn_around/turnaround_00.png" id="50_dcevi"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/turn_around/turnaround_01.png" id="51_5s74y"]
-[ext_resource type="Texture2D" path="res://characters/playable/mark/resources/sprites/turn_around/turnaround_02.png" id="52_xtm6s"]
+[ext_resource type="Texture2D" uid="uid://6jjfsd28cn0y" path="res://characters/playable/mark/resources/sprites/idle/idle_00.png" id="1_wrqq6"]
+[ext_resource type="Texture2D" uid="uid://cou5ekutbom0o" path="res://characters/playable/mark/resources/sprites/idle/idle_01.png" id="2_1xc7n"]
+[ext_resource type="Texture2D" uid="uid://8hqeyj88rv41" path="res://characters/playable/mark/resources/sprites/idle/idle_02.png" id="3_5djqb"]
+[ext_resource type="Texture2D" uid="uid://cfbcjnllsbm5k" path="res://characters/playable/mark/resources/sprites/punches/punch1_00.png" id="3_48agj"]
+[ext_resource type="Texture2D" uid="uid://c0vyi3mgh7wd3" path="res://characters/playable/mark/resources/sprites/punches/punch1_01.png" id="4_oi4qv"]
+[ext_resource type="Texture2D" uid="uid://w0ofry2ci43g" path="res://characters/playable/mark/resources/sprites/walk/walk_00.png" id="6_ra0bq"]
+[ext_resource type="Texture2D" uid="uid://6y1eprflaemd" path="res://characters/playable/mark/resources/sprites/walk/walk_01.png" id="7_n4s3j"]
+[ext_resource type="Texture2D" uid="uid://calm6eajlinn2" path="res://characters/playable/mark/resources/sprites/punches/punch3_00.png" id="7_ya88k"]
+[ext_resource type="Texture2D" uid="uid://fo05fg0myi40" path="res://characters/playable/mark/resources/sprites/punches/punch3_01.png" id="8_svxg8"]
+[ext_resource type="Texture2D" uid="uid://ch540nex17wwm" path="res://characters/playable/mark/resources/sprites/walk/walk_02.png" id="8_ytmlj"]
+[ext_resource type="Texture2D" uid="uid://bkusas088edgu" path="res://characters/playable/mark/resources/sprites/walk/walk_03.png" id="9_ur7d7"]
+[ext_resource type="Texture2D" uid="uid://dxg0ymbiq42kp" path="res://characters/playable/mark/resources/sprites/punches/punch3_02.png" id="9_x5mcd"]
+[ext_resource type="Texture2D" uid="uid://dliiveqdqqk54" path="res://characters/playable/mark/resources/sprites/punches/punch3_03.png" id="10_mesqx"]
+[ext_resource type="Texture2D" uid="uid://bmdcw60u0kpku" path="res://characters/playable/mark/resources/sprites/walk/walk_04.png" id="10_vyrsa"]
+[ext_resource type="Texture2D" uid="uid://dwihh7ge388li" path="res://characters/playable/mark/resources/sprites/walk/walk_05.png" id="11_5p56x"]
+[ext_resource type="Texture2D" uid="uid://cs75dkqoml8ne" path="res://characters/playable/mark/resources/sprites/walk/walk_06.png" id="12_sw7jw"]
+[ext_resource type="Texture2D" uid="uid://drrnqgt8nk51l" path="res://characters/playable/mark/resources/sprites/walk/walk_07.png" id="13_wlfmd"]
+[ext_resource type="Texture2D" uid="uid://b46ghehfh3jo7" path="res://characters/playable/mark/resources/sprites/idle/idle_03.png" id="14_psawv"]
+[ext_resource type="Texture2D" uid="uid://bsdm0jq5x3jse" path="res://characters/playable/mark/resources/sprites/walk/walk_08.png" id="14_ujcpq"]
+[ext_resource type="Texture2D" uid="uid://dknjyvsat5dhl" path="res://characters/playable/mark/resources/sprites/walk/walk_09.png" id="15_bany5"]
+[ext_resource type="Texture2D" uid="uid://bfdu1w6fkdokx" path="res://characters/playable/mark/resources/sprites/walk/walk_10.png" id="16_wr7m3"]
+[ext_resource type="Texture2D" uid="uid://bwpoysbt4onm4" path="res://characters/playable/mark/resources/sprites/walk/walk_11.png" id="17_j3734"]
+[ext_resource type="Texture2D" uid="uid://dwx13pnfpi00s" path="res://characters/playable/mark/resources/sprites/punches/punch2_00.png" id="19_y1ame"]
+[ext_resource type="Texture2D" uid="uid://kts2ap71u1vh" path="res://characters/playable/mark/resources/sprites/punches/punch2_01.png" id="20_7jacw"]
+[ext_resource type="Texture2D" uid="uid://08gyk1i7phpu" path="res://characters/playable/mark/resources/sprites/air_attack/air_attack_00.png" id="21_mbplx"]
+[ext_resource type="Texture2D" uid="uid://1qdmkhnx1cg5" path="res://characters/playable/mark/resources/sprites/jump/jump_03.png" id="22_c167v"]
+[ext_resource type="Texture2D" uid="uid://bqpx2fss5lhbv" path="res://characters/playable/mark/resources/sprites/air_attack/air_attack_01.png" id="22_o0cvf"]
+[ext_resource type="Texture2D" uid="uid://doboj5gawi8ff" path="res://characters/playable/mark/resources/sprites/jump/jump_01.png" id="23_trcrx"]
+[ext_resource type="Texture2D" uid="uid://bhuyw2xmc8cmf" path="res://characters/playable/mark/resources/sprites/jump/jump_02.png" id="24_5taik"]
+[ext_resource type="Texture2D" uid="uid://dvhmg3hrtvh4h" path="res://characters/playable/mark/resources/sprites/jump/jump_04.png" id="25_bqngl"]
+[ext_resource type="Texture2D" uid="uid://b0qa0q2u7tr41" path="res://characters/playable/mark/resources/sprites/hurt/hurt_high.png" id="27_fdxwh"]
+[ext_resource type="Texture2D" uid="uid://dhblfqugdeu4t" path="res://characters/playable/mark/resources/sprites/hurt/hurt_mid.png" id="28_niptm"]
+[ext_resource type="Texture2D" uid="uid://ddjcpnws1gsmv" path="res://characters/playable/mark/resources/sprites/knock_out/knockout_00.png" id="29_i7rbs"]
+[ext_resource type="Texture2D" uid="uid://1uwp2etvyg6e" path="res://characters/playable/mark/resources/sprites/knock_out/knockout_01.png" id="30_h1a1i"]
+[ext_resource type="Texture2D" uid="uid://bolbi7at867a8" path="res://characters/playable/mark/resources/sprites/knock_out/knockout_05.png" id="30_hd20p"]
+[ext_resource type="Texture2D" uid="uid://pyltrlmn6x4y" path="res://characters/playable/mark/resources/sprites/knock_out/knockout_02.png" id="31_jaglq"]
+[ext_resource type="Texture2D" uid="uid://clrj6n6pjjyc0" path="res://characters/playable/mark/resources/sprites/knock_out/knockout_03.png" id="32_2hkrc"]
+[ext_resource type="Texture2D" uid="uid://xl2tcxqk1ypt" path="res://characters/playable/mark/resources/sprites/knock_out/knockout_04.png" id="33_j15rn"]
+[ext_resource type="Texture2D" uid="uid://b7xxkoor72ttv" path="res://characters/playable/mark/resources/sprites/turn_around/turnaround_00.png" id="50_dcevi"]
+[ext_resource type="Texture2D" uid="uid://cbtva10p7r22x" path="res://characters/playable/mark/resources/sprites/turn_around/turnaround_01.png" id="51_5s74y"]
+[ext_resource type="Texture2D" uid="uid://du41gegc3hry2" path="res://characters/playable/mark/resources/sprites/turn_around/turnaround_02.png" id="52_xtm6s"]
 
 [resource]
 animations = [{
@@ -188,6 +188,20 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": ExtResource("30_hd20p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_5taik")
+}, {
+"duration": 1.0,
+"texture": ExtResource("1_wrqq6")
+}],
+"loop": false,
+"name": &"getting_up",
+"speed": 24.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": ExtResource("27_fdxwh")
 }],
 "loop": true,
@@ -290,21 +304,15 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("24_5taik")
+"texture": ExtResource("22_c167v")
 }, {
 "duration": 1.0,
 "texture": ExtResource("24_5taik")
 }, {
 "duration": 1.0,
-"texture": ExtResource("24_5taik")
-}, {
-"duration": 1.0,
-"texture": ExtResource("23_trcrx")
-}, {
-"duration": 1.0,
-"texture": ExtResource("23_trcrx")
+"texture": ExtResource("1_wrqq6")
 }],
-"loop": true,
+"loop": false,
 "name": &"landing",
 "speed": 24.0
 }, {

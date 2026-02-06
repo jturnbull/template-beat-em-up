@@ -1,13 +1,16 @@
 [gd_scene load_steps=2 format=3 uid="uid://bkfvltx0n6b8y"]
 
-[ext_resource type="Script" path="res://addons/quiver.beat_em_up/characters/quiver_character_skin_anim_tree.gd" id="1_nsabc"]
+[ext_resource type="Script" uid="uid://bunq4x4s3shn4" path="res://addons/quiver.beat_em_up/characters/quiver_character_skin_anim_tree.gd" id="1_nsabc"]
 
 [node name="CharacterSkinBase" type="Node2D"]
 script = ExtResource("1_nsabc")
-has_grab = false
-has_grabbed = false
+_has_grab = true
+_path_grab_pivot = NodePath("Positions/GrabPivot")
+_has_grabbed = true
+_path_grabbed_pivot = NodePath("Positions/GrabbedPivot")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
+active = false
 anim_player = NodePath("../AnimationPlayer")

@@ -1,11 +1,11 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=10 format=3 uid="uid://dkhr6tjbcdth7"]
 
-[ext_resource type="Script" path="res://stages/_base/base_stage.gd" id="1_l8sat"]
-[ext_resource type="PackedScene" uid="uid://dh6fu713n16kn" path="res://characters/playable/chad/chad.tscn" id="15_n533k"]
+[ext_resource type="Script" uid="uid://d1m0ydw6lcyns" path="res://stages/_base/base_stage.gd" id="1_l8sat"]
 [ext_resource type="PackedScene" path="res://characters/playable/mark/mark.tscn" id="15_mark"]
+[ext_resource type="PackedScene" uid="uid://dh6fu713n16kn" path="res://characters/playable/chad/chad.tscn" id="15_n533k"]
 [ext_resource type="PackedScene" uid="uid://dqfbpjbn74cn2" path="res://addons/quiver.beat_em_up/utilities/custom_nodes/level_camera/quiver_level_camera.tscn" id="16_hjekt"]
 [ext_resource type="Theme" uid="uid://cdal82kcse624" path="res://ui/_base/theme_debug.tres" id="22_p6usr"]
-[ext_resource type="Script" path="res://addons/quiver.beat_em_up/utilities/custom_nodes/quiver_version_label.gd" id="23_d32wv"]
+[ext_resource type="Script" uid="uid://doo05vuah73e4" path="res://addons/quiver.beat_em_up/utilities/custom_nodes/quiver_version_label.gd" id="23_d32wv"]
 [ext_resource type="PackedScene" uid="uid://d3s26tp72j41g" path="res://ui/gameplay_hud/player_hud.tscn" id="24_l458o"]
 [ext_resource type="PackedScene" path="res://ui/pause_menu/pause_menu.tscn" id="25_acd3u"]
 [ext_resource type="PackedScene" uid="uid://c4l1tfqymlsbi" path="res://ui/end_screen/end_screen.tscn" id="26_nk1mq"]
@@ -31,14 +31,14 @@ y_sort_enabled = true
 position = Vector2(536, 827)
 input_action_prefix = "p1"
 
-[node name="Player2" parent="Level/Characters" instance=ExtResource("15_mark")]
-position = Vector2(636, 827)
-input_action_prefix = "p2"
-
 [node name="LevelCamera" parent="Level/Characters/Chad" instance=ExtResource("16_hjekt")]
 limit_top = -280
 limit_bottom = 1200
 editor_draw_limits = true
+
+[node name="Player2" parent="Level/Characters" instance=ExtResource("15_mark")]
+position = Vector2(636, 827)
+input_action_prefix = "p2"
 
 [node name="Objects" type="Node2D" parent="Level"]
 y_sort_enabled = true
@@ -70,14 +70,10 @@ script = ExtResource("23_d32wv")
 [node name="PlayerHud" parent="HudLayer" instance=ExtResource("24_l458o")]
 
 [node name="PlayerHudP2" parent="HudLayer" instance=ExtResource("24_l458o")]
-anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 1.0
 offset_left = 46.0
-offset_top = 30.0
 offset_right = -50.0
-offset_bottom = 158.0
-metadata/_edit_use_custom_anchors = true
 
 [node name="PauseMenu" parent="HudLayer" instance=ExtResource("25_acd3u")]
 

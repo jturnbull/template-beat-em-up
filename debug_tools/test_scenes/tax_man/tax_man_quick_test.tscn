@@ -1,9 +1,9 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=10 format=3 uid="uid://dbeebue806n2y"]
 
-[ext_resource type="Script" path="res://debug_tools/test_scenes/base_test.gd" id="1_dv3in"]
+[ext_resource type="Script" uid="uid://bedikfshbg86t" path="res://debug_tools/test_scenes/base_test.gd" id="1_dv3in"]
 [ext_resource type="PackedScene" uid="uid://dwgxqe6h48x4e" path="res://characters/enemies/tax_man/tax_man.tscn" id="2_01cry"]
 [ext_resource type="PackedScene" uid="uid://dh6fu713n16kn" path="res://characters/playable/chad/chad.tscn" id="3_hxscm"]
-[ext_resource type="Script" path="res://addons/quiver.beat_em_up/utilities/custom_nodes/quiver_version_label.gd" id="4_yu1bl"]
+[ext_resource type="Script" uid="uid://doo05vuah73e4" path="res://addons/quiver.beat_em_up/utilities/custom_nodes/quiver_version_label.gd" id="4_yu1bl"]
 [ext_resource type="PackedScene" path="res://ui/pause_menu/pause_menu.tscn" id="5_6me1s"]
 [ext_resource type="PackedScene" uid="uid://d3s26tp72j41g" path="res://ui/gameplay_hud/player_hud.tscn" id="6_rrjee"]
 
@@ -69,15 +69,6 @@ _weights_by_child = {
 "ComboAttack": 0.608845,
 "DashAttack": 1.49911
 }
-
-[node name="StateMachine" parent="Characters/TaxMan/DebugLabels" index="0"]
-layout_mode = 2
-
-[node name="AiStateMachine" parent="Characters/TaxMan/DebugLabels" index="1"]
-layout_mode = 2
-
-[node name="Wait" parent="Characters/TaxMan/DebugLabels" index="2"]
-layout_mode = 2
 
 [node name="Chad" parent="Characters" instance=ExtResource("3_hxscm")]
 position = Vector2(1041, 688)

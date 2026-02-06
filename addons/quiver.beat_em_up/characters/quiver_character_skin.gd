@@ -91,6 +91,9 @@ func _ready() -> void:
 	if Engine.is_editor_hint():
 		_in_editor_ready()
 	elif QuiverEditorHelper.is_standalone_run(self):
+		# Standalone runs (Run Current Scene) still need runtime initialization
+		# so AnimationTree-driven skins can play.
+		_runtime_ready()
 		_standalone_run_ready()
 	else:
 		_runtime_ready()

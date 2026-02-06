@@ -48,7 +48,7 @@ def parse_args() -> argparse.Namespace:
         help="Append a preset constraint block to the prompt",
     )
     parser.add_argument("--constraints", default=None, help="Append custom constraints to the prompt")
-    parser.add_argument("--output-dir", default="outputs/fal/video", help="Output directory")
+    parser.add_argument("--output-dir", default="outputs/reskin/_tmp/videos", help="Output directory")
     parser.add_argument("--no-download", action="store_true", help="Skip downloading video")
     parser.add_argument("--max-bytes", type=int, default=MAX_UPLOAD_BYTES, help="Max upload size in bytes")
     parser.add_argument("--max-dim", type=int, default=DEFAULT_MAX_DIM, help="Resize max dimension if too large")
@@ -61,16 +61,9 @@ def download_file(url: str, dest: Path) -> None:
     with urllib.request.urlopen(url) as response:
         dest.write_bytes(response.read())
 
-
-def backup_existing(path: Path) -> None:
-    if not path.exists():
-        return
-    timestamp = time.strftime("%Y%m%d_%H%M%S")
-    backup = path.with_name(f"{path.stem}_prev_{timestamp}{path.suffix}")
-    path.rename(backup)
-
-
 def open_folder(path: Path) -> None:
+    if os.environ.get("RESKIN_BATCH") == "1":
+        return
     subprocess.run(["open", str(path)], check=True)
 
 
@@ -190,7 +183,11 @@ def main() -> int:
             if not args.no_download:
                 out_dir = Path(args.output_dir)
                 out_path = out_dir / f"{image_path.stem}.mp4"
-                backup_existing(out_path)
+                if out_path.exists():
+                    raise SystemExit(
+                        f"Refusing to overwrite existing output: {out_path}\n"
+                        "Choose a fresh --output-dir (recommended: a new timestamped folder)."
+                    )
                 download_file(url, out_path)
                 print(f"Saved {out_path}")
                 open_folder(out_dir)

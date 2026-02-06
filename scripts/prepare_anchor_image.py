@@ -126,22 +126,22 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--input",
-        default="outputs/fal/idle_00/option_1.png",
-        help="Source image (default: outputs/fal/idle_00/option_1.png)",
+        required=True,
+        help="Source image (one of the generated base options)",
     )
     parser.add_argument(
         "--match",
-        default="characters/enemies/sargent/resources/sprites/idle/idle_00.png",
-        help="Reference sprite for size + baseline (default: Sargent idle)",
+        required=True,
+        help="Reference sprite for size + baseline (the character's existing idle frame)",
     )
     parser.add_argument(
         "--output",
-        default="outputs/fal/idle_00/sargent_anchor_base.png",
+        required=True,
         help="Output path for base anchor (no border)",
     )
     parser.add_argument(
         "--framed-output",
-        default="outputs/fal/idle_00/sargent_anchor_framed.png",
+        required=True,
         help="Output path for framed anchor (with border)",
     )
     parser.add_argument("--bg", default="#00b140", help="Background fill color")
@@ -149,6 +149,18 @@ def main() -> int:
     parser.add_argument("--border-color", default="#ffffff", help="Border color for framed output")
     parser.add_argument("--border-thickness", type=int, default=2, help="Border thickness in px")
     parser.add_argument("--scale-mult", type=float, default=1.0, help="Scale multiplier")
+    parser.add_argument(
+        "--bbox-pad-pct",
+        type=float,
+        default=0.0,
+        help="Extra padding around the visible bbox (percent of bbox size)",
+    )
+    parser.add_argument(
+        "--bbox-pad-px",
+        type=int,
+        default=0,
+        help="Extra padding around the visible bbox (pixels)",
+    )
     args = parser.parse_args()
 
     input_path = Path(args.input)
@@ -181,7 +193,16 @@ def main() -> int:
     src_bbox = src.getbbox()
     if not src_bbox:
         raise SystemExit("No visible pixels found in input image.")
-    src = src.crop(src_bbox)
+    left, top, right, bottom = src_bbox
+    bbox_w = right - left
+    bbox_h = bottom - top
+    pad_x = int(round(bbox_w * float(args.bbox_pad_pct))) + int(args.bbox_pad_px)
+    pad_y = int(round(bbox_h * float(args.bbox_pad_pct))) + int(args.bbox_pad_px)
+    left = max(0, left - pad_x)
+    top = max(0, top - pad_y)
+    right = min(src.width, right + pad_x)
+    bottom = min(src.height, bottom + pad_y)
+    src = src.crop((left, top, right, bottom))
     scale_factor = (match_visible_h / src.height) * float(args.scale_mult)
     new_w = max(1, int(round(src.width * scale_factor)))
     new_h = max(1, int(round(src.height * scale_factor)))
@@ -215,7 +236,8 @@ def main() -> int:
         framed.save(framed_path)
         print(f"Saved framed anchor: {framed_path}")
 
-    subprocess.run(["open", str(output_path.parent)], check=True)
+    if os.environ.get("RESKIN_BATCH") != "1":
+        subprocess.run(["open", str(output_path.parent)], check=True)
     return 0
 
 

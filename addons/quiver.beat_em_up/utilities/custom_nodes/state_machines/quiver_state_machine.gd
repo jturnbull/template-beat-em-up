@@ -64,15 +64,21 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if state == null:
+		return
 	if should_process_input:
 		state.unhandled_input(event)
 
 
 func _process(delta: float) -> void:
+	if state == null:
+		return
 	state.process(delta)
 
 
 func _physics_process(delta: float) -> void:
+	if state == null:
+		return
 	state.physics_process(delta)
 
 
@@ -93,6 +99,10 @@ func _get_configuration_warnings() -> PackedStringArray:
 ## dictionary to be passed to the [method QuiverState.enter] method of the new state.[br]
 ## Note that the [NodePath] passed in must be relative to the StateMachine node.
 func transition_to(target_state_path: NodePath, msg: = {}) -> void:
+	if state == null:
+		push_error("Could not transition state machine before initial state is ready.")
+		return
+	
 	if not has_node(target_state_path):
 		push_error("Could not find state in path: %s"%[target_state_path])
 		return

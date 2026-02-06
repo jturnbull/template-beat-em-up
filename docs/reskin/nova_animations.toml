@@ -1,19 +1,22 @@
 [global]
+# Task used to generate the initial idle still (4 options) via fal_reskin_generate.py.
+base_task = "docs/reskin/tasks/characters/playable/nova/idle/idle_00.md"
 # Base anchor still (greenscreen) used for all animations.
-anchor_image = "outputs/fal/idle_00/nova_anchor_base.png"
+anchor_image = "outputs/reskin/nova/anchor/anchor_base.png"
+# Framed anchor used for video seeding (has 2px white border).
+anchor_framed = "outputs/reskin/nova/anchor/anchor_framed.png"
 # Scale reference used to compute a single scale factor for all frames.
-scale_ref = "outputs/fal/idle_00/nova_anchor_base.png"
+scale_ref = "outputs/reskin/nova/anchor/anchor_base.png"
 # Defaults
 resolution = "1080p"
 negative = "blurry, cropped, background, watermark, extra limbs, multiple characters"
 extract_fps = 6
-bg_remove = true
 contact_cols = 10
 contact_scale = 1
 # Where to write extracted frames
-frames_dir = "outputs/fal/frames/nova"
-video_dir = "outputs/fal/video/nova"
-padded_dir = "outputs/fal/padded/nova"
+frames_dir = "outputs/reskin/nova/frames"
+video_dir = "outputs/reskin/nova/videos"
+padded_dir = "outputs/reskin/nova/seeds"
 # Global prompt constraints appended to every animation prompt
 constraints = "side-view 2D sprite, no camera movement, no zoom, solid #00b140 background, keep character centered within the bordered frame and never cross the white border"
 # Greenscreen pad color for per-animation canvas padding
@@ -140,7 +143,6 @@ prompt_variations = [
 ]
 duration = 5
 frame_count = 4
-pad_top_pct = 0.5
 frame_indices = "6,7,8,10"
 prefix = "jump_"
 output_start = 1
@@ -160,7 +162,6 @@ extract_fps = 24
 extract_start = "00:01"
 extract_end = "00:03"
 frame_count = 2
-pad_top_pct = 0.25
 prefix = "air_attack_"
 frame_indices = "24,28"
 output_start = 0
@@ -213,8 +214,6 @@ prompt_variations = [
 duration = 5
 frame_count = 4
 frame_indices = "9,12,13,14"
-pad_top_pct = 0.5
-pad_right_pct = 0.15
 prefix = "punch3_"
 output_start = 0
 dest_dir = "characters/playable/chad/resources/sprites/punches"
@@ -232,7 +231,6 @@ duration = 3
 frame_count = 6
 end_image = "none"
 frame_indices = "6,8,9,10,12,16"
-pad_left_pct = 0.3
 prefix = "knockout_"
 output_start = 0
 dest_dir = "characters/playable/chad/resources/sprites/knock_out"

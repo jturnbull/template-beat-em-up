@@ -130,24 +130,25 @@ The reskin is “complete” when:
 
 ---
 
-## New Video‑First Workflow (Updated Plan)
+## New Video‑First Workflow (Current)
+
+The exact, up-to-date command flow lives in:
+- `docs/reskin/SPRITE_PIPELINE.md`
+- `python3 scripts/reskin_interactive.py` (recommended entrypoint)
 
 ### A) Base Still (Anchor Pose)
-- Generate a **single idle** on a flat, greenscreen background (`#00b140`).
-- Requirements:
-  - side‑view
-  - feet on ground
-  - **not flying**
-  - clean silhouette
-  - consistent proportions
-  - 4:5 aspect ratio
+- Generate **4 idle options**, choose 1, then build the anchor:
+  - solid greenscreen `#00b140`
+  - fixed canvas size + baseline that matches the existing sprite (`global.frame_guide_match`)
+  - 2px white border frame guide (constrains the video model)
 
 ### B) Video Generation (Moves)
-- Use `fal-ai/wan/v2.6/image-to-video` with the base still as `image_url`.
+- Use `fal-ai/kling-video/o1/image-to-video` seeded from the **framed anchor**.
 - Prompt should include:
   - “same outfit/proportions/lighting”
   - “no camera movement, no zoom”
-  - “start and end in matching pose” (for loops)
+  - “start and end in matching pose” (for loops) (we often pass the same image for start+end)
+  - “keep character centered within the bordered frame and never cross the white border”
   - **Workaround language to keep in‑place motion**:
     - “treadmill walk in place” for walk
     - “pivot/turn in place” for turn

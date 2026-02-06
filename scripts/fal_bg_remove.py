@@ -18,7 +18,7 @@ POLL_SECONDS = 2.0
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", required=True, help="Image file or directory")
-    parser.add_argument("--output-dir", default="outputs/fal/bg_removed", help="Output directory")
+    parser.add_argument("--output-dir", default="outputs/reskin/_tmp/bg_removed", help="Output directory")
     parser.add_argument("--no-download", action="store_true", help="Skip downloading images")
     parser.add_argument("--max-inflight", type=int, default=10, help="Max concurrent Fal requests")
     parser.add_argument("--poll", type=float, default=POLL_SECONDS, help="Polling interval seconds")
@@ -38,6 +38,8 @@ def iter_images(path: Path) -> list[Path]:
 
 
 def open_folder(path: Path) -> None:
+    if os.environ.get("RESKIN_BATCH") == "1":
+        return
     subprocess.run(["open", str(path)], check=True)
 
 

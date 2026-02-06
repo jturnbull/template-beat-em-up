@@ -1,119 +1,66 @@
-# AI Generation Workflow (fal.ai)
+# AI Workflow (fal.ai) — This Repo
 
-This workflow standardizes how we generate and evaluate assets using fal.ai. It is image‑only (no video models).
+This repo uses fal.ai for:
+- image generation (base idle stills)
+- video generation (animation clips)
+- background removal (selected frames only)
 
-## Inputs
-- Task file for each sprite (`docs/reskin/tasks/...`).
-- Art bible (palette, lighting, silhouette rules).
-- Reference images for pose + scale.
+Rules:
+- **Never** commit API keys. Use `FAL_KEY` in your environment.
+- This is a **one-off pipeline** for this game; scripts are opinionated and strict.
 
-## Script Integration (fal_api_service.py)
-You mentioned `fal_api_service.py` from another project (contains keys + concepts). Once provided (with keys removed), we’ll:
-- Extract the request structure and parameter fields.
-- Standardize prompts, negative prompts, seed handling.
-- Add a “task → batch generation” helper.
+---
 
-**Important:** Do not commit API keys into this repo.
+## Primary Entry Point
 
-## Local Helper Script
-We now have a local, image‑only helper:
-- `scripts/fal_reskin_generate.py`
-
-Example usage:
+Use the interactive wizard:
 ```bash
-FAL_KEY=... python3 scripts/fal_reskin_generate.py \\
-  --task docs/reskin/tasks/characters/playable/chad/idle/idle_00.md \\
-  --prompt \"[your prompt]\" \\
-  --negative \"[your negative]\" \\
-  --model fal-ai/flux-pulid \\
-  --num-images 3 \\
-  --ref /path/to/style_ref_01.png \\
-  --ref /path/to/style_ref_02.png \\
-  --download
+python3 scripts/reskin_interactive.py
 ```
 
-## Video Generation (kling-video v2.6)
-Helper script:
-- `scripts/fal_video_generate.py`
+It drives the full pipeline described in `docs/reskin/SPRITE_PIPELINE.md`.
 
-Example:
-```bash
-FAL_KEY=... python3 scripts/fal_video_generate.py \
-  --image outputs/fal/idle_anchor/option_1.png \
-  --prompt \"Nova performs a grounded idle with slight motion, same outfit/proportions/lighting, no camera movement, solid #00b140 background\" \
-  --negative \"low resolution, error, worst quality, low quality, defects\" \
-  --resolution 1080p \
-  --duration 5
+---
+
+## Helper Scripts (Internal Building Blocks)
+
+### 1) Generate base stills (nano-banana edit)
+Script: `scripts/fal_reskin_generate.py`
+
+- Reads `Source:`, `- Model:`, and `Reference Images:` from the task file.
+- Writes `option_1.png`..`option_4.png` into a fresh output folder.
+- To use a cheaper/non-pro model, set `- Model: fal-ai/nano-banana/edit` in the task (or pass `--model ...` to override).
+
+### 2) Build the anchor (solid greenscreen + border)
+Script: `scripts/prepare_anchor_image.py`
+
+- Uses `fal-ai/bria/background/remove` to get a clean cutout.
+- Composites onto a solid `#00b140` background.
+- Adds a 2px white border frame guide.
+- Matches canvas size + baseline to `global.frame_guide_match`.
+
+### 3) Generate videos (kling)
+Script: `scripts/fal_video_generate.py`
+
+Model: `fal-ai/kling-video/o1/image-to-video`
+
+- Always sets `generate_audio=false`.
+- Writes `.mp4` files into the given output dir.
+
+### 4) Remove background (bria)
+Script: `scripts/fal_bg_remove.py`
+
+Model: `fal-ai/bria/background/remove`
+
+- Used during `--apply-sprites` to BG-remove **only selected frames**.
+
+---
+
+## Batch Mode (No Finder Spam)
+
+When scripts are run from batch drivers (like `scripts/nova_batch.py` / `scripts/reskin_interactive.py`),
+we set:
 ```
-
-Note: this model does not expose fps control; extract fewer frames with ffmpeg to match target frame counts.
-
-## Batch Config Workflow (Nova)
-Config:
-- `docs/reskin/nova_animations.toml`
-
-Runner:
-- `scripts/nova_batch.py`
-
-Example (walk only):
-```bash
-FAL_KEY=... python3 scripts/nova_batch.py --only walk --apply-sprites
+RESKIN_BATCH=1
 ```
-
-## Background Removal (bria)
-Helper script:
-- `scripts/fal_bg_remove.py`
-
-Example:
-```bash
-FAL_KEY=... python3 scripts/fal_bg_remove.py \
-  --input outputs/fal/frames/idle \
-  --output-dir outputs/fal/frames/idle_no_bg
-```
-
-You can also pass a folder of reference images:
-```bash
-FAL_KEY=... python3 scripts/fal_reskin_generate.py \\
-  --task docs/reskin/tasks/characters/playable/chad/idle/idle_00.md \\
-  --prompt \"[your prompt]\" \\
-  --ref-dir /path/to/reference_set \\
-  --download
-```
-
-## Example: nano-banana-pro/edit
-```bash
-FAL_KEY=... python3 scripts/fal_reskin_generate.py \\
-  --task docs/reskin/tasks/characters/playable/chad/idle/idle_00.md \\
-  --prompt \"Nova grounded idle pose, not flying\" \\
-  --model fal-ai/nano-banana-pro/edit \\
-  --aspect-ratio auto \\
-  --resolution 4K \\
-  --num-images 1 \\
-  --ref source_images/AIP_Nova.png \\
-  --ref source_images/AIP_Nova_pose2.jpg \\
-  --download
-```
-
-## Prompt Template
-- Prompt: `"[subject], side‑view 2D sprite, [style], clean silhouette, consistent lighting, transparent PNG"`
-- Negative: `"blurry, cropped, background, watermark, extra limbs"`
-
-## Consistency Rules
-- **Pixel size must match** the existing sprite file.
-- **Ground line alignment** must match the original.
-- Use the **same seed family** for related frames.
-
-## Review Flow
-- Generate 3–5 variants.
-- Compare in‑engine or as strips.
-- Select best option and record metadata in the task file.
-
-## Metadata to Record
-- Model
-- Prompt + negative
-- Seed(s)
-- CFG/Guidance
-- Reference images used
-
-## Notes
-- This workflow intentionally excludes video generation.
+Helper scripts check this flag and skip `open ...` calls to avoid opening dozens of Finder windows.

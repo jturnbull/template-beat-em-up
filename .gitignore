@@ -55,3 +55,8 @@ export_project.sh
 .DS_Store
 .venv/
 outputs/
+__pycache__/
+*.pyc
+
+# Generated composites (flatten scripts)
+tmp/flattened/

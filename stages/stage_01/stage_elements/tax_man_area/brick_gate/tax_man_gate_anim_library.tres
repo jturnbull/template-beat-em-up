@@ -561,9 +561,9 @@ tracks/8/keys = {
 
 [resource]
 _data = {
-"RESET": SubResource("Animation_ronrm"),
-"closed": SubResource("Animation_agk5i"),
-"open_player_on_left": SubResource("Animation_kg3a3"),
-"open_player_on_right": SubResource("Animation_l2ctp"),
-"opening": SubResource("Animation_ih7cx")
+&"RESET": SubResource("Animation_ronrm"),
+&"closed": SubResource("Animation_agk5i"),
+&"open_player_on_left": SubResource("Animation_kg3a3"),
+&"open_player_on_right": SubResource("Animation_l2ctp"),
+&"opening": SubResource("Animation_ih7cx")
 }

@@ -1,8 +1,8 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=8 format=3 uid="uid://cisd4k86x38yn"]
 
 [ext_resource type="PackedScene" uid="uid://dwgxqe6h48x4e" path="res://characters/enemies/tax_man/tax_man.tscn" id="1_fg64k"]
 [ext_resource type="PackedScene" uid="uid://dh6fu713n16kn" path="res://characters/playable/chad/chad.tscn" id="2_8d3gw"]
-[ext_resource type="Script" path="res://addons/quiver.beat_em_up/utilities/custom_nodes/quiver_version_label.gd" id="3_avtoo"]
+[ext_resource type="Script" uid="uid://doo05vuah73e4" path="res://addons/quiver.beat_em_up/utilities/custom_nodes/quiver_version_label.gd" id="3_avtoo"]
 [ext_resource type="PackedScene" path="res://ui/pause_menu/pause_menu.tscn" id="5_638rv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ebte6"]
@@ -69,7 +69,7 @@ _weights_by_child = {
 
 [node name="ChooseRandomAttack" parent="Characters/TaxMan/AiStateMachine/Phase3" index="1"]
 _weights_by_child = {
-"AreaAttack": 0.999999,
+"AreaAttack": 0.999998,
 "ComboAttack": 0.0298333,
 "DashAttack": 1.97017
 }

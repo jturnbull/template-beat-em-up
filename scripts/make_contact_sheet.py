@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import math
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -65,7 +66,8 @@ def main() -> int:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     sheet.save(output_path)
     print(f"Wrote {output_path}")
-    subprocess.run(["open", str(output_path.parent)], check=True)
+    if os.environ.get("RESKIN_BATCH") != "1":
+        subprocess.run(["open", str(output_path.parent)], check=True)
     return 0
 
 
