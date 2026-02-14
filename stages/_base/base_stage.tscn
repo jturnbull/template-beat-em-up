@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://dkhr6tjbcdth7"]
 
 [ext_resource type="Script" uid="uid://d1m0ydw6lcyns" path="res://stages/_base/base_stage.gd" id="1_l8sat"]
-[ext_resource type="PackedScene" path="res://characters/playable/mark/mark.tscn" id="15_mark"]
+[ext_resource type="PackedScene" uid="uid://dbnqd167o80uj" path="res://characters/playable/mark/mark.tscn" id="15_mark"]
 [ext_resource type="PackedScene" uid="uid://dh6fu713n16kn" path="res://characters/playable/chad/chad.tscn" id="15_n533k"]
 [ext_resource type="PackedScene" uid="uid://dqfbpjbn74cn2" path="res://addons/quiver.beat_em_up/utilities/custom_nodes/level_camera/quiver_level_camera.tscn" id="16_hjekt"]
 [ext_resource type="Theme" uid="uid://cdal82kcse624" path="res://ui/_base/theme_debug.tres" id="22_p6usr"]

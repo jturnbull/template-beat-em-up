@@ -515,3 +515,4 @@ Generated task files for every sprite/background/title asset.
 - docs/reskin/tasks/title/main_menu/pngs/paint_spray.md
 - docs/reskin/tasks/title/main_menu/pngs/sarge.md
 - docs/reskin/tasks/title/main_menu/pngs/tax_man.md
+- docs/reskin/tasks/backgrounds/stage_01/combined/spaceport_props_spritesheet.md

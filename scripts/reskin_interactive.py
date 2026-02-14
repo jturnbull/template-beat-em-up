@@ -31,6 +31,42 @@ import tomllib
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
+TAXMAN_PICK_META = {
+    "idle": {"playground": "I", "state": "Ground/Move/IdleAi", "outline": "looped idle stance"},
+    "walk": {"playground": "W", "state": "Ground/Move/Follow", "outline": "in-place walk cycle"},
+    "turn": {"playground": "turn inside walk", "state": "Ground/Move/Follow", "outline": "pivot during follow/turn"},
+    "hurt_light": {"playground": "H (damage-driven)", "state": "Ground/Hurt", "outline": "light flinch frame"},
+    "hurt_medium": {"playground": "H (damage-driven)", "state": "Ground/Hurt", "outline": "medium flinch frame"},
+    "hurt_knockout": {"playground": "H (damage-driven)", "state": "Ground/Hurt", "outline": "knockout impact frame"},
+    "attack_retaliate": {"playground": "4", "state": "Ground/AttackRetaliate", "outline": "single retaliate slash sequence"},
+    "attack_combo": {"playground": "2", "state": "Ground/AttackCombo", "outline": "multi-hit combo sequence"},
+    "attack_dash_begin": {
+        "playground": "5 (state) / 3 (combined)",
+        "state": "Ground/AttackDash",
+        "outline": "dash startup + acceleration",
+    },
+    "attack_dash_end": {
+        "playground": "6 (state) / 3 (combined)",
+        "state": "Ground/AttackDash",
+        "outline": "dash hit/recovery phase",
+    },
+    "attack_area_body": {
+        "playground": "1",
+        "state": "Ground/AttackArea",
+        "outline": "BODY clip only; engine layers lightning/ground/smoke/explosion VFX",
+    },
+    "death_explosion_body": {
+        "playground": "D",
+        "state": "DieAi",
+        "outline": "BODY clip only; engine layers death VFX/smoke/explosions",
+    },
+    "seated_engage": {"playground": "E (state)", "state": "Seated", "outline": "seated engage beat"},
+    "seated_laugh": {"playground": "L (state)", "state": "Seated", "outline": "seated laugh beat"},
+    "seated_drink": {"playground": "R (state)", "state": "Seated", "outline": "seated goblet drink beat"},
+    "seated_swirl": {"playground": "S (state)", "state": "Seated", "outline": "seated goblet swirl beat"},
+}
+
+
 def prompt(text: str, default: str | None = None) -> str:
     if default is None:
         return input(f"{text} ").strip()
@@ -96,6 +132,79 @@ def find_animation_names(config: dict) -> list[str]:
         if name:
             names.append(name)
     return names
+
+
+def output_target_label(anim: dict, default_width: int = 2) -> str:
+    prefix = str(anim.get("prefix") or "").strip()
+    frame_count = int(anim.get("frame_count") or 0)
+    if bool(anim.get("single_frame", False)):
+        return prefix
+
+    output_indices = str(anim.get("output_indices") or "").strip()
+    if output_indices:
+        raw = [p.strip() for p in output_indices.split(",") if p.strip()]
+        if len(raw) <= 6:
+            return f"{prefix}{','.join(raw)}"
+        return f"{prefix}{raw[0]}..{raw[-1]} ({len(raw)} files)"
+
+    start = anim.get("output_start")
+    if start is None:
+        return "(missing output target)"
+    width = int(anim.get("output_width") or default_width)
+    end = int(start) + max(0, frame_count - 1)
+    return f"{prefix}{int(start):0{width}d}..{end:0{width}d}"
+
+
+def build_group_labels(config: dict, anim_names: list[str]) -> dict[str, list[str]]:
+    groups = config.get("consistency_groups", {})
+    if not isinstance(groups, dict) or not groups:
+        return {}
+    out: dict[str, list[str]] = {name: [] for name in anim_names}
+    for group_name, members in groups.items():
+        if not isinstance(members, list):
+            raise SystemExit(f"consistency_groups.{group_name} must be a list")
+        for raw_name in members:
+            name = str(raw_name).strip()
+            if not name:
+                continue
+            if name not in out:
+                raise SystemExit(
+                    f"consistency_groups.{group_name} has unknown animation: {name}"
+                )
+            out[name].append(str(group_name))
+    return out
+
+
+def apply_consistency_groups(chosen_names: list[str], anim_names: list[str], config: dict) -> list[str]:
+    """Expand selection so linked animations are always generated together."""
+    groups = config.get("consistency_groups", {})
+    if not isinstance(groups, dict) or not groups:
+        return chosen_names
+
+    chosen = set(chosen_names)
+    added: list[str] = []
+    for group_name, members in groups.items():
+        if not isinstance(members, list):
+            raise SystemExit(f"consistency_groups.{group_name} must be a list")
+        member_names = [str(m).strip() for m in members if str(m).strip()]
+        if not member_names:
+            continue
+        unknown = [m for m in member_names if m not in anim_names]
+        if unknown:
+            raise SystemExit(
+                f"consistency_groups.{group_name} has unknown animation(s): {', '.join(unknown)}"
+            )
+        intersects = any(m in chosen for m in member_names)
+        if intersects:
+            for m in member_names:
+                if m not in chosen:
+                    chosen.add(m)
+                    added.append(m)
+
+    if added:
+        print(f"Added linked animations for consistency: {', '.join(added)}")
+    # Preserve config animation ordering.
+    return [name for name in anim_names if name in chosen]
 
 
 def update_animation_string_field(toml_text: str, *, anim_name: str, key: str, value: str) -> str:
@@ -170,7 +279,7 @@ def main() -> int:
             shutil.move(str(legacy_fal), str(dest))
             print(f"Archived to {dest.relative_to(PROJECT_ROOT)}")
 
-    cfg_rel = prompt("Config path", "docs/reskin/mark_animations.toml")
+    cfg_rel = prompt("Config path", "docs/reskin/captain_snakeoil_animations.toml")
     cfg_path = _abs(cfg_rel)
     if not cfg_path.exists():
         raise SystemExit(f"Config not found: {cfg_path}")
@@ -178,6 +287,7 @@ def main() -> int:
     cfg_text = read_text(cfg_path)
     cfg_data = tomllib.loads(cfg_text)
     global_cfg = cfg_data.get("global", {})
+    animations = cfg_data.get("animation", [])
     anim_names = find_animation_names(cfg_data)
     if not anim_names:
         raise SystemExit("Config has no [[animation]] entries.")
@@ -228,21 +338,29 @@ def main() -> int:
         print(f"Using existing anchor: {anchor_base_path.relative_to(PROJECT_ROOT)}")
     else:
         print("\nBase (idle) still:")
+        base_source_pad_pct = float(global_cfg.get("base_source_pad_pct") or 0.0)
+        base_source_pad_color = str(global_cfg.get("base_source_pad_color") or "#00b140").strip()
+        base_prompt_append = str(global_cfg.get("base_prompt_append") or "").strip()
         gen = prompt("Generate 4 new base options now? (y/n)", "y").lower().startswith("y")
         if gen:
             run_id = time.strftime("run_%Y%m%d_%H%M%S")
             run_root = base_root / run_id
+            base_cmd = [
+                "python3",
+                "scripts/fal_reskin_generate.py",
+                "--task",
+                str(base_task_path.relative_to(PROJECT_ROOT)),
+                "--output-dir",
+                str(run_root.relative_to(PROJECT_ROOT)),
+                "--num-images",
+                "4",
+            ]
+            if base_prompt_append:
+                base_cmd += ["--append-prompt", base_prompt_append]
+            if base_source_pad_pct > 0:
+                base_cmd += ["--pad-pct", str(base_source_pad_pct), "--pad-color", base_source_pad_color]
             run(
-                [
-                    "python3",
-                    "scripts/fal_reskin_generate.py",
-                    "--task",
-                    str(base_task_path.relative_to(PROJECT_ROOT)),
-                    "--output-dir",
-                    str(run_root.relative_to(PROJECT_ROOT)),
-                    "--num-images",
-                    "4",
-                ],
+                base_cmd,
                 batch=False,
             )
             options_dir = run_root / base_task_path.stem
@@ -270,8 +388,15 @@ def main() -> int:
 
         print("\nAnchor (solid greenscreen + border):")
         bbox_pad = str(global_cfg.get("anchor_bbox_pad_pct") or "0.08")
+        if base_source_pad_pct > 0:
+            # Source pre-padding already adds safety margin. Avoid shrinking twice.
+            bbox_pad = "0.0"
+            print("Source pre-padding is enabled; defaulting anchor bbox pad to 0.0 to avoid double-padding.")
         bbox_pad = prompt("Anchor bbox pad %", bbox_pad)
-        scale_mult = prompt("Anchor scale multiplier", "1.0")
+        scale_mult_default = str(global_cfg.get("anchor_scale_mult") or "1.0")
+        if base_source_pad_pct > 0:
+            scale_mult_default = "1.0"
+        scale_mult = prompt("Anchor scale multiplier", scale_mult_default)
 
         anchor_base_path.parent.mkdir(parents=True, exist_ok=True)
         run(
@@ -298,9 +423,30 @@ def main() -> int:
     # Animation selection -> writes global.active (required by this pipeline).
     active = [str(x) for x in global_cfg.get("active", []) if str(x).strip()]
     default_sel = ",".join(active) if active else "all"
+    group_labels = build_group_labels(cfg_data, anim_names)
+    anim_by_name = {
+        str(a.get("name") or "").strip(): a for a in animations if str(a.get("name") or "").strip()
+    }
+    is_taxman_reskin = "captain_snakeoil_animations.toml" in str(cfg_path)
+    default_output_width = int(global_cfg.get("output_width") or 2)
     print("\nAnimations:")
     for i, name in enumerate(anim_names, start=1):
-        print(f"  {i}) {name}")
+        anim = anim_by_name.get(name, {})
+        frame_count = int(anim.get("frame_count") or 0)
+        target = output_target_label(anim, default_output_width)
+        count_label = f"{frame_count}f" if frame_count > 0 else "?"
+        labels = group_labels.get(name, [])
+        extra_parts: list[str] = [count_label, f"-> {target}"]
+        if is_taxman_reskin and name in TAXMAN_PICK_META:
+            meta = TAXMAN_PICK_META[name]
+            extra_parts.append(f"key {meta['playground']}")
+            extra_parts.append(str(meta["state"]))
+        if labels:
+            extra_parts.append(f"group: {', '.join(labels)}")
+        extra = " | ".join(extra_parts)
+        print(f"  {i}) {name}  [{extra}]")
+        if is_taxman_reskin and name in TAXMAN_PICK_META:
+            print(f"      outline: {TAXMAN_PICK_META[name]['outline']}")
     raw_sel = prompt("Run which animations? (numbers comma or 'all')", "all" if not active else "keep")
     if raw_sel.strip().lower() == "keep":
         chosen_names = active
@@ -316,6 +462,8 @@ def main() -> int:
             if n < 1 or n > len(anim_names):
                 raise SystemExit("Selection out of range.")
             chosen_names.append(anim_names[n - 1])
+
+    chosen_names = apply_consistency_groups(chosen_names, anim_names, cfg_data)
 
     cfg_text = replace_active_block(cfg_text, chosen_names)
     write_text(cfg_path, cfg_text)
@@ -397,6 +545,21 @@ def main() -> int:
         print(f"Updated frame_indices in {cfg_path.relative_to(PROJECT_ROOT)}")
 
     if step in {1, 5}:
+        if is_taxman_reskin:
+            print("\nVideo picking targets:")
+            for name in chosen_names:
+                anim = anim_by_name.get(name, {})
+                frame_count = int(anim.get("frame_count") or 0)
+                target = output_target_label(anim, default_output_width)
+                meta = TAXMAN_PICK_META.get(name, {})
+                action = str(meta.get("state") or "?")
+                playground = str(meta.get("playground") or "-")
+                outline = str(meta.get("outline") or "")
+                print(
+                    f"  - {name}: {frame_count} frames -> {target} | playground {playground} | {action}"
+                )
+                if outline:
+                    print(f"      {outline}")
         run(["python3", "scripts/nova_batch.py", "--config", cfg_rel, "--make-videos"], batch=False)
         open_folder(video_dir)
     if step in {2, 5}:

@@ -9,6 +9,7 @@ anchor_framed = "outputs/reskin/mark/anchor/anchor_framed.png"
 scale_ref = "outputs/reskin/mark/anchor/anchor_base.png"
 # Defaults
 resolution = "1080p"
+video_variants = 4
 negative = "blurry, cropped, background, watermark, extra limbs, multiple characters"
 extract_fps = 12
 contact_cols = 10

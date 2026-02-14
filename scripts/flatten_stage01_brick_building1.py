@@ -6,6 +6,19 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from PIL import Image
+from PIL import ImageChops
+
+
+CANVAS_MIN_X = -798.0
+CANVAS_MIN_Y = -1122.0
+CANVAS_WIDTH = 1376
+CANVAS_HEIGHT = 1142
+
+BANNER_LOGO_PATH = Path("source_images/logos/camino.png")
+BANNER_BOX_WIDTH_PCT = 0.86
+BANNER_BOX_HEIGHT_PCT = 0.58
+BANNER_LOGO_SCALE = 0.75
+BANNER_LOGO_INNER_MARGIN_PCT = 0.90
 
 
 @dataclass(frozen=True)
@@ -207,7 +220,6 @@ def _build_ops() -> list[DrawOp]:
         )
     )
 
-    ops.extend(_quiver_repeater_ops_pipe())
     ops.extend(_quiver_repeater_ops_windows())
 
     ops.append(
@@ -257,27 +269,53 @@ def _build_ops() -> list[DrawOp]:
     return ops
 
 
-def _write_love_yourself_banner(out_path: Path) -> None:
+def _write_banner_logo(out_path: Path) -> None:
     love_base = Path(
         "stages/stage_01/stage_elements/buildings/signs/love_yourself/pngs/love_yourself_sign_base.png"
     )
-    love_lights_base = Path(
-        "stages/stage_01/stage_elements/buildings/signs/love_yourself/pngs/love_yourself_sign_lights_base.png"
-    )
     if not love_base.exists():
         raise SystemExit(f"Missing texture: {love_base}")
-    if not love_lights_base.exists():
-        raise SystemExit(f"Missing texture: {love_lights_base}")
-
-    base = Image.open(love_base).convert("RGBA")
-    lights_base = Image.open(love_lights_base).convert("RGBA")
-    if base.size != lights_base.size:
+    if not BANNER_LOGO_PATH.exists():
         raise SystemExit(
-            f"LoveYourself banner size mismatch: base={base.size}, lights_base={lights_base.size}."
+            "Missing banner logo.\n"
+            f"Expected: {BANNER_LOGO_PATH}\n"
+            "Save the provided CAMINO logo as a transparent PNG at that path."
         )
 
-    banner = base.copy()
-    banner.alpha_composite(lights_base)
+    base = Image.open(love_base).convert("RGBA")
+    sign_alpha = base.getchannel("A")
+
+    logo = Image.open(BANNER_LOGO_PATH).convert("RGBA")
+    logo_bbox = logo.getchannel("A").getbbox()
+    if logo_bbox is None:
+        raise SystemExit(f"Logo has no visible pixels: {BANNER_LOGO_PATH}")
+    logo_trimmed = logo.crop(logo_bbox)
+
+    banner = Image.new("RGBA", base.size, (0, 0, 0, 0))
+
+    panel_w = int(base.size[0] * BANNER_BOX_WIDTH_PCT)
+    panel_h = int(base.size[1] * BANNER_BOX_HEIGHT_PCT)
+    if panel_w <= 0 or panel_h <= 0:
+        raise SystemExit(f"Invalid panel size: {(panel_w, panel_h)}")
+    panel_x = (base.size[0] - panel_w) // 2
+    panel_y = (base.size[1] - panel_h) // 2
+    white_panel = Image.new("RGBA", (panel_w, panel_h), (255, 255, 255, 255))
+    banner.alpha_composite(white_panel, dest=(panel_x, panel_y))
+
+    fit_w = panel_w * BANNER_LOGO_INNER_MARGIN_PCT
+    fit_h = panel_h * BANNER_LOGO_INNER_MARGIN_PCT
+    scale = min(fit_w / logo_trimmed.size[0], fit_h / logo_trimmed.size[1]) * BANNER_LOGO_SCALE
+    if scale <= 0:
+        raise SystemExit(f"Invalid logo size: {logo_trimmed.size}")
+    target = (max(1, round(logo_trimmed.size[0] * scale)), max(1, round(logo_trimmed.size[1] * scale)))
+    logo_resized = logo_trimmed.resize(target, Image.LANCZOS)
+    logo_x = panel_x + (panel_w - target[0]) // 2
+    logo_y = panel_y + (panel_h - target[1]) // 2
+    banner.alpha_composite(logo_resized, dest=(logo_x, logo_y))
+
+    # Constrain the logo to the original sign silhouette (keeps drop-in transparency).
+    merged_alpha = ImageChops.multiply(banner.getchannel("A"), sign_alpha)
+    banner.putalpha(merged_alpha)
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     banner.save(out_path)
@@ -342,22 +380,33 @@ def main() -> int:
     ops = _build_ops()
 
     min_x, min_y, max_x, max_y = _draw_ops_bounds(ops)
-    out_w = int((max_x - min_x) + 0.999999)
-    out_h = int((max_y - min_y) + 0.999999)
+    fixed_min_x = CANVAS_MIN_X
+    fixed_min_y = CANVAS_MIN_Y
+    fixed_max_x = fixed_min_x + CANVAS_WIDTH
+    fixed_max_y = fixed_min_y + CANVAS_HEIGHT
+    if min_x < fixed_min_x - 0.001 or min_y < fixed_min_y - 0.001 or max_x > fixed_max_x + 0.001 or max_y > fixed_max_y + 0.001:
+        raise SystemExit(
+            "Unexpected ops bounds after flattening.\n"
+            f"Computed bounds: min=({min_x:.3f},{min_y:.3f}) max=({max_x:.3f},{max_y:.3f})\n"
+            f"Fixed canvas:   min=({fixed_min_x:.3f},{fixed_min_y:.3f}) max=({fixed_max_x:.3f},{fixed_max_y:.3f})"
+        )
+    out_w = CANVAS_WIDTH
+    out_h = CANVAS_HEIGHT
+    min_x = fixed_min_x
+    min_y = fixed_min_y
 
     out_dir = Path("tmp/flattened")
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / "brick_building1_shop_body.png"
     manifest_path = out_dir / "brick_building1_shop_body_manifest.json"
-    banner_path = out_dir / "brick_building1_banner_love_yourself.png"
+    banner_path = out_dir / "brick_building1_banner_camino.png"
 
     canvas = Image.new("RGBA", (out_w, out_h), (0, 0, 0, 0))
     manifest_ops = []
     for op in ops:
         manifest_ops.append(_composite_op(canvas, op, min_x, min_y))
 
-    canvas.save(out_path)
-    _write_love_yourself_banner(banner_path)
+    _write_banner_logo(banner_path)
 
     # Original LoveYourselfSign placement (center point) relative to BrickBuilding1 root:
     # Door2 at (166, -207) and sign at (-9, -385) relative to Door2 => (157, -592).
@@ -369,6 +418,14 @@ def main() -> int:
     )
     banner_top_left_in_canvas = (banner_top_left_local[0] - min_x, banner_top_left_local[1] - min_y)
 
+    # Burn the banner into the combined shop-body image so the next AI pass sees it.
+    banner_img = Image.open(banner_path).convert("RGBA")
+    canvas.alpha_composite(
+        banner_img,
+        dest=(round(banner_top_left_in_canvas[0]), round(banner_top_left_in_canvas[1])),
+    )
+    canvas.save(out_path)
+
     manifest = {
         "canvas": {
             "min_x": min_x,
@@ -377,7 +434,8 @@ def main() -> int:
             "height": out_h,
         },
         "banner": {
-            "love_yourself_source": str(banner_path),
+            "source": str(banner_path),
+            "logo_source": str(BANNER_LOGO_PATH),
             "center_local": [banner_center_local[0], banner_center_local[1]],
             "size": [banner_size[0], banner_size[1]],
             "top_left_local": [banner_top_left_local[0], banner_top_left_local[1]],

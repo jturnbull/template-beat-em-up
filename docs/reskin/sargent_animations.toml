@@ -9,6 +9,7 @@ anchor_framed = "outputs/reskin/sargent/anchor/anchor_framed.png"
 scale_ref = "outputs/reskin/sargent/anchor/anchor_base.png"
 # Defaults
 resolution = "1080p"
+video_variants = 4
 negative = "low resolution, error, worst quality, low quality, defects"
 extract_fps = 6
 contact_cols = 10

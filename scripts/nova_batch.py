@@ -28,9 +28,12 @@ from pathlib import Path
 
 import tomllib
 from PIL import Image
+from PIL import ImageDraw
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+FAL_MIN_ASPECT_RATIO = 0.4
+FAL_MAX_ASPECT_RATIO = 2.5
 
 
 def _abs(path_value: str) -> Path:
@@ -149,6 +152,7 @@ def main() -> int:
     config = tomllib.loads(cfg_path.read_text(encoding="utf-8"))
     global_cfg = config.get("global", {})
     animations: list[dict] = config.get("animation", [])
+    consistency_groups = config.get("consistency_groups", {})
     if not animations:
         raise SystemExit("Config has no [[animation]] entries")
 
@@ -205,6 +209,9 @@ def main() -> int:
     if not negative:
         raise SystemExit("global.negative is required")
     resolution = str(global_cfg.get("resolution") or "").strip() or "1080p"
+    video_variants = int(global_cfg.get("video_variants") or 0)
+    if video_variants <= 0:
+        raise SystemExit("global.video_variants is required and must be > 0")
 
     # Step selection: if no flags, run everything.
     requested_steps = [args.make_videos, args.make_frames, args.apply_sprites]
@@ -214,6 +221,25 @@ def main() -> int:
     def selected_anims() -> list[dict]:
         active = [str(x) for x in global_cfg.get("active", []) if str(x).strip()]
         if active:
+            if consistency_groups:
+                if not isinstance(consistency_groups, dict):
+                    raise SystemExit("consistency_groups must be a table/dict")
+                active_set = set(active)
+                for group_name, members in consistency_groups.items():
+                    if not isinstance(members, list):
+                        raise SystemExit(f"consistency_groups.{group_name} must be a list")
+                    member_names = [str(m).strip() for m in members if str(m).strip()]
+                    if not member_names:
+                        continue
+                    has_any = any(m in active_set for m in member_names)
+                    if not has_any:
+                        continue
+                    missing = [m for m in member_names if m not in active_set]
+                    if missing:
+                        raise SystemExit(
+                            f"global.active partially selects consistency_groups.{group_name}. "
+                            f"Add missing: {', '.join(missing)}"
+                        )
             names = set(active)
             out = [a for a in animations if str(a.get("name") or "").strip() in names]
             missing = [name for name in active if name not in {str(a.get('name') or '') for a in out}]
@@ -230,6 +256,64 @@ def main() -> int:
             return anchor_framed_path
         return anchor_image_path
 
+    def build_seed_base_for_anim(anim: dict, seed_dir: Path) -> Path:
+        if not frame_guide_enabled:
+            return seed_base_image()
+
+        pad_color = str(global_cfg.get("pad_color") or "#00b140").strip()
+        guide_color = str(global_cfg.get("frame_guide_color") or "#ffffff").strip()
+        thickness = int(global_cfg.get("frame_guide_thickness") or 2)
+        if thickness <= 0:
+            raise SystemExit("global.frame_guide_thickness must be > 0 when frame_guide is enabled")
+
+        match_for_seed = str(anim.get("frame_guide_match") or anim.get("match") or frame_guide_match).strip()
+        if not match_for_seed:
+            raise SystemExit("Animation missing frame_guide_match/match for seeded frame guide")
+        match_path = _abs(match_for_seed)
+        if not match_path.exists():
+            raise SystemExit(f"Seed match sprite not found: {match_path}")
+
+        target_w, target_h = Image.open(match_path).convert("RGBA").size
+        seed_w = target_w
+        seed_h = target_h
+        target_aspect = float(target_w) / float(target_h)
+        if target_aspect > FAL_MAX_ASPECT_RATIO:
+            # Fal model rejects very wide seeds (>2.5). Add headroom vertically.
+            seed_h = int((target_w / FAL_MAX_ASPECT_RATIO) + 0.9999)
+        elif target_aspect < FAL_MIN_ASPECT_RATIO:
+            # Fal model rejects very tall seeds (<0.4). Add side room horizontally.
+            seed_w = int((target_h * FAL_MIN_ASPECT_RATIO) + 0.9999)
+        if seed_w != target_w or seed_h != target_h:
+            anim_name = str(anim.get("name") or "").strip()
+            print(
+                f"{anim_name}: adjusted seed canvas for Fal aspect bounds "
+                f"{target_w}x{target_h} -> {seed_w}x{seed_h}"
+            )
+
+        source = Image.open(anchor_image_path).convert("RGBA")
+        src_w, src_h = source.size
+        if src_w > seed_w or src_h > seed_h:
+            raise SystemExit(
+                f"Seed source ({src_w}x{src_h}) is larger than seed canvas ({seed_w}x{seed_h}) "
+                f"for animation {str(anim.get('name') or '').strip()}"
+            )
+
+        canvas = Image.new("RGBA", (seed_w, seed_h), pad_color)
+        paste_x = (seed_w - src_w) // 2
+        paste_y = seed_h - src_h  # Keep baseline aligned to bottom of target canvas.
+        canvas.paste(source, (paste_x, paste_y), source)
+
+        draw = ImageDraw.Draw(canvas)
+        for i in range(thickness):
+            draw.rectangle(
+                [i, i, seed_w - 1 - i, seed_h - 1 - i],
+                outline=guide_color,
+            )
+
+        out = seed_dir / "seed_base.png"
+        canvas.save(out)
+        return out
+
     def make_videos(anims: list[dict]) -> None:
         run_id = time.strftime("%Y%m%d_%H%M%S")
         jobs: list[list[str]] = []
@@ -241,17 +325,34 @@ def main() -> int:
 
             prompt_variations = anim.get("prompt_variations")
             prompt = str(anim.get("prompt") or "").strip()
-            prompts: list[str]
+            source_prompts: list[str]
             if prompt_variations:
-                prompts = [str(p).strip() for p in prompt_variations if str(p).strip()]
+                source_prompts = [str(p).strip() for p in prompt_variations if str(p).strip()]
             elif prompt:
-                prompts = [prompt]
+                source_prompts = [prompt]
             else:
                 raise SystemExit(f"Animation {name} missing prompt/prompt_variations")
-            if not prompts:
+            if not source_prompts:
                 raise SystemExit(f"Animation {name} has an empty prompt list")
+            if len(source_prompts) < video_variants and len(source_prompts) > 1:
+                raise SystemExit(
+                    f"Animation {name} has {len(source_prompts)} prompt_variations, "
+                    f"but global.video_variants={video_variants}. Add more prompt variations or lower global.video_variants."
+                )
+            if len(source_prompts) > video_variants:
+                print(
+                    f"{name}: {len(source_prompts)} prompt_variations found; "
+                    f"using first {video_variants} due to global.video_variants."
+                )
+            if len(source_prompts) == 1:
+                prompts = [source_prompts[0] for _ in range(video_variants)]
+            else:
+                prompts = source_prompts[:video_variants]
 
             duration = str(anim.get("duration") or global_cfg.get("duration") or "3")
+            anim_negative = str(anim.get("negative") or negative).strip()
+            if not anim_negative:
+                raise SystemExit(f"Animation {name} missing negative prompt")
             end_mode = str(anim.get("end_image") or "same").strip().lower()
             if end_mode not in {"same", "flip", "none"}:
                 raise SystemExit(f"Animation {name} invalid end_image: {end_mode} (use same|flip|none)")
@@ -259,13 +360,14 @@ def main() -> int:
             seed_dir = padded_dir / name / run_id
             out_dir = video_dir / name / run_id
             ensure_dirs(seed_dir, out_dir)
+            anim_seed_base = build_seed_base_for_anim(anim, seed_dir)
 
             end_image_arg: str | None = None
             if end_mode == "none":
                 end_image_arg = "none"
             elif end_mode == "flip":
                 end_path = seed_dir / "end_flip.png"
-                src = Image.open(seed_base_image()).convert("RGBA")
+                src = Image.open(anim_seed_base).convert("RGBA")
                 src = src.transpose(Image.FLIP_LEFT_RIGHT)
                 src.save(end_path)
                 end_image_arg = str(end_path)
@@ -273,7 +375,7 @@ def main() -> int:
             for idx, base_prompt in enumerate(prompts, start=1):
                 seed_path = seed_dir / f"v{idx}.png"
                 if not seed_path.exists():
-                    shutil.copy2(seed_base_image(), seed_path)
+                    shutil.copy2(anim_seed_base, seed_path)
 
                 final_prompt = f"{base_prompt}. {constraints}" if constraints else base_prompt
 
@@ -287,7 +389,7 @@ def main() -> int:
                     "--prompt",
                     final_prompt,
                     "--negative",
-                    negative,
+                    anim_negative,
                     "--resolution",
                     resolution,
                     "--duration",
@@ -352,9 +454,14 @@ def main() -> int:
             run(cmd, batch=False)
 
             if frame_guide_enabled:
-                if target_frame_size is None:
-                    raise SystemExit("Internal error: target_frame_size missing")
-                resize_frames_to_match(raw_dir, target_frame_size)
+                match_for_resize = str(anim.get("frame_guide_match") or anim.get("match") or frame_guide_match).strip()
+                if not match_for_resize:
+                    raise SystemExit(f"Animation {name} missing frame_guide_match/match for frame resize")
+                resize_match_path = _abs(match_for_resize)
+                if not resize_match_path.exists():
+                    raise SystemExit(f"Frame resize match sprite not found: {resize_match_path}")
+                resize_target_size = Image.open(resize_match_path).convert("RGBA").size
+                resize_frames_to_match(raw_dir, resize_target_size)
                 run(
                     [
                         "python3",
@@ -387,7 +494,7 @@ def main() -> int:
 
     def apply_sprites(anims: list[dict]) -> None:
         scale_mult = float(global_cfg.get("scale_multiplier") or 1.0)
-        output_width = int(global_cfg.get("output_width") or 2)
+        default_output_width = int(global_cfg.get("output_width") or 2)
 
         for anim in anims:
             name = str(anim.get("name") or "").strip()
@@ -421,8 +528,12 @@ def main() -> int:
 
             single_frame = bool(anim.get("single_frame", False))
             output_start = anim.get("output_start")
-            if not single_frame and output_start is None:
-                raise SystemExit(f"Animation {name} missing output_start")
+            output_indices_str = str(anim.get("output_indices") or "").strip()
+            output_width = int(anim.get("output_width") or default_output_width)
+            if not single_frame and output_start is None and not output_indices_str:
+                raise SystemExit(f"Animation {name} missing output_start/output_indices")
+            if output_start is not None and output_indices_str:
+                raise SystemExit(f"Animation {name} has both output_start and output_indices (choose one)")
 
             flip_h = bool(anim.get("flip_h", False))
             anim_scale_mult = float(anim.get("scale_multiplier") or scale_mult)
@@ -491,8 +602,16 @@ def main() -> int:
             # Build output index mapping so filenames match the game's expected numbering.
             output_indices: list[int] | None = None
             if not single_frame:
-                start = int(output_start)
-                output_indices = list(range(start, start + len(selected_labels)))
+                if output_indices_str:
+                    output_indices = parse_indices(output_indices_str)
+                    if len(output_indices) != len(selected_labels):
+                        raise SystemExit(
+                            f"Animation {name} output_indices count mismatch: "
+                            f"{len(output_indices)} != {len(selected_labels)}"
+                        )
+                else:
+                    start = int(output_start)
+                    output_indices = list(range(start, start + len(selected_labels)))
 
             cmd = [
                 "python3",
@@ -545,4 +664,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

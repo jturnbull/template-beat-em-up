@@ -16,6 +16,7 @@
   - Selected frames keep their original `frame_###.png` names.
   - Apply-sprites uses the selected labels for lookup and output indices only for naming.
 - Per-animation extraction controls: `extract_fps`, `extract_start`, `extract_end`, `extract_duration` (seconds or `MM:SS`) to target a time window.
+- Video count is controlled by `global.video_variants` (applies to every animation run).
 - `global.active` in the TOML overrides `enabled`. If `active` is non-empty, only those names run.
 - Background removal happens only for selected frames during apply-sprites; do not re-run BG removal when only scaling changes.
 - No backups inside character sprite folders; Git history is the source of truth.
@@ -26,6 +27,7 @@
   - `docs/reskin/SPRITE_PIPELINE.md`: exact command flow (`--make-videos`, `--make-frames`, `--apply-sprites`), frame selection is from contact sheets (1-based labels), frame guide border is removed before BG removal, and only selected frames are BG-removed.
   - `docs/reskin/AI_WORKFLOW.md`: do not commit API keys; use `FAL_KEY` env; scripts are `fal_reskin_generate.py` (image), `fal_video_generate.py` (video), and `fal_bg_remove.py` (background removal). Use `fal_reskin_generate.py` to generate the **anchor** still from `source_images/` references.
   - `docs/reskin/PROCESS.md`: task-per-sprite workflow with `docs/reskin/SPRITE_TASKS_INDEX.md` as the inventory; respect art bible, keep sizes/ground line consistent, QA on loops/attacks/readability.
+  - `docs/reskin/CAPTAIN_SNAKEOIL_VIDEO_PICKING_GUIDE.md`: mapping from Captain Snakeoil TOML action names to tax_man animation preview keys/state paths, required frame counts, and composite-action layering notes.
 - Overall character flow (repeat for each of the 4 characters):
   - Generate the base idle still with `scripts/fal_reskin_generate.py` using the character’s task file + source image references.
   - Prepare the anchor with `scripts/prepare_anchor_image.py` (greenscreen + baseline + framed). The anchor filename must include the character name.

@@ -6,6 +6,7 @@ import argparse
 import os
 import re
 import subprocess
+import tempfile
 import time
 import urllib.request
 from pathlib import Path
@@ -23,6 +24,7 @@ NUM_IMAGES = 4
 RESOLUTION = "4K"
 REF_DIR = None
 DEFAULT_NEGATIVE = "blurry, cropped, background, watermark, extra limbs, multiple characters"
+BG_REMOVE_MODEL = "fal-ai/bria/background/remove"
 POLL_SECONDS = 2.0
 ALLOWED_ASPECT_RATIOS = {
     "21:9": 21 / 9,
@@ -53,6 +55,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--task", required=True, help="Path to a task .md file")
     parser.add_argument("--prompt", default=None, help="Override prompt text")
+    parser.add_argument("--append-prompt", default=None, help="Append extra prompt constraints")
     parser.add_argument("--negative", default=None, help="Override negative prompt")
     parser.add_argument("--model", default=None, help="Fal model id (overrides task file)")
     parser.add_argument("--num-images", type=int, default=NUM_IMAGES, help="Number of images")
@@ -64,11 +67,28 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--ref", action="append", default=[], help="Additional reference image (repeatable)")
     parser.add_argument("--ref-dir", default=None, help="Directory of reference images to add")
     parser.add_argument("--output-dir", default="outputs/reskin/_tmp", help="Where to save images")
+    parser.add_argument(
+        "--pad-pct",
+        type=float,
+        default=0.0,
+        help="Uniform pre-upload canvas padding percent applied to source and reference images (e.g. 0.12)",
+    )
+    parser.add_argument("--pad-color", default="#00b140", help="Padding color (hex)")
     parser.add_argument("--no-download", action="store_true", help="Skip downloading images")
     parser.add_argument(
         "--alpha-from-source",
         action="store_true",
         help="Apply the source asset alpha channel to downloaded images (preserves transparency for drop-in).",
+    )
+    parser.add_argument(
+        "--bg-remove",
+        action="store_true",
+        help="Run fal-ai/bria/background/remove on each downloaded output image.",
+    )
+    parser.add_argument(
+        "--bg-remove-output-dir",
+        default=None,
+        help="Output directory for background-removed images (default: <output-dir>/<task>_bg_removed).",
     )
     parser.add_argument("--poll", type=float, default=POLL_SECONDS, help="Polling interval seconds")
     return parser.parse_args()
@@ -175,10 +195,64 @@ def maybe_open(path: Path) -> None:
     subprocess.run(["open", str(path)], check=True)
 
 
+def run_bg_remove(image_path: Path, output_path: Path, poll_seconds: float) -> None:
+    image_url = fal_client.upload_file(str(image_path))
+    handler = fal_client.submit(BG_REMOVE_MODEL, arguments={"image_url": image_url})
+    request_id = handler.request_id
+    print(f"BG remove submitted {request_id} for {image_path.name}")
+
+    while True:
+        status = fal_client.status(BG_REMOVE_MODEL, request_id, with_logs=False)
+        if isinstance(status, fal_client.Completed):
+            result = fal_client.result(BG_REMOVE_MODEL, request_id)
+            url = None
+            if isinstance(result, dict):
+                if "image" in result and isinstance(result["image"], dict):
+                    url = result["image"].get("url")
+                if url is None and "images" in result and result["images"]:
+                    url = result["images"][0].get("url")
+            if not url:
+                raise SystemExit(f"No image URL in bg remove result: {result}")
+            download_file(url, output_path)
+            print(f"Saved {output_path}")
+            return
+        if isinstance(status, (fal_client.Queued, fal_client.InProgress)):
+            time.sleep(poll_seconds)
+            continue
+        time.sleep(poll_seconds)
+
+
+def parse_hex_color_rgb(value: str) -> tuple[int, int, int]:
+    cleaned = value.strip().lstrip("#")
+    if len(cleaned) != 6:
+        raise SystemExit(f"Invalid hex color: {value}")
+    return int(cleaned[0:2], 16), int(cleaned[2:4], 16), int(cleaned[4:6], 16)
+
+
+def pad_image_for_upload(
+    image_path: Path, *, pad_pct: float, pad_color: tuple[int, int, int], temp_dir: Path
+) -> Path:
+    if pad_pct <= 0:
+        return image_path
+    img = Image.open(image_path).convert("RGBA")
+    pad_x = max(1, int(round(img.width * pad_pct)))
+    pad_y = max(1, int(round(img.height * pad_pct)))
+    out_w = img.width + (pad_x * 2)
+    out_h = img.height + (pad_y * 2)
+    canvas = Image.new("RGBA", (out_w, out_h), (pad_color[0], pad_color[1], pad_color[2], 255))
+    canvas.alpha_composite(img, (pad_x, pad_y))
+    temp_dir.mkdir(parents=True, exist_ok=True)
+    out_path = temp_dir / f"{image_path.stem}_padded.png"
+    canvas.save(out_path)
+    return out_path
+
+
 def main() -> int:
     args = parse_args()
     if "FAL_KEY" not in os.environ:
         raise SystemExit("FAL_KEY is not set in the environment.")
+    if args.bg_remove and args.no_download:
+        raise SystemExit("--bg-remove requires downloads; remove --no-download.")
 
     task_path = Path(args.task)
     if not task_path.exists():
@@ -201,6 +275,9 @@ def main() -> int:
     prompt = resolve_prompt(args.prompt) or resolve_prompt(task.get("prompt"))
     if not prompt:
         raise SystemExit("No prompt provided. Use --prompt or set - Prompt: in the task file.")
+    append_prompt = resolve_prompt(args.append_prompt)
+    if append_prompt:
+        prompt = f"{prompt}. {append_prompt}"
     negative = resolve_prompt(args.negative) or resolve_prompt(task.get("negative")) or DEFAULT_NEGATIVE
 
     task_size = parse_size(task.get("size"))
@@ -217,7 +294,9 @@ def main() -> int:
     else:
         aspect_ratio = "auto"
 
-    base_image_url = fal_client.upload_file(str(source_path))
+    if args.pad_pct < 0:
+        raise SystemExit("--pad-pct must be >= 0")
+    pad_color_rgb = parse_hex_color_rgb(args.pad_color)
 
     reference_paths: list[Path] = []
     for ref in args.ref:
@@ -258,64 +337,94 @@ def main() -> int:
             raise SystemExit(f"Reference is not a file: {ref_path}")
         reference_paths.append(ref_path)
 
-    reference_urls = []
-    for ref_path in reference_paths:
-        reference_urls.append(fal_client.upload_file(str(ref_path)))
+    with tempfile.TemporaryDirectory(prefix="reskin_pad_upload_") as tmp_dir:
+        tmp_path = Path(tmp_dir)
+        source_for_upload = pad_image_for_upload(
+            source_path, pad_pct=float(args.pad_pct), pad_color=pad_color_rgb, temp_dir=tmp_path
+        )
+        base_image_url = fal_client.upload_file(str(source_for_upload))
 
-    arguments = {
-        "prompt": prompt,
-        "image_urls": [base_image_url] + reference_urls,
-        "num_images": args.num_images,
-        "output_format": OUTPUT_FORMAT,
-        "reference_image_url": base_image_url,
-    }
-    if negative:
-        arguments["negative_prompt"] = negative
-    if RESOLUTION:
-        arguments["resolution"] = RESOLUTION
-    if aspect_ratio:
-        arguments["aspect_ratio"] = aspect_ratio
+        reference_urls = []
+        for idx, ref_path in enumerate(reference_paths, start=1):
+            ref_upload_path = pad_image_for_upload(
+                ref_path,
+                pad_pct=float(args.pad_pct),
+                pad_color=pad_color_rgb,
+                temp_dir=tmp_path / f"ref_{idx}",
+            )
+            reference_urls.append(fal_client.upload_file(str(ref_upload_path)))
 
-    handler = fal_client.submit(model, arguments=arguments)
-    request_id = handler.request_id
-    print(f"Submitted {request_id}")
+        arguments = {
+            "prompt": prompt,
+            "image_urls": [base_image_url] + reference_urls,
+            "num_images": args.num_images,
+            "output_format": OUTPUT_FORMAT,
+            "reference_image_url": base_image_url,
+        }
+        if negative:
+            arguments["negative_prompt"] = negative
+        if RESOLUTION:
+            arguments["resolution"] = RESOLUTION
+        if aspect_ratio:
+            arguments["aspect_ratio"] = aspect_ratio
 
-    while True:
-        status = fal_client.status(model, request_id, with_logs=False)
-        if isinstance(status, fal_client.Completed):
-            result = fal_client.result(model, request_id)
-            images = result.get("images", [])
-            if not images:
-                raise SystemExit("No images in result")
-            print(f"Completed: {len(images)} image(s)")
-            if not args.no_download:
-                out_dir = Path(args.output_dir)
-                task_dir = out_dir / task_path.stem
-                for i, item in enumerate(images, start=1):
-                    url = item.get("url")
-                    if not url:
-                        continue
-                    out_path = task_dir / f"option_{i}.{OUTPUT_FORMAT}"
-                    if out_path.exists():
-                        raise SystemExit(
-                            f"Refusing to overwrite existing output: {out_path}\n"
-                            "Choose a fresh --output-dir (recommended: a new timestamped folder)."
+        handler = fal_client.submit(model, arguments=arguments)
+        request_id = handler.request_id
+        print(f"Submitted {request_id}")
+
+        while True:
+            status = fal_client.status(model, request_id, with_logs=False)
+            if isinstance(status, fal_client.Completed):
+                result = fal_client.result(model, request_id)
+                images = result.get("images", [])
+                if not images:
+                    raise SystemExit("No images in result")
+                print(f"Completed: {len(images)} image(s)")
+                if not args.no_download:
+                    out_dir = Path(args.output_dir)
+                    task_dir = out_dir / task_path.stem
+                    saved_paths: list[Path] = []
+                    for i, item in enumerate(images, start=1):
+                        url = item.get("url")
+                        if not url:
+                            continue
+                        out_path = task_dir / f"option_{i}.{OUTPUT_FORMAT}"
+                        if out_path.exists():
+                            raise SystemExit(
+                                f"Refusing to overwrite existing output: {out_path}\n"
+                                "Choose a fresh --output-dir (recommended: a new timestamped folder)."
+                            )
+                        download_file(url, out_path)
+                        if task_size:
+                            resize_to_task_size(out_path, task_size)
+                        if args.alpha_from_source:
+                            apply_alpha_from_source(source_path, out_path)
+                        saved_paths.append(out_path)
+                        print(f"Saved {out_path}")
+                    if args.bg_remove:
+                        bg_removed_dir = (
+                            Path(args.bg_remove_output_dir)
+                            if args.bg_remove_output_dir
+                            else out_dir / f"{task_path.stem}_bg_removed"
                         )
-                    download_file(url, out_path)
-                    if task_size:
-                        resize_to_task_size(out_path, task_size)
-                    if args.alpha_from_source:
-                        apply_alpha_from_source(source_path, out_path)
-                    print(f"Saved {out_path}")
-                maybe_open(task_dir)
-            break
-        if isinstance(status, fal_client.Queued):
+                        for image_path in saved_paths:
+                            bg_out_path = bg_removed_dir / f"{image_path.stem}.png"
+                            if bg_out_path.exists():
+                                raise SystemExit(
+                                    f"Refusing to overwrite existing output: {bg_out_path}\n"
+                                    "Choose a fresh --bg-remove-output-dir."
+                                )
+                            run_bg_remove(image_path, bg_out_path, args.poll)
+                        maybe_open(bg_removed_dir)
+                    maybe_open(task_dir)
+                break
+            if isinstance(status, fal_client.Queued):
+                time.sleep(args.poll)
+                continue
+            if isinstance(status, fal_client.InProgress):
+                time.sleep(args.poll)
+                continue
             time.sleep(args.poll)
-            continue
-        if isinstance(status, fal_client.InProgress):
-            time.sleep(args.poll)
-            continue
-        time.sleep(args.poll)
 
     return 0
 

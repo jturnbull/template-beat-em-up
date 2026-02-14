@@ -13,8 +13,12 @@ Key rules:
 
 - Config: `docs/reskin/<character>_animations.toml`
   - `global.base_task` points to the idle task used to generate the first still.
+  - Optional base-generation safety controls:
+    - `global.base_source_pad_pct` / `global.base_source_pad_color` pre-pad source/reference images before upload.
+    - `global.base_prompt_append` appends hard framing constraints to the base generation prompt.
   - `global.anchor_image` / `global.anchor_framed` are the canonical anchor outputs.
   - `global.frames_dir` / `global.video_dir` / `global.padded_dir` define per-character working dirs.
+  - `global.video_variants` sets how many videos are generated per animation.
   - `global.active` is required; it defines which animation names run.
   - Each `[[animation]]` must set:
     - `name`
@@ -22,7 +26,16 @@ Key rules:
     - `duration`
     - `frame_indices` (1-based contact-sheet labels)
     - `dest_dir`, `prefix`, `match`
-    - `output_start` (unless `single_frame = true`)
+    - `output_start` (unless `single_frame = true` or `output_indices` is used)
+  - For non-contiguous sprite numbering (for example `slap_2_01,02,04,05`):
+    - Use `output_indices = "1,2,4,5"` and optional per-animation `output_width`
+  - For oversized actions (dash/explosion style moves), point `match` at the large target sprite in that action folder.
+  - Optional: `consistency_groups` table for linked actions that must be generated together.
+    - Example:
+      - `seated_block = ["seated_engage","seated_laugh","seated_drink","seated_swirl"]`
+      - `dash_block = ["dash_attack_begin","dash_attack_end"]`
+    - `reskin_interactive.py` auto-adds missing linked actions.
+    - `nova_batch.py` hard-errors if `global.active` only partially includes a linked group.
 
 ---
 

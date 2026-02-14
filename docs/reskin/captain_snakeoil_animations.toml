@@ -1,0 +1,307 @@
+[global]
+base_task = "docs/reskin/tasks/characters/enemies/captain_snakeoil/idle/idle_00.md"
+anchor_image = "outputs/reskin/captain_snakeoil/anchor/anchor_base.png"
+anchor_framed = "outputs/reskin/captain_snakeoil/anchor/anchor_framed.png"
+scale_ref = "outputs/reskin/captain_snakeoil/anchor/anchor_base.png"
+base_source_pad_pct = 0.18
+base_source_pad_color = "#00b140"
+base_prompt_append = "full character and sword must be completely visible and entirely inside the image canvas, leave at least 12% empty green margin on all sides, do not crop or cut off any body part, hand, hat, sword, or accessory at the image edges"
+resolution = "1080p"
+video_variants = 2
+negative = "blurry, cropped, background, watermark, extra limbs, multiple characters"
+extract_fps = 12
+contact_cols = 10
+contact_scale = 1
+frames_dir = "outputs/reskin/captain_snakeoil/frames"
+video_dir = "outputs/reskin/captain_snakeoil/videos"
+padded_dir = "outputs/reskin/captain_snakeoil/seeds"
+constraints = "side-view 2D sprite, no camera movement, no zoom, solid #00b140 background, keep character fully inside the white border frame with at least 8% margin on all sides, keep all VFX inside the frame and away from the border, space-galleon pirate captain aesthetic"
+pad_color = "#00b140"
+frame_guide = true
+frame_guide_color = "#ffffff"
+frame_guide_thickness = 4
+frame_guide_match = "characters/enemies/tax_man/resources/sprites/idle/idle_00.png"
+anchor_bbox_pad_pct = 0.0
+anchor_scale_mult = 1.0
+output_width = 2
+scale_multiplier = 1
+
+active = [
+ "attack_dash_begin",
+ "attack_dash_end",
+ "attack_area_body",
+]
+
+[consistency_groups]
+seated_block = ["seated_engage", "seated_laugh", "seated_drink", "seated_swirl"]
+dash_block = ["attack_dash_begin", "attack_dash_end"]
+
+[[animation]]
+name = "idle"
+prompt_variations = [
+  "Character stands in a confident sword-duelist idle stance, subtle breathing, in-place without translation, start and end matching idle pose for seamless loop",
+  "Character idle in place with slight weight shifts and sword-hand readiness, feet planted, no translation, seamless loop",
+  "Character idle in place, cape and coat settle subtly, sword hand poised, no translation, start and end matching idle",
+  "Character idle in place, villainous composure, grounded stance, no translation, seamless loop"
+]
+duration = 3
+frame_count = 8
+frame_indices = "1-8"
+prefix = "idle_"
+output_start = 0
+dest_dir = "characters/enemies/tax_man/resources/sprites/idle"
+match = "characters/enemies/tax_man/resources/sprites/idle/idle_00.png"
+
+[[animation]]
+name = "walk"
+prompt_variations = [
+  "Character treadmill walk in place, deliberate boss stride, sword arm balanced, no translation, start and end matching walk pose, anatomy lock: exactly one natural leg and one wooden peg leg only",
+  "Character walks in place with measured, threatening steps, feet stay on baseline, no translation, seamless loop, maintain exact peg-leg anatomy: one human leg and one peg leg only",
+  "Character treadmill walk in place, heavy footfall cadence, cloak movement but no body translation, preserve anatomy: one peg leg only and one natural leg only",
+  "Character in-place walk cycle, side-view readable silhouette, no translation, start and end matching, enforce single peg leg setup (no extra legs or feet)"
+]
+negative = "blurry, cropped, background, watermark, extra limbs, multiple characters, extra legs, extra feet, duplicate leg, duplicate foot, two normal feet, two normal legs, second peg leg, replace peg leg with normal foot, anatomy mutation"
+duration = 3
+frame_count = 16
+frame_indices = "1-16"
+prefix = "walk_"
+output_start = 0
+dest_dir = "characters/enemies/tax_man/resources/sprites/walk"
+match = "characters/enemies/tax_man/resources/sprites/walk/walk_00.png"
+
+[[animation]]
+name = "turn"
+prompt_variations = [
+  "Character pivots in place from facing right to facing left, short footwork turn, no translation",
+  "Character quick in-place turn with sword hand guarding, feet stay on baseline, no translation",
+  "Character rotates in place with minimal shuffle, no translation",
+  "Character step-pivot turn in place, same proportions and silhouette, no translation"
+]
+duration = 3
+frame_count = 3
+end_image = "flip"
+frame_indices = "1-3"
+prefix = "turnaround_"
+output_start = 0
+dest_dir = "characters/enemies/tax_man/resources/sprites/turn"
+match = "characters/enemies/tax_man/resources/sprites/turn/turnaround_00.png"
+
+[[animation]]
+name = "hurt_light"
+prompt_variations = [
+  "Character recoils from a light hit in place, short flinch, no translation",
+  "Character reacts to a quick hit, subtle recoil, feet planted, no translation",
+  "Character light-injury flinch in place, clear silhouette, no translation",
+  "Character quick pain reaction, in place, grounded"
+]
+duration = 3
+frame_count = 1
+frame_indices = "1"
+prefix = "injury_small"
+single_frame = true
+dest_dir = "characters/enemies/tax_man/resources/sprites/hurt"
+match = "characters/enemies/tax_man/resources/sprites/hurt/injury_small.png"
+
+[[animation]]
+name = "hurt_medium"
+prompt_variations = [
+  "Character recoils from a medium hit in place, stronger flinch, no translation",
+  "Character reacts to a heavier hit with a sharp torso recoil, feet planted, no translation",
+  "Character medium-injury flinch in place, clear readable silhouette, no translation",
+  "Character pain reaction from medium strike, in place and grounded"
+]
+duration = 3
+frame_count = 1
+frame_indices = "1"
+prefix = "injury_medium"
+single_frame = true
+dest_dir = "characters/enemies/tax_man/resources/sprites/hurt"
+match = "characters/enemies/tax_man/resources/sprites/hurt/injury_medium.png"
+
+[[animation]]
+name = "hurt_knockout"
+prompt_variations = [
+  "Character takes a heavy knockout-impact hit in place, dramatic recoil frame, no translation",
+  "Character knockout-impact reaction, brief stun pose, feet still anchored, no translation",
+  "Character heavy hit reaction frame, in place, no translation",
+  "Character impact frame before collapse, grounded and centered"
+]
+duration = 3
+frame_count = 1
+frame_indices = "1"
+prefix = "injury_knockout_impact"
+single_frame = true
+dest_dir = "characters/enemies/tax_man/resources/sprites/knockout"
+match = "characters/enemies/tax_man/resources/sprites/knockout/injury_knockout_impact.png"
+
+[[animation]]
+name = "attack_retaliate"
+prompt_variations = [
+  "Character performs a quick sword slash sequence in place (retaliation style), sharp blade arc, no translation, start and end grounded",
+  "Character executes fast sword swipes in place, clear blade silhouette, no translation, recover to neutral",
+  "Character short sword combo in place, one-two slashes, no translation, grounded finish",
+  "Character retaliatory sword cut sequence in place, crisp arcs, no translation"
+]
+duration = 3
+extract_fps = 24
+frame_count = 4
+frame_indices = "1-4"
+prefix = "slap_2_"
+output_indices = "1,2,4,5"
+output_width = 2
+dest_dir = "characters/enemies/tax_man/resources/sprites/attacks/slap"
+match = "characters/enemies/tax_man/resources/sprites/attacks/slap/slap_2_01.png"
+
+[[animation]]
+name = "attack_combo"
+prompt_variations = [
+  "Character performs a dramatic sword combo in place, multiple chained slashes, forward intent without leaving frame, no camera movement",
+  "Character executes heavy multi-hit sword sequence with cloak motion and blade trails, stays inside frame",
+  "Character boss sword combo: winding slash, cross-cut, overhead finisher, all within frame",
+  "Character chained sword attacks with readable anticipation and recovery poses, keep centered and fully visible"
+]
+duration = 5
+extract_fps = 24
+frame_count = 15
+frame_indices = "1-15"
+prefix = "attack_"
+output_start = 0
+output_width = 2
+dest_dir = "characters/enemies/tax_man/resources/sprites/attacks/combo_sequence"
+match = "characters/enemies/tax_man/resources/sprites/attacks/combo_sequence/attack_00.png"
+
+[[animation]]
+name = "attack_dash_begin"
+prompt_variations = [
+  "Character launches a rushing sword attack, aggressive forward lunge progression while staying fully inside frame, readable anticipation into burst",
+  "Character initiates a fast sword dash, accelerating body lean and blade lead, stays within frame",
+  "Character burst-start dash slash sequence, motion conveyed by pose progression and speed lines, fully inside frame",
+  "Character rush opener with sword, strong forward drive, no camera motion, keep complete silhouette in frame"
+]
+duration = 4
+extract_fps = 24
+frame_count = 7
+frame_indices = "1-7"
+prefix = "dash_"
+output_indices = "0,1,2,4,6,8,9"
+output_width = 2
+dest_dir = "characters/enemies/tax_man/resources/sprites/attacks/dash_attack"
+match = "characters/enemies/tax_man/resources/sprites/attacks/dash_attack/dash_00.png"
+
+[[animation]]
+name = "attack_dash_end"
+prompt_variations = [
+  "Character completes the rushing sword attack with deceleration, follow-through slashes, and recovery, fully inside frame",
+  "Character rush-finisher sequence: impact pose to recovery stance, sword still active, fully inside frame",
+  "Character end phase of dash attack, controlled stop and blade settle, no camera motion",
+  "Character post-dash sword combo finish, readable silhouettes, keep all body and blade inside frame"
+]
+duration = 4
+extract_fps = 24
+frame_count = 8
+frame_indices = "1-8"
+prefix = "dash_"
+output_indices = "10,11,13,14,15,16,17,18"
+output_width = 2
+dest_dir = "characters/enemies/tax_man/resources/sprites/attacks/dash_attack"
+match = "characters/enemies/tax_man/resources/sprites/attacks/dash_attack/dash_10.png"
+
+[[animation]]
+name = "attack_area_body"
+prompt_variations = [
+  "Character channels a lightning-infused area attack with sword held aloft He-Man style, power surging down the blade, escalating pose sequence and controlled energy burst, keep full body visible within frame",
+  "Character performs a charged sword-lightning ritual He-Man style: sword raised overhead to call power, then slammed to discharge, intense energy build but body stays fully in frame",
+  "Character unleashes storm energy from his sword in a boss area attack sequence, dramatic He-Man style overhead charge and recoil, no camera movement, stay fully inside frame",
+  "Character executes a lightning area attack where power originates at the sword tip and travels through his stance, He-Man style sword channeling, all motion kept inside frame"
+]
+duration = 5
+extract_fps = 24
+frame_count = 34
+frame_indices = "1-34"
+prefix = "area_attack"
+output_indices = "0000,0002,0004,0006,0009,0010,0011,0013,0014,0015,0018,0020,0022,0024,0025,0026,0029,0030,0032,0034,0036,0038,0040,0042,0044,0046,0048,0050,0053,0057,0059,0060,0061,0076"
+output_width = 4
+dest_dir = "characters/enemies/tax_man/resources/sprites/attacks/area_attack/tax_man"
+match = "characters/enemies/tax_man/resources/sprites/attacks/area_attack/tax_man/area_attack0000.png"
+
+[[animation]]
+name = "death_explosion_body"
+prompt_variations = [
+  "Character enters defeat sequence: dramatic wailing collapse, body decays and crumbles into a pile of bones, sword drops aside, keep full action readable and inside frame",
+  "Character boss death sequence with anguished wail and progressive skeletal crumble, ending as a bone pile, all motion contained inside frame",
+  "Character defeated: he staggers, howls, then crumbles into bones on the deck, no explosion, no camera movement, stay inside frame",
+  "Character death choreography: panic, wail, collapse, final pile of bones, clear silhouette progression and contained motion"
+]
+duration = 5
+extract_fps = 24
+frame_count = 15
+frame_indices = "1-15"
+prefix = "grenade_finisher"
+output_indices = "0000,0005,0007,0023,0028,0035,0038,0041,0044,0049,0056,0058,0060,0061,0063"
+output_width = 4
+dest_dir = "characters/enemies/tax_man/resources/sprites/attacks/grenade_death/tax_man"
+match = "characters/enemies/tax_man/resources/sprites/attacks/grenade_death/tax_man/grenade_finisher0000.png"
+
+[[animation]]
+name = "seated_engage"
+prompt_variations = [
+  "Character seated on the command throne of his space galleon deck, rising/engaging with commanding posture and sword-hand readiness, no translation, remain inside frame",
+  "Character seated captain engages from his throne on a space galleon deck, assertive movement beats, no translation, fully inside frame",
+  "Character boss seated-to-engage sequence on the deck of a space galleon, readable upper-body motion, no translation",
+  "Character seated captain leans forward and engages, space-galleon deck vibe, no translation, contained motion"
+]
+duration = 3
+frame_count = 3
+frame_indices = "1-3"
+prefix = "engage_"
+output_start = 0
+dest_dir = "characters/enemies/tax_man/resources/sprites/seated/engage"
+match = "characters/enemies/tax_man/resources/sprites/seated/engage/engage_00.png"
+
+[[animation]]
+name = "seated_laugh"
+prompt_variations = [
+  "Character seated on his space galleon throne laughs menacingly, in place, no translation, readable loop",
+  "Character seated captain laugh loop on a space galleon deck, shoulders and head motion only, no translation",
+  "Character seated villainous laugh in place, command-deck attitude, no translation, seamless loop",
+  "Character seated cackling loop with controlled posture, no translation, inside frame"
+]
+duration = 3
+frame_count = 4
+frame_indices = "1-4"
+prefix = "laughter_"
+output_start = 0
+dest_dir = "characters/enemies/tax_man/resources/sprites/seated/laughing"
+match = "characters/enemies/tax_man/resources/sprites/seated/laughing/laughter_00.png"
+
+[[animation]]
+name = "seated_drink"
+prompt_variations = [
+  "Character seated on a space galleon command deck, drinks from an ornate goblet (not a wine glass), in place, no translation",
+  "Character seated captain raises and drinks from a heavy metal goblet, space-galleon throne vibe, no translation",
+  "Character seated boss sipping from a carved goblet, controlled motion, no translation, keep silhouette clear",
+  "Character seated goblet-drink beat, command-throne attitude on a space galleon deck, no translation"
+]
+duration = 3
+frame_count = 2
+frame_indices = "1-2"
+prefix = "wine_drink_"
+output_start = 0
+dest_dir = "characters/enemies/tax_man/resources/sprites/seated/wine_drink"
+match = "characters/enemies/tax_man/resources/sprites/seated/wine_drink/wine_drink_00.png"
+
+[[animation]]
+name = "seated_swirl"
+prompt_variations = [
+  "Character seated on his space galleon throne, slowly swirls an ornate goblet (not a wine glass), in place, no translation",
+  "Character seated captain swirls a heavy goblet while plotting, command-deck mood, no translation",
+  "Character seated boss performs a goblet-swirl loop with subtle wrist motion, no translation, clear silhouette",
+  "Character seated goblet swirl on a space galleon deck, controlled motion, no translation, seamless loop"
+]
+duration = 3
+frame_count = 2
+frame_indices = "1-2"
+prefix = "wine_swirl_"
+output_start = 0
+dest_dir = "characters/enemies/tax_man/resources/sprites/seated/wine_swirl"
+match = "characters/enemies/tax_man/resources/sprites/seated/wine_swirl/wine_swirl_00.png"
