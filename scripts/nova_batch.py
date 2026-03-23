@@ -26,7 +26,10 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-import tomllib
+try:
+    import tomllib  # py>=3.11
+except ModuleNotFoundError:  # py<=3.10 (our scripts venv)
+    import tomli as tomllib
 from PIL import Image
 from PIL import ImageDraw
 
@@ -276,22 +279,70 @@ def main() -> int:
         target_w, target_h = Image.open(match_path).convert("RGBA").size
         seed_w = target_w
         seed_h = target_h
-        target_aspect = float(target_w) / float(target_h)
-        if target_aspect > FAL_MAX_ASPECT_RATIO:
-            # Fal model rejects very wide seeds (>2.5). Add headroom vertically.
-            seed_h = int((target_w / FAL_MAX_ASPECT_RATIO) + 0.9999)
-        elif target_aspect < FAL_MIN_ASPECT_RATIO:
-            # Fal model rejects very tall seeds (<0.4). Add side room horizontally.
-            seed_w = int((target_h * FAL_MIN_ASPECT_RATIO) + 0.9999)
+
+        source = Image.open(anchor_image_path).convert("RGBA")
+
+        def cfg_float(key: str, default: float) -> float:
+            value = anim.get(key)
+            if value is None:
+                value = global_cfg.get(key)
+            if value is None:
+                return default
+            return float(value)
+
+        def cfg_int(key: str, default: int) -> int:
+            value = anim.get(key)
+            if value is None:
+                value = global_cfg.get(key)
+            if value is None:
+                return default
+            return int(value)
+
+        # Pad the source BEFORE video generation (no scaling) to give extra movement room.
+        # This keeps character pixel scale unchanged across actions.
+        uniform_pad_pct = cfg_float("seed_source_pad_pct", 0.0)
+        pad_x_pct = cfg_float("seed_source_pad_x_pct", uniform_pad_pct)
+        pad_y_pct = cfg_float("seed_source_pad_y_pct", uniform_pad_pct)
+        if pad_x_pct < 0 or pad_y_pct < 0:
+            raise SystemExit("seed_source_pad_x_pct/seed_source_pad_y_pct must be >= 0")
+        if pad_x_pct > 4.0 or pad_y_pct > 4.0:
+            raise SystemExit("seed_source_pad_x_pct/seed_source_pad_y_pct are unexpectedly large")
+
+        src_w, src_h = source.size
+        pad_x = int(round(src_w * pad_x_pct))
+        pad_y = int(round(src_h * pad_y_pct))
+        if pad_x > 0 or pad_y > 0:
+            padded = Image.new("RGBA", (src_w + (pad_x * 2), src_h + (pad_y * 2)), pad_color)
+            padded.paste(source, (pad_x, pad_y), source)
+            source = padded
+            src_w, src_h = source.size
+
+        # Seed canvas must be large enough for the padded source, then satisfy Fal bounds.
+        seed_w = max(seed_w, src_w)
+        seed_h = max(seed_h, src_h)
+        seed_aspect = float(seed_w) / float(seed_h)
+        if seed_aspect > FAL_MAX_ASPECT_RATIO:
+            seed_h = int((seed_w / FAL_MAX_ASPECT_RATIO) + 0.9999)
+        elif seed_aspect < FAL_MIN_ASPECT_RATIO:
+            seed_w = int((seed_h * FAL_MIN_ASPECT_RATIO) + 0.9999)
+        if seed_w < src_w or seed_h < src_h:
+            raise SystemExit(
+                f"Internal seed sizing error for {str(anim.get('name') or '').strip()}: "
+                f"source={src_w}x{src_h}, canvas={seed_w}x{seed_h}"
+            )
         if seed_w != target_w or seed_h != target_h:
             anim_name = str(anim.get("name") or "").strip()
             print(
-                f"{anim_name}: adjusted seed canvas for Fal aspect bounds "
+                f"{anim_name}: adjusted seed canvas "
                 f"{target_w}x{target_h} -> {seed_w}x{seed_h}"
             )
 
-        source = Image.open(anchor_image_path).convert("RGBA")
-        src_w, src_h = source.size
+        seed_center_x = cfg_float("seed_center_x", 0.5)
+        if seed_center_x < 0.0 or seed_center_x > 1.0:
+            raise SystemExit("seed_center_x must be between 0.0 and 1.0")
+        seed_offset_x_px = cfg_int("seed_offset_x_px", 0)
+        seed_offset_y_px = cfg_int("seed_offset_y_px", 0)
+
         if src_w > seed_w or src_h > seed_h:
             raise SystemExit(
                 f"Seed source ({src_w}x{src_h}) is larger than seed canvas ({seed_w}x{seed_h}) "
@@ -299,8 +350,13 @@ def main() -> int:
             )
 
         canvas = Image.new("RGBA", (seed_w, seed_h), pad_color)
-        paste_x = (seed_w - src_w) // 2
-        paste_y = seed_h - src_h  # Keep baseline aligned to bottom of target canvas.
+        paste_x = int(round((seed_w * seed_center_x) - (src_w / 2.0))) + seed_offset_x_px
+        paste_y = (seed_h - src_h) + seed_offset_y_px  # Bottom-aligned baseline by default.
+        if paste_x < 0 or paste_y < 0 or (paste_x + src_w) > seed_w or (paste_y + src_h) > seed_h:
+            raise SystemExit(
+                f"Seed placement out of bounds for {str(anim.get('name') or '').strip()}: "
+                f"paste=({paste_x},{paste_y}) source={src_w}x{src_h} canvas={seed_w}x{seed_h}"
+            )
         canvas.paste(source, (paste_x, paste_y), source)
 
         draw = ImageDraw.Draw(canvas)
@@ -454,14 +510,12 @@ def main() -> int:
             run(cmd, batch=False)
 
             if frame_guide_enabled:
-                match_for_resize = str(anim.get("frame_guide_match") or anim.get("match") or frame_guide_match).strip()
-                if not match_for_resize:
-                    raise SystemExit(f"Animation {name} missing frame_guide_match/match for frame resize")
-                resize_match_path = _abs(match_for_resize)
-                if not resize_match_path.exists():
-                    raise SystemExit(f"Frame resize match sprite not found: {resize_match_path}")
-                resize_target_size = Image.open(resize_match_path).convert("RGBA").size
-                resize_frames_to_match(raw_dir, resize_target_size)
+                # Normalize extracted frames back to the deterministic seed canvas size for this animation.
+                # This preserves character pixel scale and makes border removal deterministic.
+                seed_path = build_seed_base_for_anim(anim, raw_dir)
+                seed_size = Image.open(seed_path).convert("RGBA").size
+                seed_path.unlink(missing_ok=True)
+                resize_frames_to_match(raw_dir, seed_size)
                 run(
                     [
                         "python3",
@@ -530,8 +584,8 @@ def main() -> int:
             output_start = anim.get("output_start")
             output_indices_str = str(anim.get("output_indices") or "").strip()
             output_width = int(anim.get("output_width") or default_output_width)
-            if not single_frame and output_start is None and not output_indices_str:
-                raise SystemExit(f"Animation {name} missing output_start/output_indices")
+            if single_frame and (output_start is not None or output_indices_str):
+                raise SystemExit(f"Animation {name} is single_frame; remove output_start/output_indices")
             if output_start is not None and output_indices_str:
                 raise SystemExit(f"Animation {name} has both output_start and output_indices (choose one)")
 
@@ -610,7 +664,7 @@ def main() -> int:
                             f"{len(output_indices)} != {len(selected_labels)}"
                         )
                 else:
-                    start = int(output_start)
+                    start = int(output_start) if output_start is not None else 0
                     output_indices = list(range(start, start + len(selected_labels)))
 
             cmd = [

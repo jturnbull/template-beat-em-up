@@ -56,7 +56,6 @@ duration = 3
 frame_count = 4
 frame_indices = "5-8"
 prefix = "idle_"
-output_start = 0
 dest_dir = "characters/enemies/sargent/resources/sprites/idle"
 match = "characters/enemies/sargent/resources/sprites/idle/idle_00.png"
 
@@ -67,7 +66,6 @@ duration = 3
 frame_count = 12
 frame_indices = "2-14"
 prefix = "walk_"
-output_start = 0
 dest_dir = "characters/enemies/sargent/resources/sprites/walk"
 match = "characters/enemies/sargent/resources/sprites/idle/idle_00.png"
 
@@ -79,7 +77,6 @@ frame_count = 3
 end_image = "flip"
 frame_indices = "6,8,10"
 prefix = "turnaround_"
-output_start = 0
 dest_dir = "characters/enemies/sargent/resources/sprites/turn_around"
 match = "characters/enemies/sargent/resources/sprites/idle/idle_00.png"
 
@@ -90,7 +87,6 @@ duration = 3
 frame_count = 2
 frame_indices = "6,10"
 prefix = "injured_"
-output_start = 0
 dest_dir = "characters/enemies/sargent/resources/sprites/hurt"
 match = "characters/enemies/sargent/resources/sprites/idle/idle_00.png"
 
@@ -118,7 +114,6 @@ frame_count = 6
 end_image = "none"
 frame_indices = "7,9,10,12,18,23"
 prefix = "ko_"
-output_start = 0
 dest_dir = "characters/enemies/sargent/resources/sprites/knockout"
 match = "characters/enemies/sargent/resources/sprites/idle/idle_00.png"
 
@@ -129,7 +124,6 @@ duration = 3
 frame_count = 4
 frame_indices = "3,5,8,12"
 prefix = "punch_1_"
-output_start = 0
 dest_dir = "characters/enemies/sargent/resources/sprites/attacks/punch_1"
 match = "characters/enemies/sargent/resources/sprites/idle/idle_00.png"
 
@@ -151,6 +145,5 @@ duration = 3
 frame_count = 7
 frame_indices = "3,4,5,6,8,10,12"
 prefix = "punch_3_"
-output_start = 0
 dest_dir = "characters/enemies/sargent/resources/sprites/attacks/punch_3"
 match = "characters/enemies/sargent/resources/sprites/idle/idle_00.png"

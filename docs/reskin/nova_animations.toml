@@ -63,9 +63,8 @@ prompt_variations = [
 ]
 duration = 3
 frame_count = 4
-frame_indices = "4,7,8,9"
+frame_indices = "1-4"
 prefix = "idle_"
-output_start = 0
 dest_dir = "characters/playable/chad/resources/sprites/idle"
 match = "characters/playable/chad/resources/sprites/idle/idle_00.png"
 
@@ -81,7 +80,6 @@ duration = 3
 frame_count = 12
 frame_indices = "1-12"
 prefix = "walk_"
-output_start = 0
 dest_dir = "characters/playable/chad/resources/sprites/walk"
 match = "characters/playable/chad/resources/sprites/idle/idle_00.png"
 
@@ -96,9 +94,8 @@ prompt_variations = [
 duration = 3
 frame_count = 3
 end_image = "flip"
-frame_indices = "6,10,13"
+frame_indices = "1-3"
 prefix = "turnaround_"
-output_start = 0
 dest_dir = "characters/playable/chad/resources/sprites/turn_around"
 match = "characters/playable/chad/resources/sprites/idle/idle_00.png"
 
@@ -112,7 +109,7 @@ prompt_variations = [
 ]
 duration = 3
 frame_count = 1
-frame_indices = "6"
+frame_indices = "1"
 prefix = "hurt_mid"
 single_frame = true
 dest_dir = "characters/playable/chad/resources/sprites/hurt"
@@ -128,7 +125,7 @@ prompt_variations = [
 ]
 duration = 3
 frame_count = 1
-frame_indices = "5"
+frame_indices = "1"
 prefix = "hurt_high"
 single_frame = true
 dest_dir = "characters/playable/chad/resources/sprites/hurt"
@@ -144,7 +141,7 @@ prompt_variations = [
 ]
 duration = 5
 frame_count = 4
-frame_indices = "6,7,8,10"
+frame_indices = "2,3,1,4"
 prefix = "jump_"
 output_start = 1
 dest_dir = "characters/playable/chad/resources/sprites/jump"
@@ -164,8 +161,7 @@ extract_start = "00:01"
 extract_end = "00:03"
 frame_count = 2
 prefix = "air_attack_"
-frame_indices = "24,28"
-output_start = 0
+frame_indices = "1-2"
 dest_dir = "characters/playable/chad/resources/sprites/air_attack"
 match = "characters/playable/chad/resources/sprites/idle/idle_00.png"
 
@@ -179,9 +175,8 @@ prompt_variations = [
 ]
 duration = 3
 frame_count = 2
-frame_indices = "4,6"
+frame_indices = "1-2"
 prefix = "punch1_"
-output_start = 0
 dest_dir = "characters/playable/chad/resources/sprites/punches"
 match = "characters/playable/chad/resources/sprites/idle/idle_00.png"
 
@@ -196,9 +191,8 @@ prompt_variations = [
 duration = 3
 extract_fps = 24
 frame_count = 2
-frame_indices = "25,33"
+frame_indices = "1-2"
 prefix = "punch2_"
-output_start = 0
 dest_dir = "characters/playable/chad/resources/sprites/punches"
 match = "characters/playable/chad/resources/sprites/idle/idle_00.png"
 
@@ -214,9 +208,8 @@ prompt_variations = [
 ]
 duration = 5
 frame_count = 4
-frame_indices = "9,12,13,14"
+frame_indices = "1-4"
 prefix = "punch3_"
-output_start = 0
 dest_dir = "characters/playable/chad/resources/sprites/punches"
 match = "characters/playable/chad/resources/sprites/idle/idle_00.png"
 
@@ -231,8 +224,7 @@ prompt_variations = [
 duration = 3
 frame_count = 6
 end_image = "none"
-frame_indices = "6,8,9,10,12,16"
+frame_indices = "1-6"
 prefix = "knockout_"
-output_start = 0
 dest_dir = "characters/playable/chad/resources/sprites/knock_out"
 match = "characters/playable/chad/resources/sprites/idle/idle_00.png"

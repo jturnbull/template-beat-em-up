@@ -122,6 +122,38 @@ def canvas_scale_on_baseline(
     return out
 
 
+def fit_canvas_no_scale(img: Image.Image, *, target_w: int, target_h: int) -> Image.Image:
+    """Crop/pad to the target canvas size without scaling the pixels.
+
+    Rules:
+    - Horizontal: center-crop / center-pad
+    - Vertical: bottom-crop / bottom-pad (preserves the ground line)
+    """
+    src_w, src_h = img.size
+
+    # Crop first (no scaling).
+    if src_w > target_w:
+        x0 = int((src_w - target_w) / 2)
+        img = img.crop((x0, 0, x0 + target_w, src_h))
+        src_w = target_w
+    if src_h > target_h:
+        y0 = src_h - target_h
+        img = img.crop((0, y0, src_w, y0 + target_h))
+        src_h = target_h
+
+    # Pad if needed.
+    if src_w < target_w or src_h < target_h:
+        out = Image.new("RGBA", (target_w, target_h), (0, 0, 0, 0))
+        px = int((target_w - src_w) / 2)
+        py = target_h - src_h
+        out.paste(img, (px, py), img)
+        img = out
+
+    if img.size != (target_w, target_h):
+        raise SystemExit(f"Internal canvas fit error: got {img.size}, expected {(target_w, target_h)}")
+    return img
+
+
 def main() -> int:
     args = parse_args()
     input_dir = Path(args.input)
@@ -217,8 +249,7 @@ def main() -> int:
         dest = dest_dir / f"{args.prefix}.png"
         img = Image.open(src).convert("RGBA")
         if args.use_canvas:
-            if img.size != (target_w, target_h):
-                img = img.resize((target_w, target_h), Image.LANCZOS)
+            img = fit_canvas_no_scale(img, target_w=target_w, target_h=target_h)
             if args.flip_h:
                 img = img.transpose(Image.FLIP_LEFT_RIGHT)
             out = canvas_scale_on_baseline(
@@ -283,8 +314,7 @@ def main() -> int:
         dest = dest_dir / dest_name
         img = Image.open(src).convert("RGBA")
         if args.use_canvas:
-            if img.size != (target_w, target_h):
-                img = img.resize((target_w, target_h), Image.LANCZOS)
+            img = fit_canvas_no_scale(img, target_w=target_w, target_h=target_h)
             if args.flip_h:
                 img = img.transpose(Image.FLIP_LEFT_RIGHT)
             out = canvas_scale_on_baseline(

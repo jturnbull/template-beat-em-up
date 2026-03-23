@@ -26,9 +26,12 @@ Key rules:
     - `duration`
     - `frame_indices` (1-based contact-sheet labels)
     - `dest_dir`, `prefix`, `match`
-    - `output_start` (unless `single_frame = true` or `output_indices` is used)
-  - For non-contiguous sprite numbering (for example `slap_2_01,02,04,05`):
-    - Use `output_indices = "1,2,4,5"` and optional per-animation `output_width`
+  - Output naming rules (non-`single_frame` animations):
+    - Default is contiguous numbering from `0` (`prefix00`, `prefix01`, ...). No output field needed.
+    - Use `output_start` only when the contiguous sequence must start at a non-zero index.
+    - Use `output_indices` only for sparse/non-contiguous numbering (for example `slap_2_01,02,04,05`).
+    - `output_start` and `output_indices` are mutually exclusive.
+    - `output_width` is optional and controls zero-padding width.
   - For oversized actions (dash/explosion style moves), point `match` at the large target sprite in that action folder.
   - Optional: `consistency_groups` table for linked actions that must be generated together.
     - Example:

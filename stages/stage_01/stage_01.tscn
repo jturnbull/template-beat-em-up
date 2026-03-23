@@ -1,4 +1,4 @@
-[gd_scene load_steps=113 format=3 uid="uid://bnoa0s3qnckt1"]
+[gd_scene load_steps=119 format=3 uid="uid://bnoa0s3qnckt1"]
 
 [ext_resource type="PackedScene" uid="uid://dkhr6tjbcdth7" path="res://stages/_base/base_stage.tscn" id="1_4lqd3"]
 [ext_resource type="Script" uid="uid://iydphvclbgwc" path="res://addons/quiver.beat_em_up/utilities/custom_nodes/quiver_sprite_repeater.gd" id="2_0ledp"]
@@ -13,23 +13,18 @@
 [ext_resource type="PackedScene" path="res://stages/stage_01/stage_elements/decorations/christmas_lights/christmas_lights.tscn" id="5_cl8vk"]
 [ext_resource type="Script" uid="uid://d2qrgealw7c6v" path="res://stages/stage_01/stage01_skybox.gd" id="5_hj50d"]
 [ext_resource type="Shader" uid="uid://cvvxrcor46rbp" path="res://stages/_base/skyboxes/gradient_map.gdshader" id="5_iqlbw"]
-[ext_resource type="Texture2D" uid="uid://c4eoksokmxc44" path="res://stages/stage_01/Space background_large2.png" id="5_kqcdg"]
 [ext_resource type="Texture2D" uid="uid://bdv436i82wdj4" path="res://stages/stage_01/stage_elements/pavement/street_revised_curved.png" id="5_rhqxk"]
-[ext_resource type="Texture2D" uid="uid://dvihwknc1jwor" path="res://stages/stage_01/Orange Left 2.png" id="6_0otdu"]
 [ext_resource type="Texture2D" uid="uid://evnwrnbyt1jd" path="res://stages/stage_01/stage_elements/sidewalk/sidewalk_revised_0.png" id="6_e0uvm"]
 [ext_resource type="Texture2D" uid="uid://c7fphss6j8oey" path="res://stages/stage_01/stage_elements/buildings/cityscape_00.png" id="6_rfrov"]
 [ext_resource type="Texture2D" uid="uid://d2tan12hotr8u" path="res://stages/stage_01/stage_elements/sidewalk/sidewalk_curve_50.png" id="7_412kv"]
 [ext_resource type="Texture2D" uid="uid://d34upd6axohpi" path="res://stages/stage_01/stage_elements/buildings/pipes/drainpipe_body.png" id="7_gqe74"]
 [ext_resource type="Texture2D" uid="uid://pry20irssppl" path="res://stages/stage_01/stage_elements/buildings/area_2_fire_tiger_steakhouse_all.png" id="7_hm5qt"]
 [ext_resource type="Texture2D" uid="uid://e161r1inmr0t" path="res://stages/stage_01/stage_elements/tax_man_area/tax_man_back_brick_wall_dirty.png" id="7_q6p58"]
-[ext_resource type="Texture2D" uid="uid://p40p2kijakl" path="res://stages/stage_01/Orange Left 1.png" id="7_tcjgr"]
 [ext_resource type="Texture2D" uid="uid://dqgwlg6ha1ime" path="res://stages/stage_01/stage_elements/buildings/pipes/drainpipe_exit.png" id="8_erudj"]
 [ext_resource type="Texture2D" uid="uid://iq7d0847x83h" path="res://stages/stage_01/stage_elements/sidewalk/sidewalk_revised_1.png" id="8_fsw4y"]
 [ext_resource type="Texture2D" uid="uid://blocy7e66ra0r" path="res://stages/stage_01/stage_elements/buildings/area_2_java_bean_dream_all.png" id="8_mhqwt"]
 [ext_resource type="Texture2D" uid="uid://bg164vx5yfm4o" path="res://stages/stage_01/stage_elements/tax_man_area/tax_man_windows.png" id="8_p47g0"]
 [ext_resource type="Texture2D" uid="uid://bvnsmsil71bnt" path="res://stages/stage_01/stage_elements/tax_man_area/tax_man_tree_leftside.png" id="8_r4uty"]
-[ext_resource type="Texture2D" uid="uid://bbdapy7upwy3n" path="res://stages/stage_01/Red Right 2.png" id="8_ygepa"]
-[ext_resource type="Texture2D" uid="uid://cb0q54jy4rst1" path="res://stages/stage_01/Red Right 1.png" id="9_0otdu"]
 [ext_resource type="Texture2D" uid="uid://ctvhqu3sfy08v" path="res://stages/stage_01/stage_elements/sidewalk/sidewalk_revised_2.png" id="9_7km5a"]
 [ext_resource type="Texture2D" uid="uid://d326gpsqdber" path="res://stages/stage_01/stage_elements/buildings/windows/standard/windows_1_1_50.png" id="9_37nkk"]
 [ext_resource type="Texture2D" uid="uid://y3mkbcs03dy" path="res://stages/stage_01/stage_elements/buildings/foster_mart/area_2_foster_mart_store_all.png" id="9_hqdgr"]
@@ -73,12 +68,18 @@
 [ext_resource type="Texture2D" uid="uid://wgg3w6gnvakg" path="res://stages/stage_01/stage_elements/street_poles/post_box/postbox_clean.png" id="40_fyh1w"]
 [ext_resource type="Texture2D" uid="uid://bngkm3s604uqa" path="res://stages/stage_01/caminoshop.png" id="47_tcjgr"]
 [ext_resource type="Texture2D" uid="uid://dh7tejawvukva" path="res://stages/stage_01/stage_elements/street_poles/metal_post.png" id="50_pgs7w"]
+[ext_resource type="Texture2D" uid="uid://41ydrvcb4csi" path="res://stages/stage_01/prop_020.png" id="55_26684"]
+[ext_resource type="Texture2D" uid="uid://c0c2h7ds5e2pg" path="res://stages/stage_01/prop_011.png" id="56_3q82n"]
 [ext_resource type="Texture2D" uid="uid://dx5n25lg03m3j" path="res://stages/stage_01/stage_elements/tax_man_area/tax_man_black_marble.png" id="56_t2mje"]
+[ext_resource type="Texture2D" uid="uid://c0jlrxj1d2djh" path="res://stages/stage_01/floornewnew80.png" id="58_2rer4"]
 [ext_resource type="PackedScene" uid="uid://dwgxqe6h48x4e" path="res://characters/enemies/tax_man/tax_man.tscn" id="59_jn7co"]
 [ext_resource type="PackedScene" path="res://stages/stage_01/stage_elements/tax_man_area/tax_man_throne.tscn" id="60_60ghw"]
 [ext_resource type="PackedScene" path="res://stages/stage_01/stage_elements/gates/tori_gate/tori_gate.tscn" id="60_mx5oi"]
 [ext_resource type="Script" uid="uid://c1unaghlqdj8f" path="res://addons/quiver.beat_em_up/combat/collision_areas/quiver_wall_hit_box.gd" id="62_je6pb"]
 [ext_resource type="Script" uid="uid://df8u8wmkhr3uf" path="res://addons/quiver.beat_em_up/combat/quiver_attack_data.gd" id="63_6am3i"]
+[ext_resource type="Texture2D" uid="uid://bns8h5pny2u0y" path="res://stages/stage_01/prop_005.png" id="64_ygepa"]
+[ext_resource type="Texture2D" uid="uid://ck6pp5n1n0sgp" path="res://stages/stage_01/prop_007.png" id="65_bay6v"]
+[ext_resource type="Texture2D" uid="uid://dt68cnn173dk4" path="res://stages/stage_01/prop_052.png" id="69_bxkbr"]
 [ext_resource type="Script" uid="uid://dr7wv1nyi1knv" path="res://addons/quiver.beat_em_up/utilities/custom_nodes/enemy_spawner/quiver_spawn_data.gd" id="70_we574"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_fe6v1"]
@@ -96,35 +97,35 @@ fill = 1
 fill_from = Vector2(0.603352, 0.349693)
 fill_to = Vector2(0, 0.475798)
 
-[sub_resource type="Gradient" id="Gradient_ygepa"]
+[sub_resource type="Gradient" id="Gradient_26684"]
 resource_local_to_scene = true
 interpolation_mode = 2
 offsets = PackedFloat32Array(0, 0.268817, 0.575269, 0.854839)
 colors = PackedColorArray(0.0823529, 0.027451, 0.027451, 1, 0.505882, 0.137255, 0.121569, 1, 0.596078, 0.313726, 0.188235, 1, 0.745098, 0.572549, 0.411765, 1)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_bay6v"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_3q82n"]
 resource_local_to_scene = true
-gradient = SubResource("Gradient_ygepa")
+gradient = SubResource("Gradient_26684")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jq4kj"]
 shader = ExtResource("5_iqlbw")
-shader_parameter/gradient = SubResource("GradientTexture1D_bay6v")
+shader_parameter/gradient = SubResource("GradientTexture1D_3q82n")
 shader_parameter/is_active = true
 shader_parameter/show_grayscale = false
 
-[sub_resource type="Gradient" id="Gradient_2rer4"]
+[sub_resource type="Gradient" id="Gradient_bxkbr"]
 resource_local_to_scene = true
 interpolation_mode = 2
 offsets = PackedFloat32Array(0, 0.268817, 0.575269, 0.854839)
 colors = PackedColorArray(0.0392157, 0.027451, 0.14902, 1, 0.243137, 0.227451, 0.34902, 1, 0.380392, 0.368627, 0.486275, 1, 0.631373, 0.619608, 0.737255, 1)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_4sjkl"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_4txu4"]
 resource_local_to_scene = true
-gradient = SubResource("Gradient_2rer4")
+gradient = SubResource("Gradient_bxkbr")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_o8ik0"]
 shader = ExtResource("5_iqlbw")
-shader_parameter/gradient = SubResource("GradientTexture1D_4sjkl")
+shader_parameter/gradient = SubResource("GradientTexture1D_4txu4")
 shader_parameter/is_active = true
 shader_parameter/show_grayscale = false
 
@@ -283,60 +284,13 @@ _color_day = Color(1, 0.972549, 0.917647, 1)
 _color_sunset = Color(0.776471, 0.458824, 0.407843, 1)
 _color_night = Color(0.278431, 0.211765, 0.478431, 1)
 
-[node name="CloudParallax" type="ParallaxBackground" parent="Background" index="0"]
-follow_viewport_enabled = true
-
-[node name="ParallaxSpace" type="ParallaxLayer" parent="Background/CloudParallax" index="0"]
-motion_scale = Vector2(0, 1)
-
-[node name="SpaceBackgroundLarge2" type="Sprite2D" parent="Background/CloudParallax/ParallaxSpace" index="0"]
-position = Vector2(8835, -646)
-scale = Vector2(1.1022, 1.1022)
-texture = ExtResource("5_kqcdg")
-
-[node name="ParallaxOrangeFar" type="ParallaxLayer" parent="Background/CloudParallax" index="1"]
-motion_scale = Vector2(0.12, 1)
-
-[node name="OrangeLeft1" type="Sprite2D" parent="Background/CloudParallax/ParallaxOrangeFar" index="0"]
-position = Vector2(6471, 120)
-scale = Vector2(0.97575, 0.97575)
-texture = ExtResource("7_tcjgr")
-
-[node name="ParallaxOrangeNear" type="ParallaxLayer" parent="Background/CloudParallax" index="2"]
-motion_scale = Vector2(0.32, 1)
-
-[node name="OrangeLeft2" type="Sprite2D" parent="Background/CloudParallax/ParallaxOrangeNear" index="0"]
-position = Vector2(8395, 54)
-scale = Vector2(1.1344, 1.1344)
-texture = ExtResource("6_0otdu")
-
-[node name="ParallaxRedFar" type="ParallaxLayer" parent="Background/CloudParallax" index="3"]
-motion_scale = Vector2(0.58, 1)
-
-[node name="RedRight1" type="Sprite2D" parent="Background/CloudParallax/ParallaxRedFar" index="0"]
-position = Vector2(6064, 112)
-scale = Vector2(0.575433, 0.575433)
-texture = ExtResource("8_ygepa")
-
-[node name="ParallaxRedNear" type="ParallaxLayer" parent="Background/CloudParallax" index="4"]
-motion_scale = Vector2(0.92, 1)
-
-[node name="RedRight2" type="Sprite2D" parent="Background/CloudParallax/ParallaxRedNear" index="0"]
-position = Vector2(8952, 315)
-scale = Vector2(0.381302, 0.381302)
-texture = ExtResource("9_0otdu")
-
-[node name="SkyboxLayer" parent="Background" index="1"]
-visible = false
+[node name="SkyboxLayer" parent="Background" index="0"]
 follow_viewport_enabled = false
 
 [node name="ParallaxLayer1" type="ParallaxLayer" parent="Background/SkyboxLayer" index="0"]
-visible = false
-position = Vector2(4416, -1669)
 motion_scale = Vector2(0, 1)
 
 [node name="Skybox" parent="Background/SkyboxLayer/ParallaxLayer1" index="0" instance=ExtResource("3_pnjnx")]
-visible = false
 position = Vector2(-8, -444)
 scale = Vector2(1.86482, 1.86482)
 script = ExtResource("5_hj50d")
@@ -344,46 +298,43 @@ day_cycle_data = ExtResource("4_y5lul")
 is_playing = true
 
 [node name="ParallaxLayer2" type="ParallaxLayer" parent="Background/SkyboxLayer" index="1"]
-visible = false
-position = Vector2(1523, -780)
+position = Vector2(26, -780)
 motion_scale = Vector2(0.65, 1)
 
 [node name="Sprite2d" type="Sprite2D" parent="Background/SkyboxLayer/ParallaxLayer2" index="0"]
-visible = false
-position = Vector2(4654, 776)
+position = Vector2(3730, 35.25)
 scale = Vector2(0.678503, 0.678503)
 texture = ExtResource("6_rfrov")
 
-[node name="ColorRect" type="ColorRect" parent="Background" index="2"]
-visible = false
+[node name="ColorRect" type="ColorRect" parent="Background" index="1"]
 offset_left = 989.0
 offset_top = -477.0
 offset_right = 1142.0
 offset_bottom = 561.0
 color = Color(0, 0, 0, 1)
 
-[node name="DirtyBrickWall" type="Sprite2D" parent="Background" index="3"]
+[node name="DirtyBrickWall" type="Sprite2D" parent="Background" index="2"]
 position = Vector2(9937, -37)
 texture = ExtResource("7_q6p58")
 
-[node name="SakuraTree1" type="Sprite2D" parent="Background" index="4"]
+[node name="SakuraTree1" type="Sprite2D" parent="Background" index="3"]
 position = Vector2(11770, 321)
 scale = Vector2(1.0194, 1.0194)
 texture = ExtResource("8_r4uty")
 
-[node name="SakuraTree2" type="Sprite2D" parent="Background" index="5"]
+[node name="SakuraTree2" type="Sprite2D" parent="Background" index="4"]
 position = Vector2(16077, 366)
 scale = Vector2(1.0194, 1.0194)
 texture = ExtResource("9_nsd75")
 
-[node name="TaxManWindows" type="Sprite2D" parent="Background" index="6"]
+[node name="TaxManWindows" type="Sprite2D" parent="Background" index="5"]
 modulate = Color(1, 1, 1, 0.5)
 material = SubResource("ShaderMaterial_fe6v1")
 position = Vector2(13754.8, 259.75)
 scale = Vector2(1.0194, 1.0194)
 texture = ExtResource("8_p47g0")
 
-[node name="MarbleGround" type="Sprite2D" parent="Background" index="7"]
+[node name="MarbleGround" type="Sprite2D" parent="Background" index="6"]
 z_index = 1
 position = Vector2(13251, 820)
 texture = ExtResource("56_t2mje")
@@ -488,21 +439,33 @@ variations_weights = Array[float]([1.49616, 0.968136, 0.535703])
 texture_sequence = Array[int]([0, 0, 0, 0, 0, 0])
 
 [node name="CrossWalk1" type="Sprite2D" parent="Background/Pavement" index="0"]
+visible = false
 position = Vector2(2425, 0)
 texture = ExtResource("15_8gqbu")
 centered = false
 
 [node name="CrossWalk2" type="Sprite2D" parent="Background/Pavement" index="1"]
+visible = false
 position = Vector2(6268, 0)
 texture = ExtResource("15_8gqbu")
 centered = false
 
 [node name="WhiteLines" type="Sprite2D" parent="Background/Pavement" index="2"]
+visible = false
 position = Vector2(9216, -12)
 texture = ExtResource("19_tfj0g")
 centered = false
 
-[node name="BrickBuilding1" type="Node2D" parent="Background" index="17"]
+[node name="Floornewnew" type="Sprite2D" parent="Background" index="17"]
+texture_filter = 1
+texture_repeat = 2
+position = Vector2(2508, 908)
+texture = ExtResource("58_2rer4")
+region_enabled = true
+region_rect = Rect2(0, 0, 15000, 819)
+region_filter_clip_enabled = true
+
+[node name="BrickBuilding1" type="Node2D" parent="Background" index="18"]
 position = Vector2(514, 565)
 
 [node name="BrickWall" parent="Background/BrickBuilding1" index="0" instance=ExtResource("4_8ntk5")]
@@ -570,12 +533,12 @@ position = Vector2(-9, -385)
 position = Vector2(-46, -566)
 texture = ExtResource("47_tcjgr")
 
-[node name="Option1" type="Sprite2D" parent="Background" index="18"]
+[node name="Option1" type="Sprite2D" parent="Background" index="19"]
 position = Vector2(5338.5, 100)
 scale = Vector2(1.01416, 1.01416)
 texture = ExtResource("23_wylcn")
 
-[node name="ChickenKing" parent="Background" index="19" instance=ExtResource("4_8mlpl")]
+[node name="ChickenKing" parent="Background" index="20" instance=ExtResource("4_8mlpl")]
 position = Vector2(2572, 505)
 
 [node name="ChristmasLights" parent="Background/ChickenKing" index="5" instance=ExtResource("5_cl8vk")]
@@ -591,7 +554,8 @@ z_index = -1
 position = Vector2(635, -509)
 texture = ExtResource("8_r4uty")
 
-[node name="SideWalk2" type="Node2D" parent="Background" index="20"]
+[node name="SideWalk2" type="Node2D" parent="Background" index="21"]
+visible = false
 position = Vector2(1842.36, 482.217)
 script = ExtResource("2_0ledp")
 main_texture = ExtResource("6_e0uvm")
@@ -610,22 +574,32 @@ texture = ExtResource("37_lr1et")
 position = Vector2(7918.64, -215.217)
 texture = ExtResource("37_lr1et")
 
-[node name="VendingMachine3" type="Sprite2D" parent="Background" index="21"]
+[node name="VendingMachine3" type="Sprite2D" parent="Background" index="22"]
 position = Vector2(6537.75, 375.856)
 scale = Vector2(1.21205, 1.21205)
 texture = ExtResource("28_f64gi")
 
-[node name="VendingMachine2" type="Sprite2D" parent="Background" index="22"]
+[node name="VendingMachine2" type="Sprite2D" parent="Background" index="23"]
 position = Vector2(6394.75, 374.856)
 scale = Vector2(1.21205, 1.21205)
 texture = ExtResource("29_70lla")
 
-[node name="VendingMachine" type="Sprite2D" parent="Background" index="23"]
+[node name="Prop020" type="Sprite2D" parent="Background" index="24"]
+position = Vector2(200, 573)
+scale = Vector2(1.58297, 1.58297)
+texture = ExtResource("55_26684")
+
+[node name="Prop011" type="Sprite2D" parent="Background" index="25"]
+position = Vector2(285, 582)
+scale = Vector2(1.91803, 1.91803)
+texture = ExtResource("56_3q82n")
+
+[node name="VendingMachine" type="Sprite2D" parent="Background" index="26"]
 position = Vector2(6210.75, 374.856)
 scale = Vector2(1.21205, 1.21205)
 texture = ExtResource("30_8bcgp")
 
-[node name="BrickBuilding2" type="Node2D" parent="Background" index="24"]
+[node name="BrickBuilding2" type="Node2D" parent="Background" index="27"]
 position = Vector2(96, 0)
 
 [node name="BrickWall2" parent="Background/BrickBuilding2" index="0" instance=ExtResource("4_8ntk5")]
@@ -670,7 +644,8 @@ texture = ExtResource("10_gbajp")
 position = Vector2(1746, -213)
 texture = ExtResource("30_5joav")
 
-[node name="SideWalk" type="Node2D" parent="Background" index="25"]
+[node name="SideWalk" type="Node2D" parent="Background" index="28"]
+visible = false
 position = Vector2(439.363, 541.217)
 script = ExtResource("2_0ledp")
 main_texture = ExtResource("6_e0uvm")
@@ -687,7 +662,7 @@ position = Vector2(911.637, -522.217)
 texture = ExtResource("34_wrols")
 
 [node name="TelefonePole2" type="Sprite2D" parent="Background/SideWalk" index="1"]
-position = Vector2(5091.64, -522.217)
+position = Vector2(3508.64, -516.217)
 texture = ExtResource("34_wrols")
 
 [node name="LampPole1" parent="Background/SideWalk" index="2" instance=ExtResource("31_n3xtr")]
@@ -697,15 +672,17 @@ position = Vector2(840.637, -458.217)
 position = Vector2(2934, -458.217)
 
 [node name="LampPole3" parent="Background/SideWalk" index="4" instance=ExtResource("31_n3xtr")]
-position = Vector2(5025.64, -458.217)
+position = Vector2(6322.64, -490.217)
 
 [node name="LampPole4" parent="Background/SideWalk" index="5" instance=ExtResource("31_n3xtr")]
+visible = false
 position = Vector2(7117.64, -458.217)
 
 [node name="LampPole5" parent="Background/SideWalk" index="6" instance=ExtResource("31_n3xtr")]
 position = Vector2(9201.64, -458.217)
 
 [node name="Postbox1" type="Sprite2D" parent="Background/SideWalk" index="7"]
+visible = false
 position = Vector2(961.637, -57.217)
 texture = ExtResource("39_n2yay")
 
@@ -730,6 +707,25 @@ length = 9
 separation = 165
 variations_weights = Array[float]([1.49616, 0.968136, 0.535703])
 texture_sequence = Array[int]([0, 0, 0, 0, 0, 0, 0, 0, 0])
+
+[node name="Prop005" type="Sprite2D" parent="Background/SideWalk" index="11"]
+position = Vector2(1339.64, 511.783)
+scale = Vector2(1.36431, 1.36431)
+texture = ExtResource("64_ygepa")
+
+[node name="Prop006" type="Sprite2D" parent="Background/SideWalk" index="12"]
+position = Vector2(1279.64, 532.783)
+texture = ExtResource("64_ygepa")
+
+[node name="Prop007" type="Sprite2D" parent="Background/SideWalk" index="13"]
+position = Vector2(6582.64, -27.217)
+scale = Vector2(0.80948, 1.38224)
+texture = ExtResource("65_bay6v")
+
+[node name="Prop052" type="Sprite2D" parent="Background" index="29"]
+position = Vector2(1429, 466)
+scale = Vector2(2.01886, 2.01886)
+texture = ExtResource("69_bxkbr")
 
 [node name="Chad" parent="Level/Characters" index="0"]
 position = Vector2(824, 800)
@@ -807,6 +803,7 @@ shape = SubResource("RectangleShape2D_ajt63")
 metadata/collision_type = "world_hit_box"
 
 [node name="TelefonePole3" type="Sprite2D" parent="Foreground" index="0"]
+visible = false
 material = SubResource("ShaderMaterial_juikt")
 position = Vector2(611, 281)
 scale = Vector2(2, 2)
@@ -849,13 +846,13 @@ limit_left = 267
 limit_top = -280
 limit_right = 2526
 limit_bottom = 1191
-zoom = 0.849934
+zoom = 0.5525
 after_fight_use_new_room = true
 after_fight_limit_left = 267
 after_fight_limit_top = -280
 after_fight_limit_right = 5775
 after_fight_limit_bottom = 1190
-after_fight_zoom = 1.0
+after_fight_zoom = 0.65
 after_fight_transition_duration = 0.8
 preview_camera = true
 preview_camera_color = Color(0.294118, 0, 0.509804, 1)
@@ -893,12 +890,13 @@ limit_left = 2924
 limit_top = -280
 limit_right = 6259
 limit_bottom = 1195
+zoom = 0.65
 after_fight_use_new_room = true
 after_fight_limit_left = 2924
 after_fight_limit_top = -280
 after_fight_limit_right = 8635
 after_fight_limit_bottom = 1195
-after_fight_zoom = 1.0
+after_fight_zoom = 0.65
 after_fight_transition_duration = 0.8
 preview_camera = true
 preview_camera_color = Color(0.294118, 0, 0.509804, 1)
@@ -953,13 +951,13 @@ limit_left = 6838
 limit_top = -320
 limit_right = 9734
 limit_bottom = 1195
-zoom = 0.9
+zoom = 0.585
 after_fight_use_new_room = true
 after_fight_limit_left = 6838
 after_fight_limit_top = -320
 after_fight_limit_right = 15832
 after_fight_limit_bottom = 1195
-after_fight_zoom = 1.0
+after_fight_zoom = 0.65
 after_fight_transition_duration = 0.8
 preview_camera = true
 preview_camera_color = Color(0.294118, 0, 0.509804, 1)
@@ -1014,7 +1012,7 @@ limit_left = 13499
 limit_top = -320
 limit_right = 15815
 limit_bottom = 1195
-zoom = 0.829016
+zoom = 0.538571
 after_fight_use_new_room = false
 preview_camera = true
 preview_camera_color = Color(0.294118, 0, 0.509804, 1)
@@ -1058,7 +1056,7 @@ limit_left = 12587
 limit_top = -320
 limit_right = 15827
 limit_bottom = 1195
-zoom = 0.712871
+zoom = 0.470722
 after_fight_use_new_room = false
 preview_camera = true
 preview_camera_color = Color(0.294118, 0, 0.509804, 1)

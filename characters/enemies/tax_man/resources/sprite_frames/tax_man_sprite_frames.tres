@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=130 format=3 uid="uid://rrn5345j7lyc"]
+[gd_resource type="SpriteFrames" load_steps=129 format=3 uid="uid://rrn5345j7lyc"]
 
 [ext_resource type="Texture2D" uid="uid://onyswyepu46a" path="res://characters/enemies/tax_man/resources/sprites/attacks/area_attack/tax_man/area_attack0000.png" id="1_8e0q1"]
 [ext_resource type="Texture2D" uid="uid://w6ak5bf2s5yh" path="res://characters/enemies/tax_man/resources/sprites/idle/idle_00.png" id="1_nuth2"]
@@ -72,7 +72,6 @@
 [ext_resource type="Texture2D" uid="uid://cg6s1wakv6owj" path="res://characters/enemies/tax_man/resources/sprites/attacks/area_attack/tax_man/area_attack0060.png" id="32_u4los"]
 [ext_resource type="Texture2D" uid="uid://8ld0s6m6t7lv" path="res://characters/enemies/tax_man/resources/sprites/attacks/dash_attack/dash_00.png" id="33_bfvo1"]
 [ext_resource type="Texture2D" uid="uid://cxa0dpefm70o" path="res://characters/enemies/tax_man/resources/sprites/attacks/area_attack/tax_man/area_attack0061.png" id="33_t473r"]
-[ext_resource type="Texture2D" uid="uid://bto0nx4u78ksx" path="res://characters/enemies/tax_man/resources/sprites/attacks/area_attack/tax_man/area_attack0076.png" id="34_1syna"]
 [ext_resource type="Texture2D" uid="uid://dgni2csfbkmpt" path="res://characters/enemies/tax_man/resources/sprites/attacks/dash_attack/dash_01.png" id="34_046k6"]
 [ext_resource type="Texture2D" uid="uid://dsxup6wqynqh1" path="res://characters/enemies/tax_man/resources/sprites/attacks/dash_attack/dash_02.png" id="35_a1hdm"]
 [ext_resource type="Texture2D" uid="uid://dibvin7il2bl6" path="res://characters/enemies/tax_man/resources/sprites/attacks/dash_attack/dash_04.png" id="36_apq5a"]
@@ -360,9 +359,6 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": ExtResource("33_t473r")
-}, {
-"duration": 1.0,
-"texture": ExtResource("34_1syna")
 }],
 "loop": false,
 "name": &"area_attack",
@@ -376,16 +372,16 @@ animations = [{
 "texture": ExtResource("16_8a82a")
 }, {
 "duration": 1.0,
-"texture": ExtResource("68_yb5qu")
+"texture": ExtResource("17_r1egb")
 }, {
 "duration": 1.0,
-"texture": ExtResource("68_yb5qu")
+"texture": ExtResource("17_r1egb")
 }, {
 "duration": 1.0,
-"texture": ExtResource("18_renxw")
+"texture": ExtResource("18_oehr0")
 }, {
 "duration": 1.0,
-"texture": ExtResource("18_renxw")
+"texture": ExtResource("18_oehr0")
 }, {
 "duration": 1.0,
 "texture": ExtResource("18_oehr0")
@@ -400,10 +396,10 @@ animations = [{
 "texture": ExtResource("19_evcpc")
 }, {
 "duration": 1.0,
-"texture": ExtResource("21_gyl5a")
+"texture": ExtResource("20_qa4sx")
 }, {
 "duration": 1.0,
-"texture": ExtResource("21_gyl5a")
+"texture": ExtResource("20_qa4sx")
 }, {
 "duration": 1.0,
 "texture": ExtResource("20_qa4sx")
@@ -448,16 +444,16 @@ animations = [{
 "texture": ExtResource("25_h5yt7")
 }, {
 "duration": 1.0,
-"texture": ExtResource("28_gcjak")
+"texture": ExtResource("26_wjc16")
 }, {
 "duration": 1.0,
-"texture": ExtResource("28_gcjak")
+"texture": ExtResource("26_wjc16")
 }, {
 "duration": 1.0,
-"texture": ExtResource("29_w7a2b")
+"texture": ExtResource("27_5pv22")
 }, {
 "duration": 1.0,
-"texture": ExtResource("29_w7a2b")
+"texture": ExtResource("27_5pv22")
 }, {
 "duration": 1.0,
 "texture": ExtResource("27_5pv22")
@@ -1253,7 +1249,7 @@ animations = [{
 "texture": ExtResource("16_8a82a")
 }, {
 "duration": 1.0,
-"texture": ExtResource("68_yb5qu")
+"texture": ExtResource("17_r1egb")
 }, {
 "duration": 1.0,
 "texture": ExtResource("17_r1egb")

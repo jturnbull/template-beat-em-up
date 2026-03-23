@@ -66,7 +66,6 @@ duration = 3
 frame_count = 4
 frame_indices = "6,25,29,32"
 prefix = "idle_"
-output_start = 0
 dest_dir = "characters/playable/mark/resources/sprites/idle"
 match = "characters/playable/mark/resources/sprites/idle/idle_00.png"
 
@@ -83,7 +82,6 @@ duration = 3
 frame_count = 12
 frame_indices = "3-15"
 prefix = "walk_"
-output_start = 0
 dest_dir = "characters/playable/mark/resources/sprites/walk"
 match = "characters/playable/mark/resources/sprites/idle/idle_00.png"
 
@@ -101,7 +99,6 @@ frame_count = 3
 end_image = "flip"
 frame_indices = "12,23,29"
 prefix = "turnaround_"
-output_start = 0
 dest_dir = "characters/playable/mark/resources/sprites/turn_around"
 match = "characters/playable/mark/resources/sprites/idle/idle_00.png"
 
@@ -167,7 +164,6 @@ duration = 5
 frame_count = 2
 prefix = "air_attack_"
 frame_indices = "11,13"
-output_start = 0
 dest_dir = "characters/playable/mark/resources/sprites/air_attack"
 match = "characters/playable/mark/resources/sprites/idle/idle_00.png"
 
@@ -183,7 +179,6 @@ duration = 3
 frame_count = 2
 frame_indices = "15,18"
 prefix = "punch1_"
-output_start = 0
 dest_dir = "characters/playable/mark/resources/sprites/punches"
 match = "characters/playable/mark/resources/sprites/idle/idle_00.png"
 
@@ -200,7 +195,6 @@ extract_fps = 24
 frame_count = 2
 frame_indices = "23,30"
 prefix = "punch2_"
-output_start = 0
 dest_dir = "characters/playable/mark/resources/sprites/punches"
 match = "characters/playable/mark/resources/sprites/idle/idle_00.png"
 
@@ -219,7 +213,6 @@ duration = 5
 frame_count = 4
 frame_indices = "49,24,34,39"
 prefix = "punch3_"
-output_start = 0
 dest_dir = "characters/playable/mark/resources/sprites/punches"
 match = "characters/playable/mark/resources/sprites/idle/idle_00.png"
 
@@ -237,6 +230,5 @@ frame_count = 6
 end_image = "none"
 frame_indices = "10,12,13,15,16,60"
 prefix = "knockout_"
-output_start = 0
 dest_dir = "characters/playable/mark/resources/sprites/knock_out"
 match = "characters/playable/mark/resources/sprites/idle/idle_00.png"

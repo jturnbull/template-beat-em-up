@@ -15,6 +15,8 @@ const TIME_SCALE_SLOW := 0.25
 const DASH_AUTO_SUCCEED_DELAY := 0.12
 const SEATED_REVEAL_SIGNAL_DELAY := 0.05
 const SEATED_REVEAL_FINISH_DELAY := 2.8
+const CONTROL_MOVE_SPEED := 900.0
+const WALK_PREVIEW_DISTANCE := 260.0
 
 @onready var _state_machine := $TaxMan/StateMachine as QuiverStateMachine
 @onready var _character := $TaxMan as QuiverCharacter
@@ -29,6 +31,9 @@ var _cycle_running := false
 var _last_state := "initializing..."
 var _slow_motion := false
 var _start_position := Vector2.ZERO
+var _control_enabled := false
+var _control_walking := false
+var _control_target: Marker2D = null
 
 
 func _ready() -> void:
@@ -44,6 +49,10 @@ func _ready() -> void:
 		_state_machine.transitioned.connect(_on_state_transitioned)
 	if _character != null:
 		_start_position = _character.global_position
+	_control_target = Marker2D.new()
+	_control_target.name = "ControlTarget"
+	add_child(_control_target)
+	_control_target.global_position = _start_position
 	_transition_to(STEP_IDLE)
 
 
@@ -59,10 +68,14 @@ func _input(event: InputEvent) -> void:
 			_auto_cycle = not _auto_cycle
 			if _auto_cycle:
 				_start_cycle()
+		KEY_C:
+			_toggle_control_mode()
 		KEY_I:
 			_transition_to(STEP_IDLE)
 		KEY_W:
 			_transition_to(STEP_WALK)
+		KEY_Y:
+			_preview_turn()
 		KEY_H:
 			_transition_to(STEP_HURT)
 		KEY_1:
@@ -101,6 +114,8 @@ func _input(event: InputEvent) -> void:
 func _start_cycle() -> void:
 	if _cycle_running:
 		return
+	_control_enabled = false
+	_control_walking = false
 	_auto_cycle = true
 	_cycle_running = true
 	_run_cycle()
@@ -112,6 +127,8 @@ func _run_cycle() -> void:
 		await get_tree().create_timer(0.8).timeout
 		_transition_to(STEP_WALK)
 		await get_tree().create_timer(1.0).timeout
+		_preview_turn()
+		await get_tree().create_timer(0.8).timeout
 		_transition_to(STEP_ATTACK_AREA)
 		await get_tree().create_timer(0.8).timeout
 		_transition_to(STEP_ATTACK_COMBO)
@@ -130,17 +147,29 @@ func _run_cycle() -> void:
 	_cycle_running = false
 
 
-func _transition_to(path: NodePath, msg := {}) -> void:
+func _transition_to(path: NodePath, msg := {}, reset_actor := true) -> void:
 	if _state_machine == null:
 		push_error("Missing state machine in preview scene.")
 		return
 	if _state_machine.state == null:
 		push_warning("State machine not ready yet.")
 		return
-	_reset_preview_actor()
+	if reset_actor:
+		_reset_preview_actor()
 	if path == STEP_WALK and msg.is_empty():
-		msg = {"target_node": _character}
+		if _control_target == null or _character == null:
+			push_error("Missing control target for walk preview.")
+			return
+		var direction := 1.0
+		if _skin != null:
+			direction = float(_skin.skin_direction)
+			if direction == 0.0:
+				direction = 1.0
+		_control_target.global_position = _character.global_position + Vector2(direction * WALK_PREVIEW_DISTANCE, 0.0)
+		msg = {"target_node": _control_target}
 	_state_machine.transition_to(path, msg)
+	if path != STEP_WALK:
+		_control_walking = false
 
 
 func _await_state_machine_ready(max_frames := 120) -> void:
@@ -156,7 +185,7 @@ func _await_state_machine_ready(max_frames := 120) -> void:
 
 func _on_state_transitioned(state_path: NodePath) -> void:
 	_last_state = str(state_path)
-	if state_path == STEP_IDLE:
+	if state_path == STEP_IDLE and not _control_enabled:
 		_reset_preview_actor()
 	_render_help()
 
@@ -172,12 +201,13 @@ func _render_help() -> void:
 		anim_name = str(_sprite.animation)
 		frame = _sprite.frame
 	_help.text = (
-		"SPACE cycle | I idle(8f) | W walk(16f) | H hurt | 1 attack_area_body(34f) | 2 attack_combo(15f)\n"
+		"SPACE cycle | C control mode | Arrows move (control mode) | I idle(8f) | W walk(16f) | Y turn(3f)\n"
+		+ "H hurt | 1 attack_area_body(34f) | 2 attack_combo(15f)\n"
 		+ "3 attack_dash combined(7f+8f) | 4 attack_retaliate(4f) | 5 attack_dash_begin | 6 attack_dash_end\n"
 		+ "K kneeled(1f) | D death_explosion_body(15f) | E engage | L laugh | R drink | S swirl | T 1/4 speed\n"
 		+ "Dash note: keys 3/5/6 all use AttackDash state machine path (no direct skin travel).\n"
-		+ "State: %s | Tree: %s | Anim: %s #%d | TimeScale: %.2f"
-	) % [_last_state, tree_active, anim_name, frame, speed]
+		+ "State: %s | Tree: %s | Anim: %s #%d | TimeScale: %.2f | Control: %s"
+	) % [_last_state, tree_active, anim_name, frame, speed, _control_enabled]
 
 
 func _process(_delta: float) -> void:
@@ -187,6 +217,27 @@ func _process(_delta: float) -> void:
 		_render_help()
 
 
+func _physics_process(delta: float) -> void:
+	if not _control_enabled:
+		return
+	if _state_machine == null or _state_machine.state == null:
+		return
+	if _character == null or _control_target == null:
+		return
+
+	var direction := _control_vector()
+	if direction == Vector2.ZERO:
+		if _control_walking:
+			_transition_to(STEP_IDLE, {}, false)
+			_control_walking = false
+		return
+
+	_control_target.global_position += direction * CONTROL_MOVE_SPEED * delta
+	if not _control_walking:
+		_transition_to(STEP_WALK, {"target_node": _control_target}, false)
+		_control_walking = true
+
+
 func _toggle_slow_motion() -> void:
 	_slow_motion = not _slow_motion
 	Engine.time_scale = TIME_SCALE_SLOW if _slow_motion else TIME_SCALE_NORMAL
@@ -194,6 +245,8 @@ func _toggle_slow_motion() -> void:
 
 
 func _exit_tree() -> void:
+	_control_enabled = false
+	_control_walking = false
 	Engine.time_scale = TIME_SCALE_NORMAL
 
 
@@ -202,12 +255,27 @@ func _reset_preview_actor() -> void:
 		return
 	_character.global_position = _start_position
 	_character.velocity = Vector2.ZERO
+	if _control_target != null:
+		_control_target.global_position = _start_position
+	_control_walking = false
 
 
 func _preview_dash_combined() -> void:
 	_transition_to(STEP_ATTACK_DASH)
 	var timer := get_tree().create_timer(DASH_AUTO_SUCCEED_DELAY)
 	timer.timeout.connect(_emit_dash_success, CONNECT_ONE_SHOT)
+
+
+func _preview_turn() -> void:
+	if _skin == null:
+		return
+	if not _control_enabled:
+		_reset_preview_actor()
+	# Force a facing flip, then play the explicit turn animation clip for frame-accurate preview.
+	_skin.skin_direction = -1 if _skin.skin_direction > 0 else 1
+	_skin.transition_to(&"turn")
+	_last_state = "Preview/Turn"
+	_render_help()
 
 
 func _preview_dash_begin_only() -> void:
@@ -288,3 +356,34 @@ func _on_seated_emit_signal(signal_name: String, label: String) -> void:
 	_emit_taxman_signal(signal_name)
 	_last_state = label
 	_render_help()
+
+
+func _toggle_control_mode() -> void:
+	_control_enabled = not _control_enabled
+	_auto_cycle = false
+	if _control_target != null and _character != null:
+		_control_target.global_position = _character.global_position
+	if _control_enabled:
+		_transition_to(STEP_IDLE, {}, false)
+		_last_state = "Control/Enabled"
+	else:
+		if _control_walking:
+			_transition_to(STEP_IDLE, {}, false)
+		_control_walking = false
+		_last_state = "Control/Disabled"
+	_render_help()
+
+
+func _control_vector() -> Vector2:
+	var value := Vector2.ZERO
+	if Input.is_physical_key_pressed(KEY_LEFT):
+		value.x -= 1.0
+	if Input.is_physical_key_pressed(KEY_RIGHT):
+		value.x += 1.0
+	if Input.is_physical_key_pressed(KEY_UP):
+		value.y -= 1.0
+	if Input.is_physical_key_pressed(KEY_DOWN):
+		value.y += 1.0
+	if value == Vector2.ZERO:
+		return value
+	return value.normalized()

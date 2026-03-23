@@ -25,7 +25,10 @@ import subprocess
 import time
 from pathlib import Path
 
-import tomllib
+try:
+    import tomllib  # py>=3.11
+except ModuleNotFoundError:  # py<=3.10 (our scripts venv)
+    import tomli as tomllib
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -148,11 +151,10 @@ def output_target_label(anim: dict, default_width: int = 2) -> str:
         return f"{prefix}{raw[0]}..{raw[-1]} ({len(raw)} files)"
 
     start = anim.get("output_start")
-    if start is None:
-        return "(missing output target)"
     width = int(anim.get("output_width") or default_width)
-    end = int(start) + max(0, frame_count - 1)
-    return f"{prefix}{int(start):0{width}d}..{end:0{width}d}"
+    start_num = int(start) if start is not None else 0
+    end = start_num + max(0, frame_count - 1)
+    return f"{prefix}{start_num:0{width}d}..{end:0{width}d}"
 
 
 def build_group_labels(config: dict, anim_names: list[str]) -> dict[str, list[str]]:
