@@ -78,7 +78,7 @@ def parse_indices(value: str) -> list[int]:
 
 
 def visible_bbox(img: Image.Image, key_color: tuple[int, int, int], tol: int) -> tuple[int, int, int, int] | None:
-    pixels = img.get_flattened_data()
+    pixels = img.getdata()
     mask = Image.new("L", img.size, 0)
     out = []
     key_r, key_g, key_b = key_color

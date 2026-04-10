@@ -83,6 +83,14 @@ Do not design motion as "camera tracks character across frame". For Tax Man, mov
 - Objective: consistent seated character performance set.
 - Grouping rule: always generate/pick as one set (`seated_block` consistency group).
 - Canvas rule: seated targets (`764x710` family).
+- Direct-replacement rule: do not use the video pipeline for the seated drink/throw set. Generate exact target files as still-image tasks because the engage throw uses mixed widths and auxiliary prop sprites.
+- Required direct-replacement files for the drink/throw sequence:
+  - `wine_swirl_00.png`, `wine_swirl_01.png` at `764x710`
+  - `wine_drink_00.png`, `wine_drink_01.png` at `764x710`
+  - `engage_00.png` at `764x710`
+  - `engage_01.png`, `engage_02.png`, `flying_glass.png` at `1034x710`
+  - `glass_shards_00.png`, `glass_shards_02.png` at `245x224`
+- Task source of truth: `docs/reskin/tasks/characters/enemies/captain_snakeoil/seated/...`
 - Picking rule: all four should look like one contiguous performance capture.
 
 ## Pipeline decisions
