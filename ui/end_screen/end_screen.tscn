@@ -1,11 +1,11 @@
-[gd_scene load_steps=20 format=3 uid="uid://c4l1tfqymlsbi"]
+[gd_scene load_steps=21 format=3 uid="uid://c4l1tfqymlsbi"]
 
 [ext_resource type="Theme" uid="uid://brlect5oi7d4w" path="res://ui/_base/theme_template.tres" id="1_2dr55"]
-[ext_resource type="Script" path="res://ui/end_screen/end_screen.gd" id="1_ll1aa"]
-[ext_resource type="Texture2D" uid="uid://d1km5hwxdeda5" path="res://ui/_base/pngs/menu_color_stripes.png" id="3_ymwy3"]
+[ext_resource type="Script" uid="uid://8bmlae5ekn8s" path="res://ui/end_screen/end_screen.gd" id="1_ll1aa"]
+[ext_resource type="Texture2D" uid="uid://c3jp2k5g8drxw" path="res://ui/_base/pngs/clouds_3_2.png" id="3_oikt8"]
 [ext_resource type="Texture2D" uid="uid://ldayfdi122qs" path="res://ui/pause_menu/pngs/buttons/restart_normal.png" id="4_q67g1"]
-[ext_resource type="Script" path="res://ui/_base/DoubleMaskMarginContainer.gd" id="4_rdvaw"]
-[ext_resource type="Script" path="res://ui/_base/DoubleMaskTextureButton.gd" id="5_2bwsg"]
+[ext_resource type="Script" uid="uid://crw0ql0mkobmx" path="res://ui/_base/DoubleMaskMarginContainer.gd" id="4_rdvaw"]
+[ext_resource type="Script" uid="uid://cl6rgit18acfe" path="res://ui/_base/DoubleMaskTextureButton.gd" id="5_2bwsg"]
 [ext_resource type="Texture2D" uid="uid://4cevig5i8foe" path="res://ui/pause_menu/pngs/buttons/restart_pressed.png" id="6_7s0xi"]
 [ext_resource type="Texture2D" uid="uid://dcogkaqvot5yr" path="res://ui/pause_menu/pngs/buttons/quit_normal.png" id="6_gep11"]
 [ext_resource type="Texture2D" uid="uid://dlanys6bpionb" path="res://ui/pause_menu/pngs/buttons/restart_hover.png" id="7_tye0q"]
@@ -15,7 +15,7 @@
 [ext_resource type="Texture2D" uid="uid://b844gyrlhn4nj" path="res://ui/pause_menu/pngs/buttons/quit_hover.png" id="13_mkvkm"]
 [ext_resource type="BitMap" uid="uid://c54ps7mf67b0b" path="res://ui/pause_menu/pngs/buttons/quit_mask_normal.png" id="14_xd73w"]
 [ext_resource type="BitMap" uid="uid://c3n1563und8fe" path="res://ui/pause_menu/pngs/buttons/quit_mask_big.png" id="15_o8nli"]
-[ext_resource type="PackedScene" path="res://ui/leaderboard/leaderboard.tscn" id="16_lead"]
+[ext_resource type="PackedScene" uid="uid://b5qfufu6dkbvt" path="res://ui/leaderboard/leaderboard.tscn" id="16_lead"]
 
 [sub_resource type="Animation" id="Animation_8g40m"]
 length = 0.001
@@ -116,9 +116,9 @@ tracks/2/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_83bbo"]
 _data = {
-"RESET": SubResource("Animation_8g40m"),
-"closed": SubResource("Animation_p2hkm"),
-"open": SubResource("Animation_3bprg")
+&"RESET": SubResource("Animation_8g40m"),
+&"closed": SubResource("Animation_p2hkm"),
+&"open": SubResource("Animation_3bprg")
 }
 
 [node name="EndScreen" type="Control"]
@@ -134,10 +134,10 @@ theme = ExtResource("1_2dr55")
 script = ExtResource("1_ll1aa")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-autoplay = "closed"
 libraries = {
-"": SubResource("AnimationLibrary_83bbo")
+&"": SubResource("AnimationLibrary_83bbo")
 }
+autoplay = "closed"
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1
@@ -155,13 +155,13 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -1201.0
-offset_top = -168.5
-offset_right = 1201.0
-offset_bottom = 168.5
+offset_left = -3291.0
+offset_top = -2595.0
+offset_right = 7517.0
+offset_bottom = 2633.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("3_ymwy3")
+texture = ExtResource("3_oikt8")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 custom_minimum_size = Vector2(0, 445)
@@ -258,8 +258,9 @@ script = ExtResource("5_2bwsg")
 mask_normal = ExtResource("14_xd73w")
 mask_hover = ExtResource("15_o8nli")
 
-[connection signal="pressed" from="PanelContainer/Buttons/MarginContainer/Replay" to="." method="_on_replay_pressed"]
-[connection signal="pressed" from="PanelContainer/Buttons/MarginContainer2/Quit" to="." method="_on_quit_pressed"]
-
 [node name="Leaderboard" parent="." instance=ExtResource("16_lead")]
 visible = false
+layout_mode = 1
+
+[connection signal="pressed" from="PanelContainer/Buttons/MarginContainer/Replay" to="." method="_on_replay_pressed"]
+[connection signal="pressed" from="PanelContainer/Buttons/MarginContainer2/Quit" to="." method="_on_quit_pressed"]

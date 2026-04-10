@@ -1,6 +1,6 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=7 format=3 uid="uid://dx0fm6hev5qpg"]
 
-[ext_resource type="Script" path="res://stages/stage_01/stage_elements/tax_man_area/brick_gate/dirty_brick_wall_gate.gd" id="1_xbrta"]
+[ext_resource type="Script" uid="uid://43u5j4lq84k" path="res://stages/stage_01/stage_elements/tax_man_area/brick_gate/dirty_brick_wall_gate.gd" id="1_xbrta"]
 [ext_resource type="Texture2D" uid="uid://b4jcajha80arw" path="res://stages/stage_01/stage_elements/tax_man_area/brick_gate/brick_gate_back.png" id="2_m7y1y"]
 [ext_resource type="AnimationLibrary" uid="uid://d2vw4ctmhthi7" path="res://stages/stage_01/stage_elements/tax_man_area/brick_gate/tax_man_gate_anim_library.tres" id="2_qacur"]
 [ext_resource type="Texture2D" uid="uid://mlxuohwa50qd" path="res://stages/stage_01/stage_elements/tax_man_area/brick_gate/brick_gate_front.png" id="3_bplye"]
@@ -8,17 +8,17 @@
 [ext_resource type="Texture2D" uid="uid://n6gavgela6ti" path="res://stages/stage_01/stage_elements/tax_man_area/brick_gate/tax_man_doors_2.png" id="4_amltg"]
 
 [node name="DirtyBrickWallGate" type="Node2D"]
-position = Vector2(11039, 1051)
 y_sort_enabled = true
+position = Vector2(11039, 1051)
 script = ExtResource("1_xbrta")
 metadata/_edit_vertical_guides_ = [11214.0]
 metadata/_edit_horizontal_guides_ = [1243.0]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-autoplay = "closed"
 libraries = {
-"": ExtResource("2_qacur")
+&"": ExtResource("2_qacur")
 }
+autoplay = "closed"
 next/opening = &"open_player_on_left"
 
 [node name="Back" type="Sprite2D" parent="."]

@@ -1,16 +1,23 @@
-[gd_resource type="Resource" script_class="QuiverAttributes" load_steps=4 format=3 uid="uid://llubu8lgbc5o"]
+[gd_resource type="Resource" script_class="QuiverAttributes" load_steps=5 format=3 uid="uid://llubu8lgbc5o"]
 
-[ext_resource type="Texture2D" uid="uid://dniavd10tv6nn" path="res://characters/enemies/sargent/resources/sarge_lifebar_gradient.tres" id="1_i8vys"]
 [ext_resource type="Script" uid="uid://bk47oolmixehn" path="res://addons/quiver.beat_em_up/characters/quiver_attributes.gd" id="1_s4idg"]
 [ext_resource type="Texture2D" uid="uid://cnpjp4lmv2quw" path="res://characters/enemies/sargent/resources/sprites/health_bar_revised_all_sarge.png" id="2_obkr6"]
 
+[sub_resource type="Gradient" id="Gradient_j43d3"]
+offsets = PackedFloat32Array(0, 0)
+colors = PackedColorArray(0.45976, 0.00100709, 0.612607, 1, 1, 0.278431, 0.588235, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_5ao5t"]
+gradient = SubResource("Gradient_j43d3")
+
 [resource]
+resource_name = "sentry"
 script = ExtResource("1_s4idg")
-display_name = "Sargent"
+display_name = "Sentry"
 profile_texture = ExtResource("2_obkr6")
-life_bar_gradient = ExtResource("1_i8vys")
+life_bar_gradient = SubResource("GradientTexture1D_5ao5t")
 health_max = 50
-speed_max = 350.0
+speed_max = 600
 air_control = 0.6
 jump_force = -1200
 hit_lane_offset = 0

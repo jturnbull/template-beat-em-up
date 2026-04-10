@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://c4pe180glk082"]
 
 [ext_resource type="Texture2D" uid="uid://bwrpook0qwymw" path="res://stages/stage_01/stage_elements/tax_man_area/tax_man_throne_revised.png" id="1_ad6kc"]
 
