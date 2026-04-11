@@ -25,6 +25,9 @@ const TITLE_VICTORY = "CONGRATULATIONS!"
 @onready var _buttons := $PanelContainer/Buttons as VBoxContainer
 @onready var _replay_button := $PanelContainer/Buttons/MarginContainer/Replay as TextureButton
 @onready var _leaderboard := $Leaderboard as Leaderboard
+@onready var _overlay := $ColorRect as ColorRect
+@onready var _background := $TextureRect as TextureRect
+@onready var _panel := $PanelContainer as PanelContainer
 var _leaderboard_timer: Timer
 
 ### -----------------------------------------------------------------------------------------------
@@ -53,9 +56,16 @@ func open_end_screen(is_victory: bool) -> void:
 			tree.paused = true
 		_title.text = TITLE_VICTORY if is_victory else TITLE_GAMEOVER
 		_animator.play("open")
+		_overlay.visible = false
+		_background.visible = false
+		_panel.visible = false
 		_buttons.visible = false
+		_leaderboard.visible = true
 		var delay := victory_leaderboard_delay if is_victory else gameover_leaderboard_delay
-		_start_leaderboard_timer(delay)
+		if delay <= 0.0:
+			_show_leaderboard_entry()
+		else:
+			_start_leaderboard_timer(delay)
 
 ### -----------------------------------------------------------------------------------------------
 
@@ -92,8 +102,7 @@ func _show_leaderboard_entry() -> void:
 
 
 func _on_leaderboard_finished() -> void:
-	_buttons.visible = true
-	_replay_button.grab_focus()
+	pass
 
 
 func _setup_leaderboard_timer() -> void:

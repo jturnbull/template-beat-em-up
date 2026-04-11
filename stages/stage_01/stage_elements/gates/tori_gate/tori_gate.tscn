@@ -1,12 +1,12 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=3 format=3 uid="uid://v5n6a5rx6ccc"]
 
 [ext_resource type="Texture2D" uid="uid://dt1bn64h1o4s4" path="res://stages/stage_01/stage_elements/gates/tori_gate/tori_gate_back.png" id="1_vb7rm"]
 [ext_resource type="Texture2D" uid="uid://eot6j1vb6jqh" path="res://stages/stage_01/stage_elements/gates/tori_gate/tori_gate_front.png" id="2_hw1c3"]
 
 [node name="ToriGate" type="Node2D"]
 self_modulate = Color(0.341176, 0.32549, 0.14902, 0.541176)
-scale = Vector2(0.75, 0.75)
 y_sort_enabled = true
+scale = Vector2(0.75, 0.75)
 
 [node name="Back" type="Sprite2D" parent="."]
 position = Vector2(-220, -96)

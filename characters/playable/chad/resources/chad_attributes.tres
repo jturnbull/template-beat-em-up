@@ -2,15 +2,16 @@
 
 [ext_resource type="Script" uid="uid://bk47oolmixehn" path="res://addons/quiver.beat_em_up/characters/quiver_attributes.gd" id="1_1ikth"]
 [ext_resource type="Texture2D" uid="uid://cqtsjmdjrqney" path="res://characters/playable/chad/resources/chad_gradient.tres" id="1_4dxsn"]
-[ext_resource type="Texture2D" uid="uid://bmmn7tps4woxq" path="res://characters/playable/chad/resources/sprites/chad_profile.png" id="2_g3jjg"]
+[ext_resource type="Texture2D" uid="uid://76821cc5jwtb" path="res://characters/playable/chad/resources/sprites/nova_profile.png" id="2_6l3y6"]
 
 [resource]
+resource_name = "Nova"
 script = ExtResource("1_1ikth")
-display_name = "Chad"
-profile_texture = ExtResource("2_g3jjg")
+display_name = "Nova"
+profile_texture = ExtResource("2_6l3y6")
 life_bar_gradient = ExtResource("1_4dxsn")
 health_max = 100
-speed_max = 500.0
+speed_max = 600
 air_control = 0.6
 jump_force = -1200
 hit_lane_offset = 0

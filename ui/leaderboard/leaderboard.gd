@@ -12,9 +12,10 @@ signal entry_flow_finished
 @export var auto_hide_on_close := true
 @export var use_monospace := true
 
-@onready var _title := $Panel/Content/Title as Label
-@onready var _subtitle := $Panel/Content/Subtitle as Label
-@onready var _rows_container := $Panel/Content/Rows as VBoxContainer
+@onready var _title := $Panel/Content/Frame/Header/Title as Label
+@onready var _subtitle := $Panel/Content/Frame/Header/Subtitle as Label
+@onready var _rows_container := $Panel/Content/Frame/RowsPanel/RowsMargin/Rows as VBoxContainer
+@onready var _footer := $Panel/Content/Frame/Footer as Label
 
 var _rows: Array = []
 var _display_list: Array = []
@@ -41,7 +42,9 @@ func _ready() -> void:
 	_build_rows()
 	_apply_font_scale(_title)
 	_apply_font_scale(_subtitle)
-	_show_title("LEADERBOARD", "")
+	_apply_font_scale(_footer)
+	_show_title("FINAL RESULTS", "TOP CREW SCORES")
+	_update_footer("")
 
 
 func show_top10() -> void:
@@ -49,7 +52,8 @@ func show_top10() -> void:
 	_pending_entry = {}
 	_stop_blink()
 	_stop_auto_close()
-	_show_title("LEADERBOARD", "")
+	_show_title("FINAL RESULTS", "TOP CREW SCORES")
+	_update_footer("")
 	_display_scores(ScoreManager.get_sorted_scores(), 0, rows_count)
 
 
@@ -65,7 +69,8 @@ func start_entry_flow() -> void:
 	_entry_cursor = 0
 	_entry_active = true
 	_start_blink()
-	_show_title("LEADERBOARD", _get_entry_subtitle())
+	_show_title("FINAL RESULTS", _get_entry_subtitle())
+	_update_footer("UP / DOWN TO CHANGE LETTERS   ATTACK TO CONFIRM")
 	_render_entry()
 
 
@@ -103,8 +108,9 @@ func _build_rows() -> void:
 func _create_header_row() -> HBoxContainer:
 	var row := HBoxContainer.new()
 	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.custom_minimum_size = Vector2(0, 28 * font_scale)
-	row.modulate = Color(1, 1, 1, 1)
+	row.custom_minimum_size = Vector2(0, 30 * font_scale)
+	row.modulate = Color(0.97, 0.82, 0.44, 1)
+	row.add_theme_constant_override("separation", int(18 * font_scale))
 
 	for key in _column_keys:
 		var label := _make_label(_column_width(key), _column_align(key))
@@ -116,7 +122,8 @@ func _create_header_row() -> HBoxContainer:
 func _create_row() -> HBoxContainer:
 	var row := HBoxContainer.new()
 	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.custom_minimum_size = Vector2(0, 28 * font_scale)
+	row.custom_minimum_size = Vector2(0, 34 * font_scale)
+	row.add_theme_constant_override("separation", int(18 * font_scale))
 
 	for key in _column_keys:
 		row.add_child(_make_label(_column_width(key), _column_align(key)))
@@ -130,6 +137,8 @@ func _make_label(min_width: int, align: HorizontalAlignment) -> Label:
 	label.custom_minimum_size = Vector2(min_width, 0)
 	label.horizontal_alignment = align as HorizontalAlignment
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER as VerticalAlignment
+	label.add_theme_color_override("font_outline_color", Color(0.03, 0.03, 0.08, 1))
+	label.add_theme_constant_override("outline_size", 12)
 	label.text = ""
 	_apply_font_scale(label)
 	return label
@@ -163,12 +172,12 @@ func _update_row(row: HBoxContainer, index: int, entry: Dictionary, highlight: b
 	if label_map.has("name"):
 		label_map.name.text = entry.get("name", "---")
 	if label_map.has("score"):
-		label_map.score.text = str(entry.get("score", 0))
+		label_map.score.text = _format_score(entry.get("score", 0))
 	if label_map.has("time"):
 		label_map.time.text = _format_duration(entry.get("duration_ms", 0))
 	if label_map.has("date"):
 		label_map.date.text = entry.get("date_time", "")
-	row.modulate = Color(1, 1, 1, 1) if highlight else Color(1, 1, 1, 0.8)
+	row.modulate = Color(1, 0.95, 0.72, 1) if highlight else Color(0.93, 0.96, 1.0, 0.9)
 
 
 func _render_entry() -> void:
@@ -244,6 +253,11 @@ func _show_title(title: String, subtitle: String) -> void:
 	_subtitle.text = subtitle
 
 
+func _update_footer(text: String) -> void:
+	_footer.text = text
+	_footer.visible = not text.is_empty()
+
+
 func _action_name(action: String) -> String:
 	return "%s_%s" % [_active_prefix, action]
 
@@ -298,13 +312,13 @@ func _build_columns() -> void:
 func _column_width(key: String) -> int:
 	match key:
 		"rank":
-			return int(60 * font_scale)
+			return int(70 * font_scale)
 		"name":
-			return int(120 * font_scale)
+			return int(150 * font_scale)
 		"score":
-			return int(160 * font_scale)
+			return int(180 * font_scale)
 		"time":
-			return int(140 * font_scale)
+			return int(150 * font_scale)
 		"date":
 			return int(180 * font_scale)
 		_:
@@ -333,6 +347,18 @@ func _column_header(key: String) -> String:
 			return "DATE"
 		_:
 			return ""
+
+
+func _format_score(value) -> String:
+	var score := int(round(float(value)))
+	var digits := str(abs(score))
+	var parts: Array[String] = []
+	while digits.length() > 3:
+		parts.push_front(digits.substr(digits.length() - 3, 3))
+		digits = digits.substr(0, digits.length() - 3)
+	parts.push_front(digits)
+	var formatted := ",".join(parts)
+	return "-%s" % formatted if score < 0 else formatted
 
 
 func _labels_by_key(labels: Array) -> Dictionary:

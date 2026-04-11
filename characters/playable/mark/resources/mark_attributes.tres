@@ -2,15 +2,15 @@
 
 [ext_resource type="Script" uid="uid://bk47oolmixehn" path="res://addons/quiver.beat_em_up/characters/quiver_attributes.gd" id="1_1ikth"]
 [ext_resource type="Texture2D" uid="uid://by73mk453l8nh" path="res://characters/playable/mark/resources/mark_gradient.tres" id="1_4dxsn"]
-[ext_resource type="Texture2D" uid="uid://bs3vqr4gjknlc" path="res://characters/playable/mark/resources/sprites/mark_profile.png" id="2_g3jjg"]
+[ext_resource type="Texture2D" uid="uid://rhkid28u5v2c" path="res://characters/playable/mark/resources/sprites/grok_profile.png" id="2_nrr40"]
 
 [resource]
 script = ExtResource("1_1ikth")
-display_name = "Mark"
-profile_texture = ExtResource("2_g3jjg")
+display_name = "Grok"
+profile_texture = ExtResource("2_nrr40")
 life_bar_gradient = ExtResource("1_4dxsn")
 health_max = 100
-speed_max = 500.0
+speed_max = 600
 air_control = 0.6
 jump_force = -1200
 hit_lane_offset = 0

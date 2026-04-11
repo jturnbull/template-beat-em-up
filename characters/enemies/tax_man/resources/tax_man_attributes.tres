@@ -6,7 +6,7 @@
 
 [resource]
 script = ExtResource("1_fte7m")
-display_name = "Tax Man"
+display_name = "Captain Snakeoil"
 profile_texture = ExtResource("2_5jwrp")
 life_bar_gradient = ExtResource("1_ppsjt")
 health_max = 600.0
@@ -14,6 +14,6 @@ speed_max = 500.0
 air_control = 0.6
 jump_force = -1200
 hit_lane_offset = 0
-is_invulnerable = false
+is_invulnerable = true
 has_superarmor = false
-can_be_grabbed = true
+can_be_grabbed = false

@@ -216,22 +216,8 @@ func _is_player_alive(player: QuiverCharacter) -> bool:
 
 
 func _get_player_display_name(player: QuiverCharacter, fallback: String) -> String:
-	if player != null:
-		var node_name := player.name.to_lower()
-		if node_name == "chad":
-			return "Chad"
-		if node_name == "mark" or node_name == "player2":
-			return "Mark"
-	
 	if player != null and player.attributes != null and not player.attributes.display_name.is_empty():
 		return player.attributes.display_name
-	
-	if player != null and not player.scene_file_path.is_empty():
-		var path := player.scene_file_path.to_lower()
-		if path.find("/chad/") != -1:
-			return "Chad"
-		if path.find("/mark/") != -1:
-			return "Mark"
 	
 	return fallback
 
