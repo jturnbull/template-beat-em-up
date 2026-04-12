@@ -2,12 +2,12 @@
 
 [ext_resource type="Texture2D" uid="uid://c3jp2k5g8drxw" path="res://ui/_base/pngs/clouds_3_2.png" id="1_3ligk"]
 [ext_resource type="Script" uid="uid://dj6kxnjom01me" path="res://ui/main_menu/main_menu.gd" id="1_xf06u"]
-[ext_resource type="Script" path="res://ui/main_menu/menu_art.gd" id="2_qewnw"]
+[ext_resource type="Script" uid="uid://dgy5j00glnynh" path="res://ui/main_menu/menu_art.gd" id="2_qewnw"]
 [ext_resource type="Texture2D" uid="uid://dpwpdnegvdmj" path="res://source_images/AIP_Groc.png" id="2_uw08o"]
 [ext_resource type="Texture2D" uid="uid://dtpl76t2aoq33" path="res://source_images/AIP_Captain_Snakeoil.jpg" id="3_mg0gr"]
 [ext_resource type="Texture2D" uid="uid://co4fophpoorpm" path="res://source_images/Sentries.png" id="4_3eqwa"]
 [ext_resource type="Texture2D" uid="uid://vdk8ukfix7cv" path="res://source_images/AIP_Nova.png" id="5_0rlna"]
-[ext_resource type="Script" path="res://ui/main_menu/grok.gd" id="6_grok"]
+[ext_resource type="Script" uid="uid://rjr3ds8gdmhv" path="res://ui/main_menu/grok.gd" id="6_grok"]
 [ext_resource type="Texture2D" uid="uid://go8x140wwobw" path="res://ui/main_menu/pngs/logo.png" id="7_abcvk"]
 [ext_resource type="Texture2D" uid="uid://dn4cgulexbpd8" path="res://ui/main_menu/pngs/buttons/start_game_normal.png" id="9_ds5cc"]
 [ext_resource type="PackedScene" uid="uid://55q23muar30r" path="res://ui/how_to_play/how_to_play.tscn" id="9_ohwlc"]
@@ -324,6 +324,7 @@ offset_bottom = 40.0
 script = ExtResource("2_qewnw")
 
 [node name="BG" type="TextureRect" parent="MenuArt"]
+modulate = Color(1, 1, 1, 0.78)
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -331,7 +332,6 @@ offset_right = 1880.0
 offset_bottom = 1040.0
 grow_horizontal = 2
 grow_vertical = 2
-modulate = Color(1, 1, 1, 0.78)
 texture = ExtResource("1_3ligk")
 
 [node name="PaintSpray" type="TextureRect" parent="MenuArt"]
@@ -340,10 +340,10 @@ offset_left = 96.0
 offset_top = 136.0
 offset_right = 668.0
 offset_bottom = 944.0
+texture = ExtResource("2_uw08o")
 expand_mode = 1
 stretch_mode = 5
 script = ExtResource("6_grok")
-texture = ExtResource("2_uw08o")
 
 [node name="TaxMan" type="TextureRect" parent="MenuArt"]
 layout_mode = 0
@@ -351,9 +351,9 @@ offset_left = 1358.0
 offset_top = 104.0
 offset_right = 1918.0
 offset_bottom = 918.0
+texture = ExtResource("3_mg0gr")
 expand_mode = 1
 stretch_mode = 5
-texture = ExtResource("3_mg0gr")
 
 [node name="Sarge" type="TextureRect" parent="MenuArt"]
 layout_mode = 0
@@ -361,9 +361,9 @@ offset_left = 1038.0
 offset_top = 52.0
 offset_right = 1814.0
 offset_bottom = 582.0
+texture = ExtResource("4_3eqwa")
 expand_mode = 1
 stretch_mode = 5
-texture = ExtResource("4_3eqwa")
 
 [node name="Chad" type="TextureRect" parent="MenuArt"]
 layout_mode = 0
@@ -371,9 +371,9 @@ offset_left = 396.0
 offset_top = 56.0
 offset_right = 1040.0
 offset_bottom = 964.0
+texture = ExtResource("5_0rlna")
 expand_mode = 1
 stretch_mode = 5
-texture = ExtResource("5_0rlna")
 
 [node name="Logo" type="TextureRect" parent="MenuArt"]
 layout_mode = 0
