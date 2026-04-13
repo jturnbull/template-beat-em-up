@@ -9,6 +9,7 @@ anchor_framed = "outputs/reskin/sargent/anchor/anchor_framed.png"
 scale_ref = "outputs/reskin/sargent/anchor/anchor_base.png"
 # Defaults
 resolution = "1080p"
+video_model = "fal-ai/kling-video/o1/image-to-video"
 video_variants = 4
 negative = "low resolution, error, worst quality, low quality, defects"
 extract_fps = 6

@@ -19,6 +19,7 @@ Key rules:
   - `global.anchor_image` / `global.anchor_framed` are the canonical anchor outputs.
   - `global.frames_dir` / `global.video_dir` / `global.padded_dir` define per-character working dirs.
   - `global.video_variants` sets how many videos are generated per animation.
+  - `global.video_model` is required and is passed straight to `scripts/fal_video_generate.py`.
   - `global.active` is required; it defines which animation names run.
   - Each `[[animation]]` must set:
     - `name`

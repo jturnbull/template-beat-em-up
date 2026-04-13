@@ -59,9 +59,9 @@
 [ext_resource type="Texture2D" uid="uid://64cy35dxtdah" path="res://stages/stage_01/stage_elements/street_poles/post_box/postbox_tagged.png" id="57_r5iey"]
 [ext_resource type="Texture2D" uid="uid://wgg3w6gnvakg" path="res://stages/stage_01/stage_elements/street_poles/post_box/postbox_clean.png" id="58_iws2g"]
 [ext_resource type="Texture2D" uid="uid://dh7tejawvukva" path="res://stages/stage_01/stage_elements/street_poles/metal_post.png" id="59_ddpfo"]
-[ext_resource type="PackedScene" path="res://stages/stage_01/stage_elements/gates/tori_gate/tori_gate.tscn" id="61_fws2h"]
+[ext_resource type="PackedScene" uid="uid://v5n6a5rx6ccc" path="res://stages/stage_01/stage_elements/gates/tori_gate/tori_gate.tscn" id="61_fws2h"]
 [ext_resource type="PackedScene" path="res://stages/stage_01/stage_elements/tax_man_area/tax_man_throne.tscn" id="62_22mbk"]
-[ext_resource type="PackedScene" path="res://stages/stage_01/stage_elements/tax_man_area/brick_gate/dirty_brick_wall_gate.tscn" id="63_lumtn"]
+[ext_resource type="PackedScene" uid="uid://dxo31c12bl10h" path="res://stages/stage_01/stage_elements/tax_man_area/brick_gate/dirty_brick_wall_gate.tscn" id="63_lumtn"]
 [ext_resource type="Shader" uid="uid://b8ldvx5sdu75c" path="res://characters/enemies/tax_man/resources/silhouette.gdshader" id="66_742h6"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_fe6v1"]

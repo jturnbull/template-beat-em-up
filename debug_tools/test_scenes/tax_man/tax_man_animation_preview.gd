@@ -5,16 +5,14 @@ const STEP_WALK := ^"Ground/Move/Follow"
 const STEP_HURT := ^"Ground/Hurt"
 const STEP_ATTACK_AREA := ^"Ground/AttackArea"
 const STEP_ATTACK_COMBO := ^"Ground/AttackCombo"
-const STEP_ATTACK_DASH := ^"Ground/AttackDash"
 const STEP_ATTACK_SLAP := ^"Ground/AttackRetaliate"
 const STEP_KNEELED := ^"Ground/KnockoutKneeled"
 const STEP_SEATED := ^"Seated"
 const STEP_DIE := ^"DieAi"
 const TIME_SCALE_NORMAL := 1.0
 const TIME_SCALE_SLOW := 0.25
-const DASH_AUTO_SUCCEED_DELAY := 0.12
 const SEATED_REVEAL_SIGNAL_DELAY := 0.05
-const SEATED_REVEAL_FINISH_DELAY := 2.8
+const SEATED_REVEAL_FINISH_DELAY := 0.35
 const CONTROL_MOVE_SPEED := 900.0
 const WALK_PREVIEW_DISTANCE := 260.0
 
@@ -24,7 +22,6 @@ const WALK_PREVIEW_DISTANCE := 260.0
 @onready var _anim_tree := $TaxMan/Skin/AnimationTree as AnimationTree
 @onready var _sprite := $TaxMan/Skin/Body as AnimatedSprite2D
 @onready var _skin := $TaxMan/Skin
-@onready var _seated_state := $TaxMan/StateMachine/Seated
 
 var _auto_cycle := false
 var _cycle_running := false
@@ -78,28 +75,26 @@ func _input(event: InputEvent) -> void:
 			_preview_turn()
 		KEY_H:
 			_transition_to(STEP_HURT)
+		KEY_7:
+			_preview_hurt_skin(&"hurt_light", "Preview/HurtLight")
+		KEY_8:
+			_preview_hurt_skin(&"hurt_medium", "Preview/HurtMedium")
+		KEY_9:
+			_preview_hurt_skin(&"hurt_knockout", "Preview/HurtKnockout")
 		KEY_1:
 			_transition_to(STEP_ATTACK_AREA)
 		KEY_2:
 			_transition_to(STEP_ATTACK_COMBO)
-		KEY_3:
-			_preview_dash_combined()
 		KEY_4:
 			_transition_to(STEP_ATTACK_SLAP)
-		KEY_5:
-			_preview_dash_begin_only()
-		KEY_6:
-			_preview_dash_end_only()
 		KEY_K:
 			_transition_to(STEP_KNEELED)
 		KEY_D:
 			_transition_to(STEP_DIE)
 		KEY_E:
 			_preview_seated_engage()
-		KEY_L:
-			_preview_seated_laugh()
 		KEY_R:
-			_preview_seated_drink()
+			_preview_seated_reveal()
 		KEY_S:
 			_preview_seated_swirl()
 		KEY_T:
@@ -132,8 +127,6 @@ func _run_cycle() -> void:
 		_transition_to(STEP_ATTACK_AREA)
 		await get_tree().create_timer(0.8).timeout
 		_transition_to(STEP_ATTACK_COMBO)
-		await get_tree().create_timer(1.0).timeout
-		_preview_dash_combined()
 		await get_tree().create_timer(1.0).timeout
 		_transition_to(STEP_ATTACK_SLAP)
 		await get_tree().create_timer(0.9).timeout
@@ -202,10 +195,10 @@ func _render_help() -> void:
 		frame = _sprite.frame
 	_help.text = (
 		"SPACE cycle | C control mode | Arrows move (control mode) | I idle(8f) | W walk(16f) | Y turn(3f)\n"
-		+ "H hurt | 1 attack_area_body(34f) | 2 attack_combo(15f)\n"
-		+ "3 attack_dash combined(7f+8f) | 4 attack_retaliate(4f) | 5 attack_dash_begin | 6 attack_dash_end\n"
-		+ "K kneeled(1f) | D death_explosion_body(15f) | E engage | L laugh | R drink | S swirl | T 1/4 speed\n"
-		+ "Dash note: keys 3/5/6 all use AttackDash state machine path (no direct skin travel).\n"
+		+ "H gameplay hurt | 7 hurt_light | 8 hurt_medium | 9 hurt_knockout | 1 attack_area_body(33f) | 2 attack_combo(15f)\n"
+		+ "4 attack_retaliate(4f)\n"
+		+ "K kneeled(1f) | D death_explosion_body(15f) | R seated reveal(1f) | S seated swirl(7f) | E seated engage(24f) | T 1/4 speed\n"
+		+ "Rush / dash attack is disabled for Snakeoil in gameplay AI.\n"
 		+ "State: %s | Tree: %s | Anim: %s #%d | TimeScale: %.2f | Control: %s"
 	) % [_last_state, tree_active, anim_name, frame, speed, _control_enabled]
 
@@ -260,12 +253,6 @@ func _reset_preview_actor() -> void:
 	_control_walking = false
 
 
-func _preview_dash_combined() -> void:
-	_transition_to(STEP_ATTACK_DASH)
-	var timer := get_tree().create_timer(DASH_AUTO_SUCCEED_DELAY)
-	timer.timeout.connect(_emit_dash_success, CONNECT_ONE_SHOT)
-
-
 func _preview_turn() -> void:
 	if _skin == null:
 		return
@@ -278,53 +265,33 @@ func _preview_turn() -> void:
 	_render_help()
 
 
-func _preview_dash_begin_only() -> void:
-	_transition_to(STEP_ATTACK_DASH)
-
-
-func _preview_dash_end_only() -> void:
-	_transition_to(STEP_ATTACK_DASH)
-	var timer := get_tree().create_timer(DASH_AUTO_SUCCEED_DELAY)
-	timer.timeout.connect(_emit_dash_success, CONNECT_ONE_SHOT)
-
-
-func _emit_dash_success() -> void:
+func _preview_hurt_skin(anim_name: StringName, label: String) -> void:
 	if _skin == null:
 		return
-	if _last_state != str(STEP_ATTACK_DASH):
-		return
-	_skin.emit_signal("dash_attack_succeeded")
+	if not _control_enabled:
+		_reset_preview_actor()
+	_force_skin_transition(anim_name)
+	_last_state = label
+	_render_help()
 
 
-func _preview_seated_drink() -> void:
-	_preview_seated_base(0, 0)
-	var timer := get_tree().create_timer(SEATED_REVEAL_FINISH_DELAY)
-	timer.timeout.connect(_on_seated_force_anim.bind(&"seated_drink", "Seated/Drink"), CONNECT_ONE_SHOT)
+func _preview_seated_reveal() -> void:
+	_preview_seated_base()
 
 
 func _preview_seated_swirl() -> void:
-	_preview_seated_base(8, 8)
+	_preview_seated_base()
 	var timer := get_tree().create_timer(SEATED_REVEAL_FINISH_DELAY)
 	timer.timeout.connect(_on_seated_force_anim.bind(&"seated_swirl", "Seated/Swirl"), CONNECT_ONE_SHOT)
 
 
-func _preview_seated_laugh() -> void:
-	_preview_seated_base(8, 8)
-	var timer := get_tree().create_timer(SEATED_REVEAL_FINISH_DELAY)
-	timer.timeout.connect(_on_seated_emit_signal.bind("tax_man_laughed", "Seated/Laugh"), CONNECT_ONE_SHOT)
-
-
 func _preview_seated_engage() -> void:
-	_preview_seated_base(8, 8)
+	_preview_seated_base()
 	var timer := get_tree().create_timer(SEATED_REVEAL_FINISH_DELAY)
 	timer.timeout.connect(_on_seated_emit_signal.bind("tax_man_engaged", "Seated/Engage"), CONNECT_ONE_SHOT)
 
 
-func _preview_seated_base(swirl_min: int, swirl_max: int) -> void:
-	if _seated_state != null:
-		# Order matters due custom setters clamping each other.
-		_seated_state.set("_swirl_min", swirl_min)
-		_seated_state.set("_swirl_max", swirl_max)
+func _preview_seated_base() -> void:
 	_transition_to(STEP_SEATED)
 	var timer := get_tree().create_timer(SEATED_REVEAL_SIGNAL_DELAY)
 	timer.timeout.connect(func() -> void: _emit_taxman_signal("tax_man_revealed"), CONNECT_ONE_SHOT)

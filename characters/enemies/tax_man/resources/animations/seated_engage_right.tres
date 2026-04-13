@@ -2,8 +2,8 @@
 
 [resource]
 resource_name = "seated_engage_right"
-length = 1.75
-step = 0.0416667
+length = 3.0
+step = 0.125
 tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -11,7 +11,7 @@ tracks/0/path = NodePath(".")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(1.75),
+"times": PackedFloat32Array(3),
 "transitions": PackedFloat32Array(1),
 "values": [{
 "args": ["seated_engage_left"],
@@ -49,10 +49,10 @@ tracks/3/path = NodePath("Body:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 1.20833),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [Vector2(-318, -306), Vector2(-221, -306)]
+"values": [Vector2(94, -315)]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -73,10 +73,10 @@ tracks/5/path = NodePath("Body:frame")
 tracks/5/interp = 1
 tracks/5/loop_wrap = false
 tracks/5/keys = {
-"times": PackedFloat32Array(0, 1.70833),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1, 1.125, 1.25, 1.375, 1.5, 1.625, 1.75, 1.875, 2, 2.125, 2.25, 2.375, 2.5, 2.625, 2.75, 2.875),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [0, 41]
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
 }
 tracks/6/type = "value"
 tracks/6/imported = false
@@ -117,46 +117,58 @@ tracks/8/keys = {
 tracks/9/type = "value"
 tracks/9/imported = false
 tracks/9/enabled = true
-tracks/9/path = NodePath("Body/QuiverHurtBox/HurtBoxShape:shape:size")
+tracks/9/path = NodePath("Body:material:shader_parameter/effect_strength")
 tracks/9/interp = 1
 tracks/9/loop_wrap = true
 tracks/9/keys = {
-"times": PackedFloat32Array(0, 1.20833, 1.54167),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 1,
-"values": [Vector2(280, 413), Vector2(229, 534), Vector2(198, 534)]
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
 }
 tracks/10/type = "value"
 tracks/10/imported = false
 tracks/10/enabled = true
-tracks/10/path = NodePath("Body/QuiverHurtBox/HurtBoxShape:position")
+tracks/10/path = NodePath("Body/QuiverHurtBox/HurtBoxShape:shape:size")
 tracks/10/interp = 1
 tracks/10/loop_wrap = true
 tracks/10/keys = {
-"times": PackedFloat32Array(0, 1.20833, 1.54167),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [Vector2(-131, 48.5), Vector2(61.5, -4), Vector2(46, -4)]
+"values": [Vector2(314, 339)]
 }
 tracks/11/type = "value"
 tracks/11/imported = false
 tracks/11/enabled = true
-tracks/11/path = NodePath("Body/QuiverHurtBox/HurtBoxShape:rotation")
+tracks/11/path = NodePath("Body/QuiverHurtBox/HurtBoxShape:position")
 tracks/11/interp = 1
 tracks/11/loop_wrap = true
 tracks/11/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [0.0]
+"values": [Vector2(129, 120.5)]
 }
 tracks/12/type = "value"
 tracks/12/imported = false
 tracks/12/enabled = true
-tracks/12/path = NodePath("Body/QuiverHurtBox/HurtBoxShape:disabled")
+tracks/12/path = NodePath("Body/QuiverHurtBox/HurtBoxShape:rotation")
 tracks/12/interp = 1
 tracks/12/loop_wrap = true
 tracks/12/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0.0]
+}
+tracks/13/type = "value"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("Body/QuiverHurtBox/HurtBoxShape:disabled")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,

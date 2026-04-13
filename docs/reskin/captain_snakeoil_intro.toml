@@ -1,0 +1,71 @@
+[global]
+review_fps = 12
+gif_frame_ms = 83
+contact_cols = 8
+contact_scale = 0.5
+
+[clip.seated_master]
+start_image = "outputs/reskin/captain_snakeoil/intro/assets/seated_master_start.png"
+end_image = "outputs/reskin/captain_snakeoil/intro/assets/seated_master_end.png"
+prompt = "Captain Snakeoil is already seated on the command throne of his space galleon, goblet in hand and sword parked by the throne. Short seated intro only: subtle notice-the-player beat, elegant goblet swirl, a sip/drink beat, then a mocking laugh beat, then he settles back into a smug composed throne pose. Keep the throne fully baked into the frame and visually identical for the whole clip. Keep camera locked, no zoom, no pan, no frame translation, no throne drift, no palette drift, no anatomy drift, no disappearing or reappearing props, no extra limbs, no chair mutation."
+duration = "4"
+resolution = "720p"
+aspect_ratio = "auto"
+models = [
+  "bytedance/seedance-2.0/fast/image-to-video",
+]
+video_dir = "outputs/reskin/captain_snakeoil/intro/seated_master/videos"
+review_dir = "outputs/reskin/captain_snakeoil/intro/seated_master/review"
+
+[[clip.seated_master.window]]
+name = "reveal_settle"
+start = "0.00"
+end = "0.90"
+
+[[clip.seated_master.window]]
+name = "swirl_loop"
+start = "0.90"
+end = "1.90"
+
+[[clip.seated_master.window]]
+name = "drink"
+start = "1.90"
+end = "2.90"
+
+[[clip.seated_master.window]]
+name = "laugh"
+start = "2.90"
+end = "4.00"
+
+[clip.engage_master]
+start_image = "outputs/reskin/captain_snakeoil/intro/assets/engage_master_start.png"
+end_image = "outputs/reskin/captain_snakeoil/intro/assets/engage_master_end.png"
+prompt = "Captain Snakeoil starts seated on the same command throne of his space galleon, with the sword already leaning against the throne. He throws the goblet backward behind himself over the side/back of the throne, not forward toward the camera or player. Then he reaches for the sword, rises from the throne in a deliberate menacing motion with no hop, no jump, no bounce, no playful flourish, and ends in a clean combat-ready pose in front of the throne. Keep the throne and deck visually consistent, keep camera locked, no zoom, no pan, no frame translation, no disappearing props, no anatomy changes, no extra limbs."
+duration = "4"
+resolution = "720p"
+aspect_ratio = "auto"
+models = [
+  "bytedance/seedance-2.0/fast/image-to-video",
+]
+video_dir = "outputs/reskin/captain_snakeoil/intro/engage_master/videos"
+review_dir = "outputs/reskin/captain_snakeoil/intro/engage_master/review"
+
+[[clip.engage_master.window]]
+name = "throw"
+start = "0.00"
+end = "1.20"
+
+[[clip.engage_master.window]]
+name = "reach_sword"
+start = "1.20"
+end = "2.40"
+
+[[clip.engage_master.window]]
+name = "stand_up"
+start = "2.40"
+end = "3.40"
+
+[[clip.engage_master.window]]
+name = "ready_pose"
+start = "3.40"
+end = "4.00"

@@ -7,6 +7,7 @@ base_source_pad_pct = 0.18
 base_source_pad_color = "#00b140"
 base_prompt_append = "full character and sword must be completely visible and entirely inside the image canvas, leave at least 12% empty green margin on all sides, do not crop or cut off any body part, hand, hat, sword, or accessory at the image edges"
 resolution = "1080p"
+video_model = "fal-ai/kling-video/o1/image-to-video"
 video_variants = 4
 negative = "blurry, cropped, background, watermark, extra limbs, multiple characters"
 extract_fps = 12
@@ -27,12 +28,12 @@ output_width = 2
 scale_multiplier = 1
 
 active = [
-	'walk'
+	'attack_area_body',
+	'death_explosion_body'
 ]
 
 [consistency_groups]
 seated_block = ["seated_engage", "seated_laugh", "seated_drink", "seated_swirl"]
-dash_block = ["attack_dash_begin", "attack_dash_end"]
 
 [[animation]]
 name = "idle"
@@ -84,10 +85,10 @@ match = "characters/enemies/tax_man/resources/sprites/turn/turnaround_00.png"
 [[animation]]
 name = "hurt_light"
 prompt_variations = [
-  "Character recoils from a light hit in place, short flinch, no translation",
-  "Character reacts to a quick hit, subtle recoil, feet planted, no translation",
-  "Character light-injury flinch in place, clear silhouette, no translation",
-  "Character quick pain reaction, in place, grounded"
+  "Character takes a light hit to the chest, brief chest-first recoil, feet planted, no translation",
+  "Character reacts to a quick strike to the chest, shoulders snap back, grounded and centered",
+  "Character light chest-impact flinch in place, one clear recoil frame, no translation",
+  "Character short pain reaction from a chest hit, torso leads the recoil, feet anchored"
 ]
 duration = 3
 frame_count = 1
@@ -100,10 +101,10 @@ match = "characters/enemies/tax_man/resources/sprites/hurt/injury_small.png"
 [[animation]]
 name = "hurt_medium"
 prompt_variations = [
-  "Character recoils from a medium hit in place, stronger flinch, no translation",
-  "Character reacts to a heavier hit with a sharp torso recoil, feet planted, no translation",
-  "Character medium-injury flinch in place, clear readable silhouette, no translation",
-  "Character pain reaction from medium strike, in place and grounded"
+  "Character takes a solid hit to the chest, stronger torso recoil, feet planted, no translation",
+  "Character reacts to a heavier chest strike with a sharp backward chest-led flinch, grounded and centered",
+  "Character medium chest-impact reaction in place, clear readable silhouette, no translation",
+  "Character pain reaction from a strong chest hit, in place, shoulders and ribcage taking the impact"
 ]
 duration = 3
 frame_count = 1
@@ -116,10 +117,10 @@ match = "characters/enemies/tax_man/resources/sprites/hurt/injury_medium.png"
 [[animation]]
 name = "hurt_knockout"
 prompt_variations = [
-  "Character takes a heavy knockout-impact hit in place, dramatic recoil frame, no translation",
-  "Character knockout-impact reaction, brief stun pose, feet still anchored, no translation",
-  "Character heavy hit reaction frame, in place, no translation",
-  "Character impact frame before collapse, grounded and centered"
+  "Character takes a knockout-impact hit square in the chest, dramatic chest-driven recoil frame, no translation",
+  "Character knockout-impact reaction from a brutal chest strike, brief stunned pose, feet anchored",
+  "Character heavy chest-hit reaction frame, centered and grounded, no translation",
+  "Character impact frame before collapse, chest struck hard, torso buckling backward"
 ]
 duration = 3
 frame_count = 1
@@ -171,54 +172,12 @@ dest_dir = "characters/enemies/tax_man/resources/sprites/attacks/combo_sequence"
 match = "characters/enemies/tax_man/resources/sprites/attacks/combo_sequence/attack_01.png"
 
 [[animation]]
-name = "attack_dash_begin"
-prompt_variations = [
-  "Character launches dash attack at normal body size: slight hover with feet just off ground, sword thrust forward, lateral motion inside frame with no smoke trails",
-  "Character initiates fast sword rush at normal scale, side-space reserved for blade extension, body and sword stay fully in frame, no big smoke effects",
-  "Character dash opener with controlled forward travel inside frame, feet lightly lifted, sword leading the movement, no rear smoke plume",
-  "Character rush-start sequence in normal-size canvas, forward sword-point stance and hover-step motion, keep all motion inside white border"
-]
-duration = 4
-extract_fps = 24
-frame_count = 7
-seed_source_pad_x_pct = 0.24
-seed_source_pad_y_pct = 0.10
-seed_center_x = 0.50
-frame_indices = "1-7"
-prefix = "dash_"
-output_indices = "0,1,2,4,6,8,9"
-output_width = 2
-dest_dir = "characters/enemies/tax_man/resources/sprites/attacks/dash_attack"
-match = "characters/enemies/tax_man/resources/sprites/attacks/dash_attack/dash_00.png"
-
-[[animation]]
-name = "attack_dash_end"
-prompt_variations = [
-  "Character completes sword dash at normal scale with controlled deceleration and recovery, feet settle from slight hover, no smoke trails",
-  "Character rush-finisher: forward sword impact pose into stable recovery stance, maintain side-space and keep full silhouette inside frame",
-  "Character dash end phase with sword follow-through and stop, no extra effects cloud, no camera motion",
-  "Character post-dash recovery at normal size, blade settles while body remains contained in frame"
-]
-duration = 4
-extract_fps = 24
-frame_count = 8
-seed_source_pad_x_pct = 0.24
-seed_source_pad_y_pct = 0.10
-seed_center_x = 0.50
-frame_indices = "1-8"
-prefix = "dash_"
-output_indices = "10,11,13,14,15,16,17,18"
-output_width = 2
-dest_dir = "characters/enemies/tax_man/resources/sprites/attacks/dash_attack"
-match = "characters/enemies/tax_man/resources/sprites/attacks/dash_attack/dash_10.png"
-
-[[animation]]
 name = "attack_area_body"
 prompt_variations = [
-  "Character starts middle-right in a large frame area, channels sword-lightning He-Man style, escalating overhead charge then discharge while staying fully inside border",
-  "Character on middle-right side of wide arena space raises sword to call power then releases area strike, keep body contained and leave room for effects",
-  "Character performs space-galleon area attack from middle-right placement, sword is lightning source, dramatic build/recoil with no camera movement",
-  "Character executes area strike from a right-of-center stance with roomy left-side space for VFX, all motion and blade fully inside frame"
+  "Character points his sword straight up into the sky to pull down electricity, holds the blade aloft like a lightning rod, then discharges the power, staying fully inside frame",
+  "Character raises sword overhead to call lightning down from above, chest open and body braced for the strike, roomy left-side space for reused Tax Man VFX",
+  "Character performs a sword-to-sky electrical summon, pulling lightning into the raised blade before releasing an area attack, no camera movement, all motion contained",
+  "Character plants his stance and thrusts the sword skyward to channel electricity from above, dramatic ritual build and release, leave room for the existing background lightning/explosion layers"
 ]
 duration = 5
 extract_fps = 24
@@ -231,15 +190,15 @@ prefix = "area_attack"
 output_indices = "0,2,4,6,9-11,13-15,18,20,22,24-26,29-30,32,34,36,38,40,42,44,46,48,50,53,57,59-61"
 output_width = 4
 dest_dir = "characters/enemies/tax_man/resources/sprites/attacks/area_attack/tax_man"
-match = "characters/enemies/tax_man/resources/sprites/attacks/area_attack/tax_man/area_attack0000.png"
+match = "outputs/reskin/captain_snakeoil/guides/attack_area_body_match.png"
 
 [[animation]]
 name = "death_explosion_body"
 prompt_variations = [
-  "Character defeat sequence: stagger, wail, collapse, then crumble into a pile of bones with sword dropped, no lightning explosion, fully inside frame",
-  "Character death animation on deck: anguished collapse into bone pile, no blast VFX, no camera movement, contained motion",
-  "Character is defeated and disassembles into bones in-place, clear staged fall then skeletal heap, keep full action readable",
-  "Character final death choreography: panic beat, fall, crumble to bones and stillness, no explosion plume"
+  "Character defeat sequence: chest caves, stagger, collapse to the deck, then crumble into a pile of bones with the sword dropped beside the remains, no bombs, no grenade toss",
+  "Character dies by collapsing in place and breaking down into a skeletal heap on the floor, no explosive gimmick, no thrown objects, contained readable motion",
+  "Character final death choreography: wounded stagger, fall to the deck, then crumble into bones and stillness, sword falling harmlessly away, no bomb throw",
+  "Character is defeated and crumbles onto the floor as a pile of bones, no grenades, no self-destruct beat, no comedy explosion"
 ]
 duration = 5
 extract_fps = 24

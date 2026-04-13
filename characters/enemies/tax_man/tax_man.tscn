@@ -141,12 +141,8 @@ _skin_state = &"death_explosion"
 [node name="Seated" type="Node" parent="StateMachine" index="2"]
 script = ExtResource("14_feq3t")
 _path_idle = "Ground/Move/IdleAi"
-_swirl_max = 8
-_swirl_min = 3
 _skin_reveal = &"seated_reveal"
 _skin_swirl = &"seated_swirl"
-_skin_drink = &"seated_drink"
-_skin_laugh = &"seated_laugh"
 _skin_engage = &"seated_engage"
 
 [node name="AiStateMachine" type="Node" parent="." index="3"]
@@ -179,8 +175,7 @@ _max_wait = 6.0
 [node name="ChooseRandomAttack" type="Node" parent="AiStateMachine/Phase1" index="1"]
 script = ExtResource("17_5k63d")
 _weights_by_child = {
-"ComboAttack": 1.40816,
-"DashAttack": 0.591839
+"ComboAttack": 1.0
 }
 
 [node name="ComboAttack" type="Node" parent="AiStateMachine/Phase1/ChooseRandomAttack" index="0"]
@@ -193,24 +188,6 @@ _path_follow_state = "Ground/Move/Follow"
 [node name="CallAttack" type="Node" parent="AiStateMachine/Phase1/ChooseRandomAttack/ComboAttack" index="1"]
 script = ExtResource("20_38efy")
 _attack_state_path = "Ground/AttackCombo"
-_fallback_state_path = "Ground/Move/IdleAi"
-
-[node name="DashAttack" type="Node" parent="AiStateMachine/Phase1/ChooseRandomAttack" index="1"]
-script = ExtResource("18_thg3o")
-
-[node name="GoToClosestPosition" type="Node" parent="AiStateMachine/Phase1/ChooseRandomAttack/DashAttack" index="0" groups=["tm_dash_position_states"]]
-script = ExtResource("24_jvcip")
-_path_follow_state = "Ground/Move/Follow"
-_use_node = false
-_fallback_position = Vector2(inf, inf)
-
-[node name="AlignToClosestPlayer" type="Node" parent="AiStateMachine/Phase1/ChooseRandomAttack/DashAttack" index="1"]
-script = ExtResource("21_ghwwy")
-_path_follow_state = "Ground/Move/Follow"
-
-[node name="CallAttack" type="Node" parent="AiStateMachine/Phase1/ChooseRandomAttack/DashAttack" index="2"]
-script = ExtResource("20_38efy")
-_attack_state_path = "Ground/AttackDash"
 _fallback_state_path = "Ground/Move/IdleAi"
 
 [node name="Phase2" type="Node" parent="AiStateMachine" index="3"]
@@ -227,8 +204,7 @@ _max_wait = 1.0
 script = ExtResource("17_5k63d")
 _weights_by_child = {
 "AreaAttack": 0.60801,
-"ComboAttack": 1.19884,
-"DashAttack": 1.19315
+"ComboAttack": 1.19884
 }
 
 [node name="ComboAttack" type="Node" parent="AiStateMachine/Phase2/ChooseRandomAttack" index="0"]
@@ -243,25 +219,7 @@ script = ExtResource("20_38efy")
 _attack_state_path = "Ground/AttackCombo"
 _fallback_state_path = "Ground/Move/IdleAi"
 
-[node name="DashAttack" type="Node" parent="AiStateMachine/Phase2/ChooseRandomAttack" index="1"]
-script = ExtResource("18_thg3o")
-
-[node name="GoToClosestPosition" type="Node" parent="AiStateMachine/Phase2/ChooseRandomAttack/DashAttack" index="0" groups=["tm_dash_position_states"]]
-script = ExtResource("24_jvcip")
-_path_follow_state = "Ground/Move/Follow"
-_use_node = false
-_fallback_position = Vector2(inf, inf)
-
-[node name="AlignToClosestPlayer" type="Node" parent="AiStateMachine/Phase2/ChooseRandomAttack/DashAttack" index="1"]
-script = ExtResource("21_ghwwy")
-_path_follow_state = "Ground/Move/Follow"
-
-[node name="CallAttack" type="Node" parent="AiStateMachine/Phase2/ChooseRandomAttack/DashAttack" index="2"]
-script = ExtResource("20_38efy")
-_attack_state_path = "Ground/AttackDash"
-_fallback_state_path = "Ground/Move/IdleAi"
-
-[node name="AreaAttack" type="Node" parent="AiStateMachine/Phase2/ChooseRandomAttack" index="2"]
+[node name="AreaAttack" type="Node" parent="AiStateMachine/Phase2/ChooseRandomAttack" index="1"]
 script = ExtResource("18_thg3o")
 
 [node name="ChaseClosestPlayer" type="Node" parent="AiStateMachine/Phase2/ChooseRandomAttack/AreaAttack" index="0"]
@@ -287,8 +245,7 @@ _max_wait = 0.7
 script = ExtResource("17_5k63d")
 _weights_by_child = {
 "AreaAttack": 0.892046,
-"ComboAttack": 0.608845,
-"DashAttack": 1.49911
+"ComboAttack": 0.608845
 }
 
 [node name="ComboAttack" type="Node" parent="AiStateMachine/Phase3/ChooseRandomAttack" index="0"]
@@ -303,25 +260,7 @@ script = ExtResource("20_38efy")
 _attack_state_path = "Ground/AttackCombo"
 _fallback_state_path = "Ground/Move/IdleAi"
 
-[node name="DashAttack" type="Node" parent="AiStateMachine/Phase3/ChooseRandomAttack" index="1"]
-script = ExtResource("18_thg3o")
-
-[node name="GoToClosestPosition" type="Node" parent="AiStateMachine/Phase3/ChooseRandomAttack/DashAttack" index="0" groups=["tm_dash_position_states"]]
-script = ExtResource("24_jvcip")
-_path_follow_state = "Ground/Move/Follow"
-_use_node = false
-_fallback_position = Vector2(inf, inf)
-
-[node name="AlignToClosestPlayer" type="Node" parent="AiStateMachine/Phase3/ChooseRandomAttack/DashAttack" index="1"]
-script = ExtResource("21_ghwwy")
-_path_follow_state = "Ground/Move/Follow"
-
-[node name="CallAttack" type="Node" parent="AiStateMachine/Phase3/ChooseRandomAttack/DashAttack" index="2"]
-script = ExtResource("20_38efy")
-_attack_state_path = "Ground/AttackDash"
-_fallback_state_path = "Ground/Move/IdleAi"
-
-[node name="AreaAttack" type="Node" parent="AiStateMachine/Phase3/ChooseRandomAttack" index="2"]
+[node name="AreaAttack" type="Node" parent="AiStateMachine/Phase3/ChooseRandomAttack" index="1"]
 script = ExtResource("18_thg3o")
 
 [node name="ChaseClosestPlayer" type="Node" parent="AiStateMachine/Phase3/ChooseRandomAttack/AreaAttack" index="0"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dx0fm6hev5qpg"]
+[gd_scene load_steps=7 format=3 uid="uid://dxo31c12bl10h"]
 
 [ext_resource type="Script" uid="uid://43u5j4lq84k" path="res://stages/stage_01/stage_elements/tax_man_area/brick_gate/dirty_brick_wall_gate.gd" id="1_xbrta"]
 [ext_resource type="Texture2D" uid="uid://b4jcajha80arw" path="res://stages/stage_01/stage_elements/tax_man_area/brick_gate/brick_gate_back.png" id="2_m7y1y"]
@@ -47,6 +47,7 @@ texture = ExtResource("4_amltg")
 offset = Vector2(135, -321.999)
 
 [node name="StaticBody2d" type="StaticBody2D" parent="."]
+visible = false
 collision_layer = 2
 collision_mask = 17
 
@@ -61,6 +62,7 @@ position = Vector2(617, 600)
 polygon = PackedVector2Array(-515, -497, -429, -499, -544.939, -607.145, -553, -610, -611, -607, -613, -603, -612, -598, -608, -594)
 
 [node name="LeftArea" type="Area2D" parent="."]
+visible = false
 collision_layer = 0
 monitorable = false
 metadata/collision_type = "player_detector"
@@ -69,6 +71,7 @@ metadata/collision_type = "player_detector"
 polygon = PackedVector2Array(-617, -632, 148, 125, -393, 123, -1155, -634)
 
 [node name="RightArea" type="Area2D" parent="."]
+visible = false
 collision_layer = 0
 monitorable = false
 metadata/collision_type = "player_detector"

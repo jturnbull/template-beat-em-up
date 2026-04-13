@@ -212,6 +212,9 @@ def main() -> int:
     if not negative:
         raise SystemExit("global.negative is required")
     resolution = str(global_cfg.get("resolution") or "").strip() or "1080p"
+    video_model = str(global_cfg.get("video_model") or "").strip()
+    if not video_model:
+        raise SystemExit("global.video_model is required")
     video_variants = int(global_cfg.get("video_variants") or 0)
     if video_variants <= 0:
         raise SystemExit("global.video_variants is required and must be > 0")
@@ -438,6 +441,8 @@ def main() -> int:
                 cmd = [
                     "python3",
                     "scripts/fal_video_generate.py",
+                    "--model",
+                    video_model,
                     "--image",
                     str(seed_path),
                     "--output-dir",

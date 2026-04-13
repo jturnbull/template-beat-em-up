@@ -20,6 +20,17 @@ python3 scripts/reskin_interactive.py
 
 It drives the full pipeline described in `docs/reskin/SPRITE_PIPELINE.md`.
 
+For Captain Snakeoil throne-intro source clips, use the dedicated runner:
+```bash
+python3 scripts/captain_snakeoil_intro.py --clip seated_master
+```
+
+That uses `docs/reskin/captain_snakeoil_intro.toml` and generates:
+- model A/B videos
+- full contact sheets
+- full GIFs
+- windowed review GIFs
+
 ---
 
 ## Helper Scripts (Internal Building Blocks)
@@ -42,9 +53,12 @@ Script: `scripts/prepare_anchor_image.py`
 ### 3) Generate videos (kling)
 Script: `scripts/fal_video_generate.py`
 
-Model: `fal-ai/kling-video/o1/image-to-video`
+Supported models:
+- `fal-ai/kling-video/o1/image-to-video`
+- `bytedance/seedance-2.0/fast/image-to-video`
 
 - Always sets `generate_audio=false`.
+- Requires an explicit `--model`.
 - Writes `.mp4` files into the given output dir.
 
 ### 4) Remove background (bria)

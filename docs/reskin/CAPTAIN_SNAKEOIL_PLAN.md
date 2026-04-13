@@ -4,7 +4,7 @@
 Replace Tax Man body sprites with Captain Snakeoil while preserving existing gameplay wiring, hitboxes, and state-machine behavior.
 
 ## Critical constraint
-Do not design motion as "camera tracks character across frame". For Tax Man, movement-heavy states (especially dash) are driven by gameplay movement + hitbox tracks, not by translating the whole body sprite from one edge of the canvas to the other.
+Do not design motion as "camera tracks character across frame". For Tax Man/Snakeoil, gameplay movement comes from the state machine and hitbox tracks, not from sliding the whole body sprite across the canvas.
 
 ## Shape inventory (current game targets)
 
@@ -14,7 +14,6 @@ Do not design motion as "camera tracks character across frame". For Tax Man, mov
 - Hurt canvases: `544x632`
 - Retaliate (`attack_retaliate`): `795x625`
 - Combo (`attack_combo`): `1258x636`
-- Dash (`attack_dash_begin` + `attack_dash_end`): `2558x1008`
 - Area body (`attack_area_body`): `844x985`
 - Death body (`death_explosion_body`): `864x968`
 - Seated:
@@ -46,38 +45,26 @@ Do not design motion as "camera tracks character across frame". For Tax Man, mov
   - `attack_combo` uses `1258x636`.
 - Picking rule: ensure enough distinct pose beats to satisfy frame counts.
 
-### 3) Dash block (most sensitive)
-
-- Actions: `attack_dash_begin`, `attack_dash_end`
-- Objective: preserve existing dash feel without breaking hitbox/travel timing.
-- Motion rule:
-  - Do **not** animate full-frame left->right traversal.
-  - `attack_dash_begin`: startup/launch body language.
-  - `attack_dash_end`: strike/recovery body language.
-- Canvas rule:
-  - both use wide `2558x1008` targets.
-  - body framing must remain compatible with existing dash hitbox tracks.
-- Picking rule:
-  - review begin/end separately and as combined sequence in preview (`3`, `5`, `6`).
-
-### 4) Area attack block (composite)
+### 3) Area attack block (composite)
 
 - Action: `attack_area_body`
-- Objective: body choreography for sword-powered lightning attack.
-- Motion rule: body drives the ritual; keep action readable and contained.
+- Objective: body choreography for a sword-to-sky lightning summon.
+- Motion rule:
+  - point the sword straight up to call electricity down from above
+  - keep the body readable and contained while the existing Tax Man VFX layers sell the impact
 - Canvas rule: `844x985`.
-- Important: this is body-only. Final in-game look includes layered VFX (lightning/smoke/explosion sprite sets).
-- Picking rule: choose body poses that sync well with layered VFX timing.
+- Important: this is body-only. Final in-game look keeps the existing lightning / smoke / explosion layers from Tax Man.
+- Picking rule: `33` body frames, chosen to match the current `area_attack0000..0061` mapping and to leave room for the reused VFX.
 
-### 5) Death block (composite)
+### 4) Death block (composite)
 
 - Action: `death_explosion_body`
-- Objective: wail-and-crumble body sequence (no self-explosion body pose language).
+- Objective: wail-and-crumble body sequence ending in a bone pile.
 - Canvas rule: `864x968`.
-- Important: body-only; existing explosion/smoke/lightning layers still play.
-- Picking rule: body readability first; VFX layers provide spectacle.
+- Important: current gameplay still contains old Tax Man death VFX layers (lightning, smoke, explosion, coins). Those need stripping after the new body frames are in, otherwise Snakeoil still reads like a grenade finisher.
+- Picking rule: `15` body frames, ending with clear floor contact and a stable skeletal heap.
 
-### 6) Seated behavior block (linked)
+### 5) Seated behavior block (linked)
 
 - Actions: `seated_engage`, `seated_laugh`, `seated_drink`, `seated_swirl`
 - Objective: consistent seated character performance set.
@@ -96,13 +83,23 @@ Do not design motion as "camera tracks character across frame". For Tax Man, mov
 ## Pipeline decisions
 
 1. Keep action names aligned with gameplay names in TOML:
-   - `attack_retaliate`, `attack_combo`, `attack_dash_begin`, `attack_dash_end`, `attack_area_body`, `death_explosion_body`.
+   - `attack_retaliate`, `attack_combo`, `attack_area_body`, `death_explosion_body`.
 2. Use per-action `match` dimensions as canonical frame guides.
 3. Generate videos by section, not all at once:
-   - locomotion -> sword -> dash -> area -> death -> seated.
+   - locomotion -> sword -> hurt -> area -> death -> seated.
 4. Use preview scene keys to validate before frame picking:
-   - `1/2/3/4/5/6`, `E/L/R/S`, etc.
+   - `1/2/4`, `H`, `D`, `E/L/R/S`, etc.
 5. Only after preview validation: choose `frame_indices`, then apply sprites.
+
+## Current work queue
+
+1. Disable rush/dash in gameplay AI. Do not spend more time generating dash sprites.
+2. Generate the three hurt reactions as chest-hit recoil frames:
+   - `hurt_light`
+   - `hurt_medium`
+   - `hurt_knockout`
+3. Generate `attack_area_body` as the sword-to-sky lightning ritual while reusing the existing Tax Man VFX layers.
+4. Generate `death_explosion_body` as a crumble-to-bones sequence, then remove the old grenade/explosion/coin tracks from the defeat animation resources.
 
 ## Non-negotiables
 

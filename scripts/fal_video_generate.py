@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate an animation clip with fal-ai/kling-video/o1/image-to-video."""
+"""Generate an animation clip with one of the supported fal.ai image-to-video models."""
 from __future__ import annotations
 
 import argparse
@@ -10,11 +10,23 @@ import urllib.request
 from pathlib import Path
 
 import fal_client
+from PIL import Image
 
-MODEL = "fal-ai/kling-video/o1/image-to-video"
+SUPPORTED_MODELS = {
+    "fal-ai/kling-video/o1/image-to-video": {
+        "start_field": "start_image_url",
+        "end_field": "end_image_url",
+        "supports_negative": True,
+        "supports_aspect_ratio": False,
+    },
+    "bytedance/seedance-2.0/fast/image-to-video": {
+        "start_field": "image_url",
+        "end_field": "end_image_url",
+        "supports_negative": False,
+        "supports_aspect_ratio": True,
+    },
+}
 DEFAULT_RESOLUTION = "1080p"
-DEFAULT_DURATION = "3"
-DEFAULT_NEGATIVE = "low resolution, error, worst quality, low quality, defects"
 ALLOWED_DURATIONS_WITH_END = {3, 4, 5}
 ALLOWED_DURATIONS_NO_END = {5, 10}
 POLL_SECONDS = 2.0
@@ -31,6 +43,7 @@ PRESET_CONSTRAINTS = {
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
+    parser.add_argument("--model", required=True, choices=sorted(SUPPORTED_MODELS.keys()))
     parser.add_argument("--image", required=True, help="Path to base image (anchor still)")
     parser.add_argument(
         "--end-image",
@@ -38,9 +51,14 @@ def parse_args() -> argparse.Namespace:
         help="Path to end image, or 'same' to reuse start, or 'none' to omit end image",
     )
     parser.add_argument("--prompt", required=True, help="Video prompt")
-    parser.add_argument("--negative", default=DEFAULT_NEGATIVE, help="Negative prompt")
+    parser.add_argument("--negative", default=None, help="Negative prompt (supported only by Kling)")
     parser.add_argument("--resolution", default=DEFAULT_RESOLUTION, help="Resolution (e.g., 1080p)")
-    parser.add_argument("--duration", default=DEFAULT_DURATION, help="Duration in seconds (3, 4, or 5)")
+    parser.add_argument("--duration", required=True, help="Duration in seconds")
+    parser.add_argument(
+        "--aspect-ratio",
+        default=None,
+        help="Aspect ratio for models that support it (e.g. auto, 16:9)",
+    )
     parser.add_argument(
         "--preset",
         choices=sorted(PRESET_CONSTRAINTS.keys()),
@@ -48,7 +66,8 @@ def parse_args() -> argparse.Namespace:
         help="Append a preset constraint block to the prompt",
     )
     parser.add_argument("--constraints", default=None, help="Append custom constraints to the prompt")
-    parser.add_argument("--output-dir", default="outputs/reskin/_tmp/videos", help="Output directory")
+    parser.add_argument("--output-dir", required=True, help="Output directory")
+    parser.add_argument("--output-name", default=None, help="Output mp4 filename")
     parser.add_argument("--no-download", action="store_true", help="Skip downloading video")
     parser.add_argument("--max-bytes", type=int, default=MAX_UPLOAD_BYTES, help="Max upload size in bytes")
     parser.add_argument("--max-dim", type=int, default=DEFAULT_MAX_DIM, help="Resize max dimension if too large")
@@ -61,6 +80,7 @@ def download_file(url: str, dest: Path) -> None:
     with urllib.request.urlopen(url) as response:
         dest.write_bytes(response.read())
 
+
 def open_folder(path: Path) -> None:
     if os.environ.get("RESKIN_BATCH") == "1":
         return
@@ -70,24 +90,16 @@ def open_folder(path: Path) -> None:
 def ensure_size_limit(image_path: Path, max_bytes: int, max_dim: int) -> Path:
     if image_path.stat().st_size <= max_bytes:
         return image_path
-    # Create resized PNG to reduce size; shrink dimensions until under limit.
     tmp_dir = image_path.parent / "_resized"
     tmp_dir.mkdir(parents=True, exist_ok=True)
     current_dim = max_dim
     for _ in range(6):
         out_path = tmp_dir / f"{image_path.stem}_max{current_dim}.png"
-        cmd = [
-            "sips",
-            "-Z",
-            str(current_dim),
-            "-s",
-            "format",
-            "png",
-            str(image_path),
-            "--out",
-            str(out_path),
-        ]
-        subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        with Image.open(image_path) as src:
+            src = src.convert("RGBA")
+            resized = src.copy()
+            resized.thumbnail((current_dim, current_dim), Image.LANCZOS)
+            resized.save(out_path, format="PNG", optimize=True)
         if out_path.exists() and out_path.stat().st_size <= max_bytes:
             return out_path
         current_dim = int(current_dim * 0.85)
@@ -97,6 +109,65 @@ def ensure_size_limit(image_path: Path, max_bytes: int, max_dim: int) -> Path:
         "Resized PNG still exceeds max upload size. "
         "Reduce input dimensions or raise --max-bytes."
     )
+
+
+def resolve_duration(model: str, raw_duration: str, end_image_mode: str) -> str:
+    if model != "fal-ai/kling-video/o1/image-to-video":
+        return raw_duration
+
+    allowed_durations = (
+        ALLOWED_DURATIONS_NO_END if end_image_mode == "none" else ALLOWED_DURATIONS_WITH_END
+    )
+    try:
+        duration_value = int(float(raw_duration))
+    except ValueError as exc:
+        raise SystemExit(f"Invalid duration for Kling: {raw_duration}") from exc
+
+    if duration_value not in allowed_durations:
+        raise SystemExit(
+            f"Kling duration {duration_value}s is invalid for end_image={end_image_mode}. "
+            f"Allowed: {sorted(allowed_durations)}"
+        )
+    return str(duration_value)
+
+
+def build_arguments(args: argparse.Namespace, image_url: str, end_image_url: str | None) -> dict:
+    model_spec = SUPPORTED_MODELS[args.model]
+
+    prompt = args.prompt
+    if args.preset:
+        prompt = f"{prompt}. {PRESET_CONSTRAINTS[args.preset]}"
+    if args.constraints:
+        prompt = f"{prompt}. {args.constraints}"
+
+    if args.aspect_ratio and not model_spec["supports_aspect_ratio"]:
+        raise SystemExit(f"Model {args.model} does not support --aspect-ratio")
+
+    negative = (args.negative or "").strip()
+    if negative and not model_spec["supports_negative"]:
+        raise SystemExit(f"Model {args.model} does not support --negative")
+
+    duration = resolve_duration(args.model, args.duration, args.end_image)
+
+    arguments = {
+        "prompt": prompt,
+        model_spec["start_field"]: image_url,
+        "resolution": args.resolution,
+        "duration": duration,
+        "generate_audio": False,
+    }
+
+    if args.aspect_ratio:
+        arguments["aspect_ratio"] = args.aspect_ratio
+    if negative:
+        arguments["negative_prompt"] = negative
+
+    if end_image_url is None and args.end_image == "same":
+        arguments[model_spec["end_field"]] = image_url
+    elif end_image_url is not None:
+        arguments[model_spec["end_field"]] = end_image_url
+
+    return arguments
 
 
 def main() -> int:
@@ -110,6 +181,7 @@ def main() -> int:
 
     safe_path = ensure_size_limit(image_path, args.max_bytes, args.max_dim)
     image_url = fal_client.upload_file(str(safe_path))
+
     end_image_url = None
     if args.end_image and args.end_image != "same":
         if args.end_image == "none":
@@ -121,56 +193,16 @@ def main() -> int:
             safe_end = ensure_size_limit(end_path, args.max_bytes, args.max_dim)
             end_image_url = fal_client.upload_file(str(safe_end))
 
-    prompt = args.prompt
-    if args.preset:
-        prompt = f"{prompt}. {PRESET_CONSTRAINTS[args.preset]}"
-    if args.constraints:
-        prompt = f"{prompt}. {args.constraints}"
+    arguments = build_arguments(args, image_url, end_image_url)
 
-    end_image_mode = args.end_image
-    allowed_durations = (
-        ALLOWED_DURATIONS_NO_END if end_image_mode == "none" else ALLOWED_DURATIONS_WITH_END
-    )
-    try:
-        duration_value = int(float(args.duration))
-    except ValueError:
-        duration_value = int(DEFAULT_DURATION)
-    if duration_value not in allowed_durations:
-        if end_image_mode == "none":
-            duration_value = 5 if duration_value < 10 else 10
-        else:
-            if duration_value <= 3:
-                duration_value = 3
-            elif duration_value <= 4:
-                duration_value = 4
-            else:
-                duration_value = 5
-        print(f"Duration not supported for end_image={end_image_mode}; using {duration_value}s.")
-    duration = str(duration_value)
-
-    arguments = {
-        "prompt": prompt,
-        "start_image_url": image_url,
-        "resolution": args.resolution,
-        "duration": duration,
-        "generate_audio": False,
-    }
-    if end_image_url is None and args.end_image == "same":
-        arguments["end_image_url"] = image_url
-    elif end_image_url is not None:
-        arguments["end_image_url"] = end_image_url
-    if args.negative:
-        arguments["negative_prompt"] = args.negative
-
-    handler = fal_client.submit(MODEL, arguments=arguments)
+    handler = fal_client.submit(args.model, arguments=arguments)
     request_id = handler.request_id
     print(f"Submitted {request_id}")
 
     while True:
-        status = fal_client.status(MODEL, request_id, with_logs=False)
+        status = fal_client.status(args.model, request_id, with_logs=False)
         if isinstance(status, fal_client.Completed):
-            result = fal_client.result(MODEL, request_id)
-            # Try common shapes: {"video": {"url": ...}} or {"videos": [{"url": ...}]}
+            result = fal_client.result(args.model, request_id)
             url = None
             if isinstance(result, dict):
                 if "video" in result and isinstance(result["video"], dict):
@@ -182,11 +214,14 @@ def main() -> int:
 
             if not args.no_download:
                 out_dir = Path(args.output_dir)
-                out_path = out_dir / f"{image_path.stem}.mp4"
+                ensure_name = args.output_name or f"{image_path.stem}.mp4"
+                if not ensure_name.endswith(".mp4"):
+                    raise SystemExit("--output-name must end with .mp4")
+                out_path = out_dir / ensure_name
                 if out_path.exists():
                     raise SystemExit(
                         f"Refusing to overwrite existing output: {out_path}\n"
-                        "Choose a fresh --output-dir (recommended: a new timestamped folder)."
+                        "Choose a fresh output name or fresh output dir."
                     )
                 download_file(url, out_path)
                 print(f"Saved {out_path}")
