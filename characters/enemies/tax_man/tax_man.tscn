@@ -11,9 +11,8 @@
 [ext_resource type="Script" path="res://addons/quiver.beat_em_up/characters/action_states/ground_actions/move_actions/quiver_action_idle_ai.gd" id="7_ohh3m"]
 [ext_resource type="Script" path="res://addons/quiver.beat_em_up/characters/action_states/quiver_action_attack.gd" id="10_ptkg4"]
 [ext_resource type="Script" path="res://characters/enemies/tax_man/resources/custom_states/taxman_hurt.gd" id="11_6u64b"]
-[ext_resource type="Script" path="res://addons/quiver.beat_em_up/characters/action_states/quiver_action_die_ai.gd" id="11_7kn5i"]
+[ext_resource type="Script" path="res://characters/enemies/tax_man/resources/custom_states/taxman_die_ai.gd" id="11_7kn5i"]
 [ext_resource type="Script" path="res://characters/enemies/tax_man/resources/custom_states/dash_attack_action.gd" id="11_f2uve"]
-[ext_resource type="Script" path="res://characters/enemies/tax_man/resources/custom_states/knockout_kneeled_action.gd" id="12_4lwgy"]
 [ext_resource type="Script" path="res://addons/quiver.beat_em_up/characters/ai/states/quiver_ai_wait.gd" id="13_oq38d"]
 [ext_resource type="Script" path="res://characters/enemies/tax_man/resources/custom_states/seated.gd" id="14_feq3t"]
 [ext_resource type="Script" path="res://characters/enemies/tax_man/tax_man_ai_state_machine.gd" id="15_ylsp3"]
@@ -124,14 +123,9 @@ script = ExtResource("11_6u64b")
 _skin_state_hurt_light = &"hurt_light"
 _skin_state_hurt_medium = &"hurt_medium"
 _skin_state_hurt_knockout = &"hurt_knockout"
-_path_knockout = "Ground/KnockoutKneeled"
+_path_attack_area = "Ground/AttackArea"
 _path_retaliate = "Ground/AttackRetaliate"
 _path_idle = "Ground/Move/IdleAi"
-
-[node name="KnockoutKneeled" type="Node" parent="StateMachine/Ground" index="6"]
-script = ExtResource("12_4lwgy")
-_skin_state = &"knockout_kneeled"
-_path_attack_area = "Ground/AttackArea"
 _path_die = "DieAi"
 
 [node name="DieAi" type="Node" parent="StateMachine" index="1"]
@@ -313,4 +307,3 @@ properties = PackedStringArray("time_left")
 [connection signal="dash_attack_succeeded" from="Skin" to="StateMachine/Ground/AttackDash" method="_on_skin_dash_attack_succeeded"]
 [connection signal="skin_animation_finished" from="Skin" to="StateMachine/Ground/AttackDash" method="_on_skin_animation_finished"]
 [connection signal="skin_animation_finished" from="Skin" to="StateMachine/Ground/Hurt" method="_on_skin_skin_animation_finished"]
-[connection signal="skin_animation_finished" from="Skin" to="StateMachine/Ground/KnockoutKneeled" method="_on_skin_skin_animation_finished"]

@@ -2,7 +2,7 @@
 
 [resource]
 resource_name = "defeat_explosion_right"
-length = 4.54167
+length = 2.70833
 step = 0.0416667
 tracks/0/type = "method"
 tracks/0/imported = false
@@ -11,7 +11,7 @@ tracks/0/path = NodePath(".")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(4.54167),
+"times": PackedFloat32Array(2.70833),
 "transitions": PackedFloat32Array(1),
 "values": [{
 "args": ["defeat_explosion_left"],
@@ -49,10 +49,10 @@ tracks/3/path = NodePath("Body:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.958334, 1.83333, 2.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [Vector2(176, -277), Vector2(4, -277), Vector2(-108, -277), Vector2(-12, -277)]
+"values": [Vector2(21, -312)]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -97,14 +97,14 @@ tracks/7/path = NodePath("Body:modulate")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
-"times": PackedFloat32Array(0, 3.29167, 3.33333),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+"values": [Color(1, 1, 1, 1)]
 }
 tracks/8/type = "value"
 tracks/8/imported = false
-tracks/8/enabled = true
+tracks/8/enabled = false
 tracks/8/path = NodePath("Lightining:visible")
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
@@ -116,7 +116,7 @@ tracks/8/keys = {
 }
 tracks/9/type = "value"
 tracks/9/imported = false
-tracks/9/enabled = true
+tracks/9/enabled = false
 tracks/9/path = NodePath("Lightining:position")
 tracks/9/interp = 1
 tracks/9/loop_wrap = true
@@ -128,7 +128,7 @@ tracks/9/keys = {
 }
 tracks/10/type = "value"
 tracks/10/imported = false
-tracks/10/enabled = true
+tracks/10/enabled = false
 tracks/10/path = NodePath("Lightining:frame")
 tracks/10/interp = 1
 tracks/10/loop_wrap = true
@@ -140,7 +140,7 @@ tracks/10/keys = {
 }
 tracks/11/type = "value"
 tracks/11/imported = false
-tracks/11/enabled = true
+tracks/11/enabled = false
 tracks/11/path = NodePath("Body/GroundLightining:visible")
 tracks/11/interp = 1
 tracks/11/loop_wrap = true
@@ -152,7 +152,7 @@ tracks/11/keys = {
 }
 tracks/12/type = "value"
 tracks/12/imported = false
-tracks/12/enabled = true
+tracks/12/enabled = false
 tracks/12/path = NodePath("Body/GroundLightining:position")
 tracks/12/interp = 1
 tracks/12/loop_wrap = true
@@ -164,7 +164,7 @@ tracks/12/keys = {
 }
 tracks/13/type = "value"
 tracks/13/imported = false
-tracks/13/enabled = true
+tracks/13/enabled = false
 tracks/13/path = NodePath("Body/GroundLightining:animation")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
@@ -176,7 +176,7 @@ tracks/13/keys = {
 }
 tracks/14/type = "value"
 tracks/14/imported = false
-tracks/14/enabled = true
+tracks/14/enabled = false
 tracks/14/path = NodePath("Body/GroundLightining:frame")
 tracks/14/interp = 1
 tracks/14/loop_wrap = true
@@ -188,7 +188,7 @@ tracks/14/keys = {
 }
 tracks/15/type = "value"
 tracks/15/imported = false
-tracks/15/enabled = true
+tracks/15/enabled = false
 tracks/15/path = NodePath("Body/GroundLightining:modulate")
 tracks/15/interp = 1
 tracks/15/loop_wrap = true
@@ -200,7 +200,7 @@ tracks/15/keys = {
 }
 tracks/16/type = "value"
 tracks/16/imported = false
-tracks/16/enabled = true
+tracks/16/enabled = false
 tracks/16/path = NodePath("FrontLightining:visible")
 tracks/16/interp = 1
 tracks/16/loop_wrap = true
@@ -212,7 +212,7 @@ tracks/16/keys = {
 }
 tracks/17/type = "value"
 tracks/17/imported = false
-tracks/17/enabled = true
+tracks/17/enabled = false
 tracks/17/path = NodePath("FrontLightining:position")
 tracks/17/interp = 1
 tracks/17/loop_wrap = true
@@ -224,7 +224,7 @@ tracks/17/keys = {
 }
 tracks/18/type = "value"
 tracks/18/imported = false
-tracks/18/enabled = true
+tracks/18/enabled = false
 tracks/18/path = NodePath("FrontLightining:frame")
 tracks/18/interp = 1
 tracks/18/loop_wrap = true
@@ -236,7 +236,7 @@ tracks/18/keys = {
 }
 tracks/19/type = "value"
 tracks/19/imported = false
-tracks/19/enabled = true
+tracks/19/enabled = false
 tracks/19/path = NodePath("Positions/ScorchSpawn:position")
 tracks/19/interp = 1
 tracks/19/loop_wrap = true
@@ -248,7 +248,7 @@ tracks/19/keys = {
 }
 tracks/20/type = "value"
 tracks/20/imported = false
-tracks/20/enabled = true
+tracks/20/enabled = false
 tracks/20/path = NodePath("Explosion:visible")
 tracks/20/interp = 1
 tracks/20/loop_wrap = true
@@ -260,7 +260,7 @@ tracks/20/keys = {
 }
 tracks/21/type = "value"
 tracks/21/imported = false
-tracks/21/enabled = true
+tracks/21/enabled = false
 tracks/21/path = NodePath("Explosion:position")
 tracks/21/interp = 1
 tracks/21/loop_wrap = true
@@ -272,7 +272,7 @@ tracks/21/keys = {
 }
 tracks/22/type = "value"
 tracks/22/imported = false
-tracks/22/enabled = true
+tracks/22/enabled = false
 tracks/22/path = NodePath("Explosion:frame")
 tracks/22/interp = 1
 tracks/22/loop_wrap = true
@@ -284,7 +284,7 @@ tracks/22/keys = {
 }
 tracks/23/type = "value"
 tracks/23/imported = false
-tracks/23/enabled = true
+tracks/23/enabled = false
 tracks/23/path = NodePath("SmokeVertical:visible")
 tracks/23/interp = 1
 tracks/23/loop_wrap = true
@@ -296,7 +296,7 @@ tracks/23/keys = {
 }
 tracks/24/type = "value"
 tracks/24/imported = false
-tracks/24/enabled = true
+tracks/24/enabled = false
 tracks/24/path = NodePath("SmokeVertical:position")
 tracks/24/interp = 1
 tracks/24/loop_wrap = true
@@ -308,7 +308,7 @@ tracks/24/keys = {
 }
 tracks/25/type = "value"
 tracks/25/imported = false
-tracks/25/enabled = true
+tracks/25/enabled = false
 tracks/25/path = NodePath("SmokeVertical:frame")
 tracks/25/interp = 1
 tracks/25/loop_wrap = true
@@ -368,7 +368,7 @@ tracks/29/keys = {
 }
 tracks/30/type = "value"
 tracks/30/imported = false
-tracks/30/enabled = true
+tracks/30/enabled = false
 tracks/30/path = NodePath("Attacks/AreaAttack/AreaAttackShape:visible")
 tracks/30/interp = 1
 tracks/30/loop_wrap = true
@@ -380,7 +380,7 @@ tracks/30/keys = {
 }
 tracks/31/type = "value"
 tracks/31/imported = false
-tracks/31/enabled = true
+tracks/31/enabled = false
 tracks/31/path = NodePath("Attacks/AreaAttack/AreaAttackShape:shape:radius")
 tracks/31/interp = 1
 tracks/31/loop_wrap = true
@@ -392,7 +392,7 @@ tracks/31/keys = {
 }
 tracks/32/type = "value"
 tracks/32/imported = false
-tracks/32/enabled = true
+tracks/32/enabled = false
 tracks/32/path = NodePath("Attacks/AreaAttack/AreaAttackShape:shape:height")
 tracks/32/interp = 1
 tracks/32/loop_wrap = true
@@ -404,7 +404,7 @@ tracks/32/keys = {
 }
 tracks/33/type = "value"
 tracks/33/imported = false
-tracks/33/enabled = true
+tracks/33/enabled = false
 tracks/33/path = NodePath("Attacks/AreaAttack/AreaAttackShape:position")
 tracks/33/interp = 1
 tracks/33/loop_wrap = true
@@ -416,7 +416,7 @@ tracks/33/keys = {
 }
 tracks/34/type = "value"
 tracks/34/imported = false
-tracks/34/enabled = true
+tracks/34/enabled = false
 tracks/34/path = NodePath("Attacks/AreaAttack/AreaAttackShape:disabled")
 tracks/34/interp = 1
 tracks/34/loop_wrap = true
@@ -428,7 +428,7 @@ tracks/34/keys = {
 }
 tracks/35/type = "value"
 tracks/35/imported = false
-tracks/35/enabled = true
+tracks/35/enabled = false
 tracks/35/path = NodePath(".:attributes:hit_lane_offset")
 tracks/35/interp = 1
 tracks/35/loop_wrap = true
@@ -440,7 +440,7 @@ tracks/35/keys = {
 }
 tracks/36/type = "value"
 tracks/36/imported = false
-tracks/36/enabled = true
+tracks/36/enabled = false
 tracks/36/path = NodePath("Attacks/Lightining/LigthtiningShape:visible")
 tracks/36/interp = 1
 tracks/36/loop_wrap = true
@@ -452,7 +452,7 @@ tracks/36/keys = {
 }
 tracks/37/type = "value"
 tracks/37/imported = false
-tracks/37/enabled = true
+tracks/37/enabled = false
 tracks/37/path = NodePath("Attacks/Lightining/LigthtiningShape:shape:size")
 tracks/37/interp = 1
 tracks/37/loop_wrap = true
@@ -464,7 +464,7 @@ tracks/37/keys = {
 }
 tracks/38/type = "value"
 tracks/38/imported = false
-tracks/38/enabled = true
+tracks/38/enabled = false
 tracks/38/path = NodePath("Attacks/Lightining/LigthtiningShape:position")
 tracks/38/interp = 1
 tracks/38/loop_wrap = true
@@ -476,7 +476,7 @@ tracks/38/keys = {
 }
 tracks/39/type = "value"
 tracks/39/imported = false
-tracks/39/enabled = true
+tracks/39/enabled = false
 tracks/39/path = NodePath("Attacks/Lightining/LigthtiningShape:disabled")
 tracks/39/interp = 1
 tracks/39/loop_wrap = true
@@ -488,7 +488,7 @@ tracks/39/keys = {
 }
 tracks/40/type = "value"
 tracks/40/imported = false
-tracks/40/enabled = true
+tracks/40/enabled = false
 tracks/40/path = NodePath("Lightining:animation")
 tracks/40/interp = 1
 tracks/40/loop_wrap = true
@@ -500,7 +500,7 @@ tracks/40/keys = {
 }
 tracks/41/type = "value"
 tracks/41/imported = false
-tracks/41/enabled = true
+tracks/41/enabled = false
 tracks/41/path = NodePath("Body/GroundLightining/Smoke:frame")
 tracks/41/interp = 1
 tracks/41/loop_wrap = true
@@ -512,7 +512,7 @@ tracks/41/keys = {
 }
 tracks/42/type = "value"
 tracks/42/imported = false
-tracks/42/enabled = true
+tracks/42/enabled = false
 tracks/42/path = NodePath("Body/GroundLightining/Smoke:visible")
 tracks/42/interp = 1
 tracks/42/loop_wrap = true
@@ -524,7 +524,7 @@ tracks/42/keys = {
 }
 tracks/43/type = "value"
 tracks/43/imported = false
-tracks/43/enabled = true
+tracks/43/enabled = false
 tracks/43/path = NodePath("FrontLightining:animation")
 tracks/43/interp = 1
 tracks/43/loop_wrap = true
@@ -536,7 +536,7 @@ tracks/43/keys = {
 }
 tracks/44/type = "value"
 tracks/44/imported = false
-tracks/44/enabled = true
+tracks/44/enabled = false
 tracks/44/path = NodePath("Explosion:animation")
 tracks/44/interp = 1
 tracks/44/loop_wrap = true
@@ -548,7 +548,7 @@ tracks/44/keys = {
 }
 tracks/45/type = "value"
 tracks/45/imported = false
-tracks/45/enabled = true
+tracks/45/enabled = false
 tracks/45/path = NodePath("SmokeVertical:animation")
 tracks/45/interp = 1
 tracks/45/loop_wrap = true
@@ -560,7 +560,7 @@ tracks/45/keys = {
 }
 tracks/46/type = "value"
 tracks/46/imported = false
-tracks/46/enabled = true
+tracks/46/enabled = false
 tracks/46/path = NodePath("SmokeHorizontal:visible")
 tracks/46/interp = 1
 tracks/46/loop_wrap = true
@@ -572,7 +572,7 @@ tracks/46/keys = {
 }
 tracks/47/type = "value"
 tracks/47/imported = false
-tracks/47/enabled = true
+tracks/47/enabled = false
 tracks/47/path = NodePath("SmokeHorizontal:frame")
 tracks/47/interp = 1
 tracks/47/loop_wrap = true
@@ -584,7 +584,7 @@ tracks/47/keys = {
 }
 tracks/48/type = "value"
 tracks/48/imported = false
-tracks/48/enabled = true
+tracks/48/enabled = false
 tracks/48/path = NodePath("SmokeHorizontal:animation")
 tracks/48/interp = 1
 tracks/48/loop_wrap = true
@@ -596,7 +596,7 @@ tracks/48/keys = {
 }
 tracks/49/type = "value"
 tracks/49/imported = false
-tracks/49/enabled = true
+tracks/49/enabled = false
 tracks/49/path = NodePath("SmokeHorizontal:position")
 tracks/49/interp = 1
 tracks/49/loop_wrap = true
@@ -608,7 +608,7 @@ tracks/49/keys = {
 }
 tracks/50/type = "value"
 tracks/50/imported = false
-tracks/50/enabled = true
+tracks/50/enabled = false
 tracks/50/path = NodePath("Coins:visible")
 tracks/50/interp = 1
 tracks/50/loop_wrap = true
@@ -620,7 +620,7 @@ tracks/50/keys = {
 }
 tracks/51/type = "value"
 tracks/51/imported = false
-tracks/51/enabled = true
+tracks/51/enabled = false
 tracks/51/path = NodePath("Coins:frame")
 tracks/51/interp = 1
 tracks/51/loop_wrap = true

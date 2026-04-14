@@ -6,7 +6,6 @@ const STEP_HURT := ^"Ground/Hurt"
 const STEP_ATTACK_AREA := ^"Ground/AttackArea"
 const STEP_ATTACK_COMBO := ^"Ground/AttackCombo"
 const STEP_ATTACK_SLAP := ^"Ground/AttackRetaliate"
-const STEP_KNEELED := ^"Ground/KnockoutKneeled"
 const STEP_SEATED := ^"Seated"
 const STEP_DIE := ^"DieAi"
 const TIME_SCALE_NORMAL := 1.0
@@ -87,8 +86,6 @@ func _input(event: InputEvent) -> void:
 			_transition_to(STEP_ATTACK_COMBO)
 		KEY_4:
 			_transition_to(STEP_ATTACK_SLAP)
-		KEY_K:
-			_transition_to(STEP_KNEELED)
 		KEY_D:
 			_transition_to(STEP_DIE)
 		KEY_E:
@@ -132,8 +129,6 @@ func _run_cycle() -> void:
 		await get_tree().create_timer(0.9).timeout
 		_transition_to(STEP_HURT)
 		await get_tree().create_timer(0.9).timeout
-		_transition_to(STEP_KNEELED)
-		await get_tree().create_timer(1.2).timeout
 		_transition_to(STEP_DIE)
 		await get_tree().create_timer(0.8).timeout
 
@@ -197,7 +192,7 @@ func _render_help() -> void:
 		"SPACE cycle | C control mode | Arrows move (control mode) | I idle(8f) | W walk(16f) | Y turn(3f)\n"
 		+ "H gameplay hurt | 7 hurt_light | 8 hurt_medium | 9 hurt_knockout | 1 attack_area_body(33f) | 2 attack_combo(15f)\n"
 		+ "4 attack_retaliate(4f)\n"
-		+ "K kneeled(1f) | D death_explosion_body(15f) | R seated reveal(1f) | S seated swirl(7f) | E seated engage(24f) | T 1/4 speed\n"
+		+ "D death_explosion_body(15f) | R seated reveal(1f) | S seated swirl(7f) | E seated engage(24f) | T 1/4 speed\n"
 		+ "Rush / dash attack is disabled for Snakeoil in gameplay AI.\n"
 		+ "State: %s | Tree: %s | Anim: %s #%d | TimeScale: %.2f | Control: %s"
 	) % [_last_state, tree_active, anim_name, frame, speed, _control_enabled]

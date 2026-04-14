@@ -18,9 +18,10 @@ var _skin_state_hurt_light := &"hurt_light"
 var _skin_state_hurt_medium := &"hurt_medium"
 var _skin_state_hurt_knockout := &"hurt_knockout"
 
-var _path_knockout := "Ground/KnockoutKneeled"
+var _path_attack_area := "Ground/AttackArea"
 var _path_retaliate := "Ground/GrabReject"
 var _path_idle := "Ground/Move/IdleAi"
+var _path_die := "DieAi"
 
 var _should_knockout := false
 
@@ -117,7 +118,10 @@ func _on_owner_ready() -> void:
 
 func _on_skin_skin_animation_finished() -> void:
 	if _should_knockout:
-		_state_machine.transition_to(_path_knockout)
+		if _attributes.get_health_as_percentage() <= 0.0:
+			_state_machine.transition_to(_path_die)
+		else:
+			_state_machine.transition_to(_path_attack_area)
 	elif _tax_man._current_cumulated_damage >= _tax_man._max_damage_in_one_combo:
 		_state_machine.transition_to(_path_retaliate)
 	else:
@@ -174,8 +178,15 @@ func _get_custom_properties() -> Dictionary:
 			usage = PROPERTY_USAGE_GROUP,
 			hint_string = "_path_",
 		},
-		"_path_knockout": {
-			default_value = "Ground/KnockoutKneeled",
+		"_path_attack_area": {
+			default_value = "Ground/AttackArea",
+			type = TYPE_STRING,
+			usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE,
+			hint = PROPERTY_HINT_NONE,
+			hint_string = QuiverState.HINT_STATE_LIST,
+		},
+		"_path_die": {
+			default_value = "DieAi",
 			type = TYPE_STRING,
 			usage = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE,
 			hint = PROPERTY_HINT_NONE,

@@ -6,8 +6,8 @@ scale_ref = "outputs/reskin/captain_snakeoil/anchor/anchor_base.png"
 base_source_pad_pct = 0.18
 base_source_pad_color = "#00b140"
 base_prompt_append = "full character and sword must be completely visible and entirely inside the image canvas, leave at least 12% empty green margin on all sides, do not crop or cut off any body part, hand, hat, sword, or accessory at the image edges"
-resolution = "1080p"
-video_model = "fal-ai/kling-video/o1/image-to-video"
+resolution = "720p"
+video_model = "bytedance/seedance-2.0/fast/image-to-video"
 video_variants = 4
 negative = "blurry, cropped, background, watermark, extra limbs, multiple characters"
 extract_fps = 12
@@ -28,8 +28,7 @@ output_width = 2
 scale_multiplier = 1
 
 active = [
-	'attack_area_body',
-	'death_explosion_body'
+	'attack_retaliate'
 ]
 
 [consistency_groups]
@@ -138,7 +137,7 @@ prompt_variations = [
   "Character does one short sword slash only, minimal body travel, clear blade arc, no additional strikes",
   "Character retaliatory attack as one concise sword slice, no chained motion, no second hit, start and end grounded"
 ]
-duration = 3
+duration = 4
 extract_fps = 24
 frame_count = 4
 seed_source_pad_x_pct = 0.16

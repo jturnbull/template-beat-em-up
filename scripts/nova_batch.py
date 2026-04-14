@@ -33,6 +33,8 @@ except ModuleNotFoundError:  # py<=3.10 (our scripts venv)
 from PIL import Image
 from PIL import ImageDraw
 
+from fal_video_generate import SUPPORTED_MODELS
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 FAL_MIN_ASPECT_RATIO = 0.4
@@ -215,6 +217,8 @@ def main() -> int:
     video_model = str(global_cfg.get("video_model") or "").strip()
     if not video_model:
         raise SystemExit("global.video_model is required")
+    if video_model not in SUPPORTED_MODELS:
+        raise SystemExit(f"Unsupported global.video_model: {video_model}")
     video_variants = int(global_cfg.get("video_variants") or 0)
     if video_variants <= 0:
         raise SystemExit("global.video_variants is required and must be > 0")
@@ -449,13 +453,13 @@ def main() -> int:
                     str(out_dir),
                     "--prompt",
                     final_prompt,
-                    "--negative",
-                    anim_negative,
                     "--resolution",
                     resolution,
                     "--duration",
                     duration,
                 ]
+                if SUPPORTED_MODELS[video_model]["supports_negative"]:
+                    cmd += ["--negative", anim_negative]
                 if end_image_arg is not None:
                     cmd += ["--end-image", end_image_arg]
                 jobs.append(cmd)
