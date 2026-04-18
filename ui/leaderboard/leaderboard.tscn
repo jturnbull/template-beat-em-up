@@ -148,8 +148,13 @@ theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 28
 theme_override_constants/margin_bottom = 24
 
-[node name="Rows" type="VBoxContainer" parent="Panel/Content/Frame/RowsPanel/RowsMargin"]
+[node name="RowsScroll" type="ScrollContainer" parent="Panel/Content/Frame/RowsPanel/RowsMargin"]
 layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Rows" type="VBoxContainer" parent="Panel/Content/Frame/RowsPanel/RowsMargin/RowsScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 10
 
 [node name="Footer" type="Label" parent="Panel/Content/Frame"]

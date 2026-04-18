@@ -48,6 +48,12 @@ func _ready() -> void:
 func _input(event: InputEvent) -> void:
 	if _animator.assigned_animation == "game_started":
 		return
+	if event.is_action_pressed("p2_start"):
+		_start_game(2)
+		return
+	if event.is_action_pressed("p1_start"):
+		_start_game(1)
+		return
 	if event is InputEventKey and event.pressed and not event.echo:
 		_restart_idle()
 	elif event is InputEventJoypadButton and event.pressed:
@@ -66,16 +72,21 @@ func _input(event: InputEvent) -> void:
 ### Private Methods -------------------------------------------------------------------------------
 
 func _on_start_pressed() -> void:
-	if _animator.assigned_animation == "game_started":
-		return
-	_pause_idle()
-	_animator.play("game_started")
-	await transition_started
-	ScreenTransitions.transition_to_scene(GAMEPLAY_SCENE)
+	_start_game(1)
 
 
 func _start_transition() -> void:
 	transition_started.emit()
+
+
+func _start_game(player_count: int) -> void:
+	if _animator.assigned_animation == "game_started":
+		return
+	ScoreManager.request_player_count(player_count)
+	_pause_idle()
+	_animator.play("game_started")
+	await transition_started
+	ScreenTransitions.transition_to_scene(GAMEPLAY_SCENE)
 
 
 func _on_how_to_play_pressed() -> void:

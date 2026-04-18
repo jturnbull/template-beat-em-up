@@ -6,7 +6,7 @@
 
 [resource]
 script = ExtResource("1_1ikth")
-display_name = "Grok"
+display_name = "Groc"
 profile_texture = ExtResource("2_nrr40")
 life_bar_gradient = ExtResource("1_4dxsn")
 health_max = 100

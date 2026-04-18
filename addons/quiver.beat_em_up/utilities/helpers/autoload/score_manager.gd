@@ -12,6 +12,7 @@ var time_bonus_divisor := 10.0
 var _run_start_ms := 0
 var _run_active := false
 var _p2_joined := false
+var _requested_player_count := 1
 var _pending_entries: Array = []
 var _scores: Array = []
 
@@ -24,6 +25,19 @@ func start_run() -> void:
 	_run_active = true
 	_p2_joined = false
 	_pending_entries.clear()
+
+
+func request_player_count(player_count: int) -> void:
+	if player_count != 1 and player_count != 2:
+		push_error("Invalid requested player count: %s" % player_count)
+		return
+	_requested_player_count = player_count
+
+
+func consume_requested_player_count() -> int:
+	var player_count := _requested_player_count
+	_requested_player_count = 1
+	return player_count
 
 
 func set_p2_joined() -> void:

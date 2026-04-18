@@ -7,14 +7,19 @@ signal entry_flow_finished
 @export var show_date := false
 @export var show_time := true
 @export var font_scale := 3.0
+@export var title_scale := 0.5
+@export var subtitle_scale := 0.6
 @export var blink_interval := 0.4
 @export var auto_close_seconds := 3.0
 @export var auto_hide_on_close := true
 @export var use_monospace := true
+@export var viewport_margin := 24.0
 
+@onready var _panel := $Panel as PanelContainer
 @onready var _title := $Panel/Content/Frame/Header/Title as Label
 @onready var _subtitle := $Panel/Content/Frame/Header/Subtitle as Label
-@onready var _rows_container := $Panel/Content/Frame/RowsPanel/RowsMargin/Rows as VBoxContainer
+@onready var _rows_scroll := $Panel/Content/Frame/RowsPanel/RowsMargin/RowsScroll as ScrollContainer
+@onready var _rows_container := $Panel/Content/Frame/RowsPanel/RowsMargin/RowsScroll/Rows as VBoxContainer
 @onready var _footer := $Panel/Content/Frame/Footer as Label
 
 var _rows: Array = []
@@ -40,11 +45,13 @@ func _ready() -> void:
 	_setup_blink_timer()
 	_setup_auto_close_timer()
 	_build_rows()
-	_apply_font_scale(_title)
-	_apply_font_scale(_subtitle)
+	_apply_font_scale(_title, title_scale)
+	_apply_font_scale(_subtitle, subtitle_scale)
 	_apply_font_scale(_footer)
 	_show_title("FINAL RESULTS", "TOP CREW SCORES")
 	_update_footer("")
+	get_viewport().size_changed.connect(_fit_panel_to_viewport)
+	_fit_panel_to_viewport()
 
 
 func show_top10() -> void:
@@ -99,10 +106,17 @@ func _build_rows() -> void:
 	_build_columns()
 	_header_row = _create_header_row()
 	_rows_container.add_child(_header_row)
-	for _i in rows_count:
+	_ensure_row_count(rows_count)
+
+
+func _ensure_row_count(required_count: int) -> void:
+	while _rows.size() < required_count:
 		var row := _create_row()
 		_rows_container.add_child(row)
 		_rows.append(row)
+	while _rows.size() > required_count:
+		var row := _rows.pop_back() as HBoxContainer
+		row.queue_free()
 
 
 func _create_header_row() -> HBoxContainer:
@@ -147,14 +161,15 @@ func _make_label(min_width: int, align: HorizontalAlignment) -> Label:
 func _display_scores(scores: Array, offset: int, count: int) -> void:
 	_display_list = scores
 	_display_offset = int(clamp(offset, 0, max(0, scores.size() - count)))
-	var max_rows: int = int(min(count, _rows.size()))
-	for i in range(max_rows):
-		var row_index: int = _display_offset + int(i)
+	_ensure_row_count(max(rows_count, scores.size()))
+	for i in range(_rows.size()):
+		var row_index := int(i)
 		var row := _rows[i] as HBoxContainer
 		if row_index < scores.size():
 			_update_row(row, row_index, scores[row_index], row_index == _entry_row_index)
 		else:
 			_update_row(row, -1, {}, false)
+	call_deferred("_sync_scroll_position", _display_offset)
 
 
 func _update_row(row: HBoxContainer, index: int, entry: Dictionary, highlight: bool) -> void:
@@ -289,11 +304,11 @@ func _on_blink_timeout() -> void:
 	_render_entry()
 
 
-func _apply_font_scale(label: Label) -> void:
+func _apply_font_scale(label: Label, scale: float = font_scale) -> void:
 	var base_size := label.get_theme_font_size("font_size")
 	if base_size <= 0:
 		base_size = 16
-	label.add_theme_font_size_override("font_size", int(base_size * font_scale))
+	label.add_theme_font_size_override("font_size", int(base_size * scale))
 	if _mono_font != null:
 		label.add_theme_font_override("font", _mono_font)
 
@@ -402,3 +417,22 @@ func _on_auto_close_timeout() -> void:
 	if auto_hide_on_close:
 		visible = false
 	emit_signal("entry_flow_finished")
+
+
+func _fit_panel_to_viewport() -> void:
+	var viewport_size := get_viewport_rect().size
+	var target_size := _panel.size
+	target_size.x = min(880.0, max(540.0, viewport_size.x - 64.0))
+	target_size.y = max(320.0, viewport_size.y - (viewport_margin * 2.0))
+	_panel.custom_minimum_size = target_size
+	_panel.size = target_size
+	_panel.position = (viewport_size - target_size) * 0.5
+
+
+func _sync_scroll_position(row_index: int) -> void:
+	if _rows.is_empty():
+		_rows_scroll.scroll_vertical = 0
+		return
+	var clamped_index := int(clamp(row_index, 0, _rows.size() - 1))
+	var row := _rows[clamped_index] as HBoxContainer
+	_rows_scroll.scroll_vertical = int(row.position.y)

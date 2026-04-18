@@ -1,16 +1,17 @@
-[gd_scene load_steps=33 format=3 uid="uid://cl5t3fr12656g"]
+[gd_scene load_steps=35 format=3 uid="uid://cl5t3fr12656g"]
 
 [ext_resource type="Texture2D" uid="uid://c3jp2k5g8drxw" path="res://ui/_base/pngs/clouds_3_2.png" id="1_3ligk"]
 [ext_resource type="Script" uid="uid://dj6kxnjom01me" path="res://ui/main_menu/main_menu.gd" id="1_xf06u"]
 [ext_resource type="Script" uid="uid://dgy5j00glnynh" path="res://ui/main_menu/menu_art.gd" id="2_qewnw"]
-[ext_resource type="Texture2D" uid="uid://dpwpdnegvdmj" path="res://source_images/AIP_Groc.png" id="2_uw08o"]
-[ext_resource type="Texture2D" uid="uid://dtpl76t2aoq33" path="res://source_images/AIP_Captain_Snakeoil.jpg" id="3_mg0gr"]
-[ext_resource type="Texture2D" uid="uid://co4fophpoorpm" path="res://source_images/Sentries.png" id="4_3eqwa"]
-[ext_resource type="Texture2D" uid="uid://vdk8ukfix7cv" path="res://source_images/AIP_Nova.png" id="5_0rlna"]
+[ext_resource type="Texture2D" uid="uid://dpwpdnegvdmj" path="res://ui/main_menu/pngs/characters/AIP_Groc.png" id="2_uw08o"]
+[ext_resource type="Texture2D" uid="uid://dtpl76t2aoq33" path="res://ui/main_menu/pngs/characters/AIP_Captain_Snakeoil.jpg" id="3_mg0gr"]
+[ext_resource type="Texture2D" uid="uid://bu12dr34sr8af" path="res://ui/main_menu/pngs/signs/bg2.png" id="3_udpxl"]
+[ext_resource type="Texture2D" uid="uid://co4fophpoorpm" path="res://ui/main_menu/pngs/characters/Sentries.png" id="4_3eqwa"]
+[ext_resource type="Texture2D" uid="uid://vdk8ukfix7cv" path="res://ui/main_menu/pngs/characters/AIP_Nova.png" id="5_0rlna"]
 [ext_resource type="Script" uid="uid://rjr3ds8gdmhv" path="res://ui/main_menu/grok.gd" id="6_grok"]
-[ext_resource type="Texture2D" uid="uid://go8x140wwobw" path="res://ui/main_menu/pngs/logo.png" id="7_abcvk"]
 [ext_resource type="Texture2D" uid="uid://dn4cgulexbpd8" path="res://ui/main_menu/pngs/buttons/start_game_normal.png" id="9_ds5cc"]
 [ext_resource type="PackedScene" uid="uid://55q23muar30r" path="res://ui/how_to_play/how_to_play.tscn" id="9_ohwlc"]
+[ext_resource type="Texture2D" uid="uid://chhe3a1m0ckts" path="res://ui/main_menu/pngs/signs/logo.png" id="10_5vef8"]
 [ext_resource type="Texture2D" uid="uid://c57jdcqsvpc47" path="res://ui/main_menu/pngs/buttons/start_game_pressed.png" id="10_jjw2h"]
 [ext_resource type="Texture2D" uid="uid://nkop1d7eltev" path="res://ui/main_menu/pngs/buttons/start_game_hover.png" id="11_eb3x3"]
 [ext_resource type="BitMap" uid="uid://7fio68fkg246" path="res://ui/main_menu/pngs/buttons/start_game_mask_normal.png" id="12_s7lr0"]
@@ -27,6 +28,7 @@
 [ext_resource type="BitMap" uid="uid://ypgrjkvrf2x4" path="res://ui/main_menu/pngs/buttons/quit_mask_normal.png" id="22_vs4uq"]
 [ext_resource type="BitMap" uid="uid://b82vv7y25nrwr" path="res://ui/main_menu/pngs/buttons/quit_mask_big.png" id="23_giihp"]
 [ext_resource type="PackedScene" uid="uid://b5qfufu6dkbvt" path="res://ui/leaderboard/leaderboard.tscn" id="24_lead"]
+[ext_resource type="Texture2D" uid="uid://dyftj2ax2vit4" path="res://ui/main_menu/pngs/signs/pss.png" id="29_5c3ki"]
 
 [sub_resource type="Animation" id="Animation_bamca"]
 length = 0.001
@@ -323,20 +325,36 @@ offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("2_qewnw")
 
+[node name="Bg2" type="Sprite2D" parent="MenuArt"]
+position = Vector2(498, 356)
+scale = Vector2(2.76481, 2.76481)
+texture = ExtResource("3_udpxl")
+
+[node name="Logo" type="TextureRect" parent="MenuArt"]
+layout_mode = 0
+offset_left = 94.0
+offset_top = 19.0
+offset_right = 882.0
+offset_bottom = 263.0
+texture = ExtResource("10_5vef8")
+expand_mode = 1
+stretch_mode = 5
+
 [node name="BG" type="TextureRect" parent="MenuArt"]
 modulate = Color(1, 1, 1, 0.78)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -554.0
-offset_top = -117.0
-offset_right = 10214.0
-offset_bottom = 5071.0
+offset_left = -555.0
+offset_top = -54.0
+offset_right = 10213.0
+offset_bottom = 5134.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.170061, 0.192129)
 texture = ExtResource("1_3ligk")
+script = ExtResource("6_grok")
 
 [node name="PaintSpray" type="TextureRect" parent="MenuArt"]
 layout_mode = 0
@@ -347,7 +365,6 @@ offset_bottom = 944.0
 texture = ExtResource("2_uw08o")
 expand_mode = 1
 stretch_mode = 5
-script = ExtResource("6_grok")
 
 [node name="TaxMan" type="TextureRect" parent="MenuArt"]
 visible = false
@@ -381,22 +398,21 @@ texture = ExtResource("5_0rlna")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Logo" type="TextureRect" parent="MenuArt"]
-layout_mode = 0
-offset_left = 74.0
-offset_top = 42.0
-offset_right = 862.0
-offset_bottom = 286.0
-texture = ExtResource("7_abcvk")
-expand_mode = 1
-stretch_mode = 5
+[node name="Logo2" type="Sprite2D" parent="MenuArt"]
+visible = false
+position = Vector2(413, 195)
+texture = ExtResource("10_5vef8")
+
+[node name="Pss" type="Sprite2D" parent="MenuArt"]
+position = Vector2(506, 659)
+texture = ExtResource("29_5c3ki")
 
 [node name="MenuButtons" type="ReferenceRect" parent="."]
 layout_mode = 0
 offset_left = 902.0
 offset_top = 584.0
-offset_right = 1600.99
-offset_bottom = 985.0
+offset_right = 1927.0
+offset_bottom = 1403.0
 border_color = Color(0.00784314, 0, 1, 1)
 
 [node name="Start" type="TextureButton" parent="MenuButtons"]

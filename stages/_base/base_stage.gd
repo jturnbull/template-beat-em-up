@@ -35,6 +35,7 @@ var _has_finished_run := false
 
 func _ready() -> void:
 	randomize()
+	var requested_player_count := ScoreManager.consume_requested_player_count()
 	ScoreManager.start_run()
 	if is_instance_valid(_player_one):
 		_player_hud.set_player_attributes(_player_one.attributes)
@@ -46,6 +47,8 @@ func _ready() -> void:
 		_player_two_hud.set_player_name(_get_player_display_name(_player_two, "Player 2"))
 		_player_two.attributes.health_depleted.connect(_on_player_health_depleted.bind(_player_two))
 		_set_player_two_active(false)
+		if requested_player_count == 2:
+			_set_player_two_active(true)
 	else:
 		_player_two_hud.visible = false
 	QuiverEditorHelper.connect_between(Events.player_died, _on_Events_player_died)
