@@ -1,4 +1,4 @@
-[gd_scene load_steps=109 format=3 uid="uid://bnoa0s3qnckt1"]
+[gd_scene load_steps=108 format=3 uid="uid://bnoa0s3qnckt1"]
 
 [ext_resource type="PackedScene" uid="uid://dkhr6tjbcdth7" path="res://stages/_base/base_stage.tscn" id="1_4lqd3"]
 [ext_resource type="Script" uid="uid://iydphvclbgwc" path="res://addons/quiver.beat_em_up/utilities/custom_nodes/quiver_sprite_repeater.gd" id="2_0ledp"]
@@ -43,6 +43,7 @@
 [ext_resource type="Texture2D" uid="uid://2ctiibmyxsj8" path="res://stages/stage_01/stage_elements/buildings/foster_mart/bits.png" id="22_lge2l"]
 [ext_resource type="Texture2D" uid="uid://bas58lo8paimg" path="res://stages/stage_01/option_1.png" id="23_wylcn"]
 [ext_resource type="Texture2D" uid="uid://dt6k7557b1bql" path="res://stages/stage_01/option_3.png" id="24_qiwg1"]
+[ext_resource type="Texture2D" uid="uid://bcyhpmlp8s51p" path="res://stages/stage_01/stage_elements/tax_man_area/fllor3.png" id="25_wylcn"]
 [ext_resource type="Texture2D" uid="uid://10s4duduxokp" path="res://stages/stage_01/stage_elements/vending_machines/vending_machines_clean_separated_yellow_50.png" id="28_f64gi"]
 [ext_resource type="Texture2D" uid="uid://d2ayfbynawa4b" path="res://stages/stage_01/stage_elements/vending_machines/vending_machine_tags_separated_3_50.png" id="29_70lla"]
 [ext_resource type="Texture2D" uid="uid://b1t7e4lf2fjru" path="res://stages/stage_01/stage_elements/buildings/windows/narrow/window_2.png" id="30_5joav"]
@@ -59,7 +60,6 @@
 [ext_resource type="Texture2D" uid="uid://41ydrvcb4csi" path="res://stages/stage_01/prop_020.png" id="55_26684"]
 [ext_resource type="Texture2D" uid="uid://c0c2h7ds5e2pg" path="res://stages/stage_01/prop_011.png" id="56_3q82n"]
 [ext_resource type="Texture2D" uid="uid://dx5n25lg03m3j" path="res://stages/stage_01/stage_elements/tax_man_area/tax_man_black_marble.png" id="56_t2mje"]
-[ext_resource type="Texture2D" uid="uid://c0jlrxj1d2djh" path="res://stages/stage_01/floornewnew80.png" id="58_2rer4"]
 [ext_resource type="PackedScene" uid="uid://dwgxqe6h48x4e" path="res://characters/enemies/tax_man/tax_man.tscn" id="59_jn7co"]
 [ext_resource type="Texture2D" uid="uid://ffcjdn8neopq" path="res://stages/stage_01/stage_elements/buildings/signs/prop_039.png" id="59_uymx4"]
 [ext_resource type="Texture2D" uid="uid://cyg4d5jl5kavj" path="res://stages/stage_01/stage_elements/buildings/signs/prop_055.png" id="60_2nd85"]
@@ -74,7 +74,6 @@
 [ext_resource type="Texture2D" uid="uid://dm7cc7xnvbob3" path="res://stages/stage_01/stage_panel_large.png" id="66_wylcn"]
 [ext_resource type="Texture2D" uid="uid://dt68cnn173dk4" path="res://stages/stage_01/prop_052.png" id="68_tcjgr"]
 [ext_resource type="Script" uid="uid://dr7wv1nyi1knv" path="res://addons/quiver.beat_em_up/utilities/custom_nodes/enemy_spawner/quiver_spawn_data.gd" id="70_we574"]
-[ext_resource type="Texture2D" uid="uid://c4ev27kwod32p" path="res://stages/stage_01/R5tuNvh8cXBjc08Anmof8_8b90BbC5.png" id="72_wylcn"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_fe6v1"]
 shader = ExtResource("10_yubb3")
@@ -320,6 +319,10 @@ position = Vector2(5340, 640)
 scale = Vector2(0.757975, 0.511415)
 texture = ExtResource("10_tcjgr")
 
+[node name="SpaceBackgroundLarge" type="Sprite2D" parent="Background/SkyboxLayer/ParallaxLayer2" index="3"]
+position = Vector2(13408, 760)
+texture = ExtResource("9_0otdu")
+
 [node name="TaxManWindows" type="Sprite2D" parent="Background" index="1"]
 modulate = Color(1, 1, 1, 0.5)
 material = SubResource("ShaderMaterial_fe6v1")
@@ -400,10 +403,10 @@ texture = ExtResource("24_qiwg1")
 [node name="Floornewnew" type="Sprite2D" parent="Background" index="8"]
 texture_filter = 1
 texture_repeat = 2
-position = Vector2(2508, 908)
-texture = ExtResource("58_2rer4")
+position = Vector2(3276.5, 908)
+texture = ExtResource("25_wylcn")
 region_enabled = true
-region_rect = Rect2(0, 0, 15000, 819)
+region_rect = Rect2(0, 0, 16537, 819)
 region_filter_clip_enabled = true
 
 [node name="BrickBuilding1" type="Node2D" parent="Background" index="9"]
@@ -742,8 +745,7 @@ position = Vector2(15482, 861)
 should_start_seated = true
 
 [node name="ToriGate" parent="Level/Objects" index="0" instance=ExtResource("60_mx5oi")]
-visible = false
-position = Vector2(10233, 790.5)
+position = Vector2(9745, 722)
 
 [node name="TaxManThrone" parent="Level/Objects" index="1" instance=ExtResource("60_60ghw")]
 visible = false
@@ -751,6 +753,7 @@ position = Vector2(15615, 763)
 scale = Vector2(0.75, 0.75)
 
 [node name="DirtyBrickWallGate" parent="Level/Objects" index="2" instance=ExtResource("10_nq7xs")]
+visible = false
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="Level/Objects/DirtyBrickWallGate" index="7"]
 occluder = SubResource("OccluderPolygon2D_nuxeb")
@@ -1043,11 +1046,6 @@ position = Vector2(1488, 940)
 
 [node name="GuardPos2" type="Marker2D" parent="FightRooms/FightRoom4" index="3"]
 position = Vector2(1748, 1248)
-
-[node name="R5TuNvh8cXBjc08Anmof88b90BbC5" type="Sprite2D" parent="FightRooms/FightRoom4" index="4"]
-position = Vector2(-3916, 414)
-scale = Vector2(0.621669, 0.621669)
-texture = ExtResource("72_wylcn")
 
 [node name="FightRoom5" type="ReferenceRect" parent="FightRooms" index="4"]
 unique_name_in_owner = true
