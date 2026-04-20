@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dtpl76t2aoq33"
-path="res://.godot/imported/AIP_Captain_Snakeoil.jpg-51b5db25129f360bcb246f3b14387557.ctex"
+path="res://.godot/imported/AIP_Captain_Snakeoil.jpg-5a3e2782c8723b114e70b9cf6b3cbc26.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://ui/main_menu/pngs/characters/AIP_Captain_Snakeoil.jpg"
-dest_files=["res://.godot/imported/AIP_Captain_Snakeoil.jpg-51b5db25129f360bcb246f3b14387557.ctex"]
+dest_files=["res://.godot/imported/AIP_Captain_Snakeoil.jpg-5a3e2782c8723b114e70b9cf6b3cbc26.ctex"]
 
 [params]
 
