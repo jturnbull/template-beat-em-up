@@ -7,6 +7,7 @@ import os
 import re
 import subprocess
 import time
+import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -20,6 +21,7 @@ from fal_video_generate import SUPPORTED_MODELS
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PYTHON = sys.executable
 EXPECTED_CLIPS = {"seated_master", "engage_master"}
 
 
@@ -176,7 +178,7 @@ def build_review_for_model(
     contact_path = review_dir / "contact.png"
     run(
         [
-            "python3",
+            PYTHON,
             "scripts/make_contact_sheet.py",
             "--input",
             str(full_frames_dir),
@@ -290,7 +292,7 @@ def main() -> int:
         out_dir = video_dir / run_id / slug
         ensure_dir(out_dir)
         cmd = [
-            "python3",
+            PYTHON,
             "scripts/fal_video_generate.py",
             "--model",
             model,

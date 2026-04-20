@@ -50,11 +50,10 @@ Script: `scripts/prepare_anchor_image.py`
 - Adds a 2px white border frame guide.
 - Matches canvas size + baseline to `global.frame_guide_match`.
 
-### 3) Generate videos (kling)
+### 3) Generate videos (seedance)
 Script: `scripts/fal_video_generate.py`
 
 Supported models:
-- `fal-ai/kling-video/o1/image-to-video`
 - `bytedance/seedance-2.0/fast/image-to-video`
 
 - Always sets `generate_audio=false`.

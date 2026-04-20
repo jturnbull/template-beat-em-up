@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 
@@ -27,10 +28,12 @@ def main() -> int:
     project_root = Path(__file__).resolve().parents[1]
     output_root = project_root / "outputs" / "fal"
 
+    python = sys.executable
+
     chained_ref: Path | None = None
 
     for task in args.tasks:
-        cmd = ["python3", "scripts/fal_reskin_generate.py", "--task", task, "--prompt", args.prompt]
+        cmd = [python, "scripts/fal_reskin_generate.py", "--task", task, "--prompt", args.prompt]
         if args.negative:
             cmd.extend(["--negative", args.negative])
         if args.model:

@@ -23,6 +23,7 @@ import re
 import shutil
 import subprocess
 import time
+import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -37,6 +38,7 @@ from fal_video_generate import SUPPORTED_MODELS
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PYTHON = sys.executable
 FAL_MIN_ASPECT_RATIO = 0.4
 FAL_MAX_ASPECT_RATIO = 2.5
 
@@ -213,7 +215,7 @@ def main() -> int:
     negative = str(global_cfg.get("negative") or "").strip()
     if not negative:
         raise SystemExit("global.negative is required")
-    resolution = str(global_cfg.get("resolution") or "").strip() or "1080p"
+    resolution = str(global_cfg.get("resolution") or "").strip() or "720p"
     video_model = str(global_cfg.get("video_model") or "").strip()
     if not video_model:
         raise SystemExit("global.video_model is required")
@@ -443,7 +445,7 @@ def main() -> int:
                 final_prompt = f"{base_prompt}. {constraints}" if constraints else base_prompt
 
                 cmd = [
-                    "python3",
+                    PYTHON,
                     "scripts/fal_video_generate.py",
                     "--model",
                     video_model,
@@ -527,7 +529,7 @@ def main() -> int:
                 resize_frames_to_match(raw_dir, seed_size)
                 run(
                     [
-                        "python3",
+                        PYTHON,
                         "scripts/remove_frame_border.py",
                         "--input",
                         str(raw_dir),
@@ -540,7 +542,7 @@ def main() -> int:
 
             run(
                 [
-                    "python3",
+                    PYTHON,
                     "scripts/make_contact_sheet.py",
                     "--input",
                     str(raw_dir),
@@ -648,7 +650,7 @@ def main() -> int:
             if not final_is_current():
                 run(
                     [
-                        "python3",
+                        PYTHON,
                         "scripts/fal_bg_remove.py",
                         "--input",
                         str(selected_dir),
@@ -677,7 +679,7 @@ def main() -> int:
                     output_indices = list(range(start, start + len(selected_labels)))
 
             cmd = [
-                "python3",
+                PYTHON,
                 "scripts/prepare_walk_frames.py",
                 "--input",
                 str(final_dir),

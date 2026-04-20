@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate an animation clip with one of the supported fal.ai image-to-video models."""
+"""Generate an animation clip with the project-standard fal.ai image-to-video model."""
 from __future__ import annotations
 
 import argparse
@@ -13,22 +13,15 @@ import fal_client
 from PIL import Image
 
 SUPPORTED_MODELS = {
-    "fal-ai/kling-video/o1/image-to-video": {
-        "start_field": "start_image_url",
-        "end_field": "end_image_url",
-        "supports_negative": True,
-        "supports_aspect_ratio": False,
-    },
     "bytedance/seedance-2.0/fast/image-to-video": {
         "start_field": "image_url",
         "end_field": "end_image_url",
         "supports_negative": False,
         "supports_aspect_ratio": True,
+        "supported_resolutions": {"480p", "720p"},
     },
 }
-DEFAULT_RESOLUTION = "1080p"
-ALLOWED_DURATIONS_WITH_END = {3, 4, 5}
-ALLOWED_DURATIONS_NO_END = {5, 10}
+DEFAULT_RESOLUTION = "720p"
 POLL_SECONDS = 2.0
 MAX_UPLOAD_BYTES = 10_485_760
 DEFAULT_MAX_DIM = 1024
@@ -51,8 +44,8 @@ def parse_args() -> argparse.Namespace:
         help="Path to end image, or 'same' to reuse start, or 'none' to omit end image",
     )
     parser.add_argument("--prompt", required=True, help="Video prompt")
-    parser.add_argument("--negative", default=None, help="Negative prompt (supported only by Kling)")
-    parser.add_argument("--resolution", default=DEFAULT_RESOLUTION, help="Resolution (e.g., 1080p)")
+    parser.add_argument("--negative", default=None, help="Negative prompt")
+    parser.add_argument("--resolution", default=DEFAULT_RESOLUTION, help="Resolution (480p or 720p)")
     parser.add_argument("--duration", required=True, help="Duration in seconds")
     parser.add_argument(
         "--aspect-ratio",
@@ -111,24 +104,8 @@ def ensure_size_limit(image_path: Path, max_bytes: int, max_dim: int) -> Path:
     )
 
 
-def resolve_duration(model: str, raw_duration: str, end_image_mode: str) -> str:
-    if model != "fal-ai/kling-video/o1/image-to-video":
-        return raw_duration
-
-    allowed_durations = (
-        ALLOWED_DURATIONS_NO_END if end_image_mode == "none" else ALLOWED_DURATIONS_WITH_END
-    )
-    try:
-        duration_value = int(float(raw_duration))
-    except ValueError as exc:
-        raise SystemExit(f"Invalid duration for Kling: {raw_duration}") from exc
-
-    if duration_value not in allowed_durations:
-        raise SystemExit(
-            f"Kling duration {duration_value}s is invalid for end_image={end_image_mode}. "
-            f"Allowed: {sorted(allowed_durations)}"
-        )
-    return str(duration_value)
+def resolve_duration(_model: str, raw_duration: str, _end_image_mode: str) -> str:
+    return raw_duration
 
 
 def build_arguments(args: argparse.Namespace, image_url: str, end_image_url: str | None) -> dict:
@@ -148,6 +125,11 @@ def build_arguments(args: argparse.Namespace, image_url: str, end_image_url: str
         raise SystemExit(f"Model {args.model} does not support --negative")
 
     duration = resolve_duration(args.model, args.duration, args.end_image)
+
+    supported_resolutions = model_spec["supported_resolutions"]
+    if args.resolution not in supported_resolutions:
+        allowed = ", ".join(sorted(supported_resolutions))
+        raise SystemExit(f"Model {args.model} supports only: {allowed}")
 
     arguments = {
         "prompt": prompt,

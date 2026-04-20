@@ -143,7 +143,7 @@ The exact, up-to-date command flow lives in:
   - 2px white border frame guide (constrains the video model)
 
 ### B) Video Generation (Moves)
-- Use `fal-ai/kling-video/o1/image-to-video` seeded from the **framed anchor**.
+- Use `bytedance/seedance-2.0/fast/image-to-video` seeded from the **framed anchor**.
 - Prompt should include:
   - “same outfit/proportions/lighting”
   - “no camera movement, no zoom”

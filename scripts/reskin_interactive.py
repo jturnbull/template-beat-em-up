@@ -23,6 +23,7 @@ import re
 import shutil
 import subprocess
 import time
+import sys
 from pathlib import Path
 
 try:
@@ -32,6 +33,7 @@ except ModuleNotFoundError:  # py<=3.10 (our scripts venv)
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PYTHON = sys.executable
 
 
 TAXMAN_PICK_META = {
@@ -348,7 +350,7 @@ def main() -> int:
             run_id = time.strftime("run_%Y%m%d_%H%M%S")
             run_root = base_root / run_id
             base_cmd = [
-                "python3",
+                PYTHON,
                 "scripts/fal_reskin_generate.py",
                 "--task",
                 str(base_task_path.relative_to(PROJECT_ROOT)),
@@ -403,7 +405,7 @@ def main() -> int:
         anchor_base_path.parent.mkdir(parents=True, exist_ok=True)
         run(
             [
-                "python3",
+                PYTHON,
                 "scripts/prepare_anchor_image.py",
                 "--input",
                 str(base_chosen.relative_to(PROJECT_ROOT)),
@@ -562,17 +564,17 @@ def main() -> int:
                 )
                 if outline:
                     print(f"      {outline}")
-        run(["python3", "scripts/nova_batch.py", "--config", cfg_rel, "--make-videos"], batch=False)
+        run([PYTHON, "scripts/nova_batch.py", "--config", cfg_rel, "--make-videos"], batch=False)
         open_folder(video_dir)
     if step in {2, 5}:
         pick_videos()
     if step in {3, 5}:
-        run(["python3", "scripts/nova_batch.py", "--config", cfg_rel, "--make-frames"], batch=False)
+        run([PYTHON, "scripts/nova_batch.py", "--config", cfg_rel, "--make-frames"], batch=False)
         open_folder(frames_dir)
         if prompt("Edit frame_indices now? (y/n)", "y" if step == 5 else "n").lower().startswith("y"):
             maybe_edit_frame_indices()
     if step in {4, 5}:
-        run(["python3", "scripts/nova_batch.py", "--config", cfg_rel, "--apply-sprites"], batch=False)
+        run([PYTHON, "scripts/nova_batch.py", "--config", cfg_rel, "--apply-sprites"], batch=False)
 
     return 0
 
