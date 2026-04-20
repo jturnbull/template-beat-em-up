@@ -12,6 +12,7 @@ extends Control
 
 const TITLE_GAMEOVER = "GAME OVER!"
 const TITLE_VICTORY = "CONGRATULATIONS!"
+const PATH_MAIN_MENU = "res://ui/main_menu/main_menu.tscn"
 
 #--- public variables - order: export > normal var > onready --------------------------------------
 
@@ -40,9 +41,9 @@ func _ready() -> void:
 		var is_victory = randi() % 2 as bool
 		_title.text = TITLE_VICTORY if is_victory else TITLE_GAMEOVER
 		_animator.play("open")
-	_start_leaderboard_timer(0.5)
 	_leaderboard.entry_flow_finished.connect(_on_leaderboard_finished)
 	_setup_leaderboard_timer()
+	BackgroundLoader.load_resource(PATH_MAIN_MENU)
 
 ### -----------------------------------------------------------------------------------------------
 
@@ -102,7 +103,13 @@ func _show_leaderboard_entry() -> void:
 
 
 func _on_leaderboard_finished() -> void:
-	pass
+	if not is_inside_tree():
+		return
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return
+	tree.paused = false
+	ScreenTransitions.transition_to_scene(PATH_MAIN_MENU)
 
 
 func _setup_leaderboard_timer() -> void:

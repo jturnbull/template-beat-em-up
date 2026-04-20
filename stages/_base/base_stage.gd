@@ -127,12 +127,13 @@ func _set_player_two_active(is_active: bool) -> void:
 	if is_active and _player_two_dead:
 		_player_two_active = false
 		_player_two_hud.visible = true
-		_player_two_hud.set_player_inactive(true, "")
+		_player_two_hud.set_player_inactive(true, "DEAD")
 		return
 	
 	_player_two_active = is_active
+	var player_two_is_dead := _player_two_dead or (_player_two.attributes != null and not _player_two.attributes.is_alive())
 	_player_two_hud.visible = true
-	_player_two_hud.set_player_inactive(not is_active, "" if _player_two_dead else "PRESS START")
+	_player_two_hud.set_player_inactive(not is_active, "DEAD" if player_two_is_dead else "PRESS START")
 	
 	if is_active:
 		if not _player_two_joined:
@@ -152,13 +153,12 @@ func _set_player_two_active(is_active: bool) -> void:
 		if _player_one != null:
 			_player_two.global_position = _player_one.global_position + Vector2(100, 0)
 	else:
-		_player_two.visible = false
+		_player_two.visible = player_two_is_dead
 		_player_two.set_process(false)
 		_player_two.set_physics_process(false)
 		_player_two.set_process_input(false)
 		_player_two.set_process_unhandled_input(false)
-		var can_remove := _player_two.attributes == null or _player_two.attributes.is_alive()
-		if can_remove and _player_two.is_in_group("players"):
+		if _player_two.is_in_group("players"):
 			_player_two.remove_from_group("players")
 		var collision := _player_two.get_node_or_null("Collision") as CollisionShape2D
 		if collision != null:
@@ -170,8 +170,9 @@ func _set_player_one_active(is_active: bool) -> void:
 		return
 	
 	_player_one_active = is_active
+	var player_one_is_dead := _player_one.attributes != null and not _player_one.attributes.is_alive()
 	
-	_player_one.visible = is_active
+	_player_one.visible = is_active or player_one_is_dead
 	_player_one.set_process(is_active)
 	_player_one.set_physics_process(is_active)
 	_player_one.set_process_input(is_active)
@@ -180,8 +181,7 @@ func _set_player_one_active(is_active: bool) -> void:
 	if is_active:
 		_player_one.add_to_group("players")
 	else:
-		var can_remove := _player_one.attributes == null or _player_one.attributes.is_alive()
-		if can_remove and _player_one.is_in_group("players"):
+		if _player_one.is_in_group("players"):
 			_player_one.remove_from_group("players")
 		var collision := _player_one.get_node_or_null("Collision") as CollisionShape2D
 		if collision != null:
@@ -191,9 +191,12 @@ func _set_player_one_active(is_active: bool) -> void:
 func _on_player_health_depleted(player: QuiverCharacter) -> void:
 	if player == _player_two:
 		_player_two_dead = true
-		_set_player_two_active(false)
+		_player_two_active = false
+		_player_two_hud.visible = true
+		_player_two_hud.set_player_inactive(true, "DEAD")
 	elif player == _player_one:
-		_set_player_one_active(false)
+		_player_one_active = false
+		_player_hud.set_player_inactive(true, "DEAD")
 
 
 func finish_run(is_victory: bool) -> void:
