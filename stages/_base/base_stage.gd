@@ -21,6 +21,7 @@ extends Node2D
 @onready var _player_two_hud := $HudLayer/PlayerHudP2
 @onready var _end_screen := $HudLayer/EndScreen as EndScreen
 @onready var _camera := $Level/Characters/Chad/LevelCamera as Camera2D
+@onready var _characters_root := $Level/Characters as Node2D
 
 var _player_two_active := false
 var _player_one_active := true
@@ -37,6 +38,7 @@ func _ready() -> void:
 	randomize()
 	var requested_player_count := ScoreManager.consume_requested_player_count()
 	ScoreManager.start_run()
+	ScoreManager.set_total_enemy_health_pool(_calculate_total_enemy_health_pool())
 	if is_instance_valid(_player_one):
 		_player_hud.set_player_attributes(_player_one.attributes)
 		_player_hud.set_player_name(_get_player_display_name(_player_one, "Player 1"))
@@ -51,6 +53,10 @@ func _ready() -> void:
 			_set_player_two_active(true)
 	else:
 		_player_two_hud.visible = false
+	if _characters_root != null:
+		_characters_root.child_entered_tree.connect(_on_characters_root_child_entered_tree)
+		for child in _characters_root.get_children():
+			call_deferred("_register_enemy_if_needed", child)
 	QuiverEditorHelper.connect_between(Events.player_died, _on_Events_player_died)
 
 
@@ -203,7 +209,7 @@ func finish_run(is_victory: bool) -> void:
 	if _has_finished_run:
 		return
 	_has_finished_run = true
-	ScoreManager.finish_run(_player_one, _player_two, _player_two_joined)
+	ScoreManager.finish_run(_player_one, _player_two, _player_two_joined, is_victory)
 	_end_screen.open_end_screen(is_victory)
 
 
@@ -226,5 +232,51 @@ func _get_player_display_name(player: QuiverCharacter, fallback: String) -> Stri
 		return player.attributes.display_name
 	
 	return fallback
+
+
+func _on_characters_root_child_entered_tree(node: Node) -> void:
+	call_deferred("_register_enemy_if_needed", node)
+
+
+func _register_enemy_if_needed(node: Node) -> void:
+	var enemy := node as QuiverEnemyCharacter
+	if enemy == null or not enemy.is_in_group("enemies"):
+		return
+	ScoreManager.register_enemy(enemy)
+
+
+func _calculate_total_enemy_health_pool() -> float:
+	var total := 0.0
+	if _characters_root != null:
+		for child in _characters_root.get_children():
+			if child.is_in_group("enemies"):
+				var enemy := child as QuiverEnemyCharacter
+				if enemy == null or enemy.attributes == null:
+					push_error("Initial enemy missing attributes: %s" % child)
+					continue
+				total += float(enemy.attributes.health_max)
+
+	for spawner_node in find_children("*", "QuiverEnemySpawner", true, false):
+		var spawn_waves = spawner_node.get("spawn_waves")
+		if typeof(spawn_waves) != TYPE_ARRAY:
+			push_error("Spawner missing spawn_waves array: %s" % spawner_node)
+			continue
+		for wave in spawn_waves:
+			if typeof(wave) != TYPE_ARRAY:
+				push_error("Invalid wave in spawner: %s" % spawner_node)
+				continue
+			for item in wave:
+				var spawn_data := item as QuiverSpawnData
+				if spawn_data == null or spawn_data.enemy_scene == null:
+					push_error("Invalid spawn data in spawner: %s" % spawner_node)
+					continue
+				var enemy := spawn_data.enemy_scene.instantiate() as QuiverEnemyCharacter
+				if enemy == null or enemy.attributes == null:
+					push_error("Spawned enemy scene missing attributes: %s" % spawn_data.enemy_scene)
+					continue
+				total += float(enemy.attributes.health_max)
+				enemy.free()
+
+	return total
 
 ### -----------------------------------------------------------------------------------------------

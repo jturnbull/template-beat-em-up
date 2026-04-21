@@ -115,6 +115,8 @@ func _on_leaderboard_finished() -> void:
 func _setup_leaderboard_timer() -> void:
 	_leaderboard_timer = Timer.new()
 	_leaderboard_timer.one_shot = true
+	_leaderboard_timer.ignore_time_scale = true
+	_leaderboard_timer.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_leaderboard_timer)
 	_leaderboard_timer.timeout.connect(_show_leaderboard_entry)
 

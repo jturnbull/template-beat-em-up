@@ -28,7 +28,9 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_theme")
 script = ExtResource("1_lead")
-font_scale = 1.15
+rows_count = 6
+show_time = false
+font_scale = 1.5
 
 [node name="Backdrop" type="ColorRect" parent="."]
 visible = false

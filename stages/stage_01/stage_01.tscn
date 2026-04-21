@@ -12,7 +12,6 @@
 [ext_resource type="Script" uid="uid://d2qrgealw7c6v" path="res://stages/stage_01/stage01_skybox.gd" id="5_hj50d"]
 [ext_resource type="Shader" uid="uid://cvvxrcor46rbp" path="res://stages/_base/skyboxes/gradient_map.gdshader" id="5_iqlbw"]
 [ext_resource type="Texture2D" uid="uid://evnwrnbyt1jd" path="res://stages/stage_01/stage_elements/sidewalk/sidewalk_revised_0.png" id="6_e0uvm"]
-[ext_resource type="Texture2D" uid="uid://c7fphss6j8oey" path="res://stages/stage_01/stage_elements/buildings/cityscape_00.png" id="6_rfrov"]
 [ext_resource type="Texture2D" uid="uid://d2tan12hotr8u" path="res://stages/stage_01/stage_elements/sidewalk/sidewalk_curve_50.png" id="7_412kv"]
 [ext_resource type="Texture2D" uid="uid://d34upd6axohpi" path="res://stages/stage_01/stage_elements/buildings/pipes/drainpipe_body.png" id="7_gqe74"]
 [ext_resource type="Texture2D" uid="uid://dqgwlg6ha1ime" path="res://stages/stage_01/stage_elements/buildings/pipes/drainpipe_exit.png" id="8_erudj"]
@@ -36,6 +35,7 @@
 [ext_resource type="PackedScene" path="res://stages/stage_01/stage_elements/buildings/signs/love_yourself/love_yourself_sign.tscn" id="14_h8n7k"]
 [ext_resource type="Texture2D" uid="uid://ctkb0fi51x2wh" path="res://stages/stage_01/stage_elements/fence/chainlink_fence_panel.png" id="14_newfence"]
 [ext_resource type="Script" uid="uid://bs7bp1v08q6r1" path="res://stages/stage_01/tax_man_room_light.gd" id="16_rlks8"]
+[ext_resource type="Texture2D" uid="uid://dxpid27lo77lv" path="res://stages/stage_01/stage_elements/tax_man_area/tax_man_room_image.png" id="16_wylcn"]
 [ext_resource type="Script" uid="uid://dwggpb3s86jlc" path="res://addons/quiver.beat_em_up/utilities/custom_nodes/quiver_fight_room.gd" id="17_cjfi2"]
 [ext_resource type="Script" uid="uid://ut1w0oqhpbgt" path="res://addons/quiver.beat_em_up/utilities/custom_nodes/enemy_spawner/quiver_enemy_spawner.gd" id="18_5ae2i"]
 [ext_resource type="PackedScene" uid="uid://2jhcwfmlrylb" path="res://characters/enemies/sargent/sarge.tscn" id="19_etsee"]
@@ -90,35 +90,35 @@ fill = 1
 fill_from = Vector2(0.603352, 0.349693)
 fill_to = Vector2(0, 0.475798)
 
-[sub_resource type="Gradient" id="Gradient_uymx4"]
+[sub_resource type="Gradient" id="Gradient_wylcn"]
 resource_local_to_scene = true
 interpolation_mode = 2
 offsets = PackedFloat32Array(0, 0.268817, 0.575269, 0.854839)
 colors = PackedColorArray(0.0823529, 0.027451, 0.027451, 1, 0.505882, 0.137255, 0.121569, 1, 0.596078, 0.313726, 0.188235, 1, 0.745098, 0.572549, 0.411765, 1)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_2nd85"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_uymx4"]
 resource_local_to_scene = true
-gradient = SubResource("Gradient_uymx4")
+gradient = SubResource("Gradient_wylcn")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jq4kj"]
 shader = ExtResource("5_iqlbw")
-shader_parameter/gradient = SubResource("GradientTexture1D_2nd85")
+shader_parameter/gradient = SubResource("GradientTexture1D_uymx4")
 shader_parameter/is_active = true
 shader_parameter/show_grayscale = false
 
-[sub_resource type="Gradient" id="Gradient_erbt0"]
+[sub_resource type="Gradient" id="Gradient_2nd85"]
 resource_local_to_scene = true
 interpolation_mode = 2
 offsets = PackedFloat32Array(0, 0.268817, 0.575269, 0.854839)
 colors = PackedColorArray(0.0392157, 0.027451, 0.14902, 1, 0.243137, 0.227451, 0.34902, 1, 0.380392, 0.368627, 0.486275, 1, 0.631373, 0.619608, 0.737255, 1)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_kqcdg"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_erbt0"]
 resource_local_to_scene = true
-gradient = SubResource("Gradient_erbt0")
+gradient = SubResource("Gradient_2nd85")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_o8ik0"]
 shader = ExtResource("5_iqlbw")
-shader_parameter/gradient = SubResource("GradientTexture1D_kqcdg")
+shader_parameter/gradient = SubResource("GradientTexture1D_erbt0")
 shader_parameter/is_active = true
 shader_parameter/show_grayscale = false
 
@@ -291,9 +291,11 @@ _color_night = Color(0.529412, 0.462745, 0.721569, 1)
 follow_viewport_enabled = false
 
 [node name="ParallaxLayer1" type="ParallaxLayer" parent="Background/SkyboxLayer" index="0"]
+visible = false
 motion_scale = Vector2(0, 1)
 
 [node name="Skybox" parent="Background/SkyboxLayer/ParallaxLayer1" index="0" instance=ExtResource("3_pnjnx")]
+visible = false
 position = Vector2(-8, -444)
 scale = Vector2(1.86482, 1.86482)
 script = ExtResource("5_hj50d")
@@ -304,26 +306,23 @@ is_playing = true
 position = Vector2(26, -780)
 motion_scale = Vector2(0.65, 1)
 
-[node name="Sprite2d" type="Sprite2D" parent="Background/SkyboxLayer/ParallaxLayer2" index="0"]
-position = Vector2(3548, 238)
-scale = Vector2(0.678503, 0.678503)
-texture = ExtResource("6_rfrov")
-
-[node name="Sprite2d3" type="Sprite2D" parent="Background/SkyboxLayer/ParallaxLayer2" index="1"]
+[node name="Sprite2d3" type="Sprite2D" parent="Background/SkyboxLayer/ParallaxLayer2" index="0"]
 position = Vector2(5262, 604)
-scale = Vector2(0.778659, 0.525041)
+scale = Vector2(1.85252, 0.200297)
 texture = ExtResource("9_0otdu")
 
-[node name="Sprite2D" type="Sprite2D" parent="Background/SkyboxLayer/ParallaxLayer2" index="2"]
+[node name="Sprite2D" type="Sprite2D" parent="Background/SkyboxLayer/ParallaxLayer2" index="1"]
 position = Vector2(5340, 640)
 scale = Vector2(0.757975, 0.511415)
 texture = ExtResource("10_tcjgr")
 
-[node name="SpaceBackgroundLarge" type="Sprite2D" parent="Background/SkyboxLayer/ParallaxLayer2" index="3"]
-position = Vector2(13408, 760)
+[node name="SpaceBackgroundLarge" type="Sprite2D" parent="Background/SkyboxLayer/ParallaxLayer2" index="2"]
+position = Vector2(15002, 352)
+scale = Vector2(1.273, 1.1978)
 texture = ExtResource("9_0otdu")
 
 [node name="TaxManWindows" type="Sprite2D" parent="Background" index="1"]
+visible = false
 modulate = Color(1, 1, 1, 0.5)
 material = SubResource("ShaderMaterial_fe6v1")
 position = Vector2(13754.8, 259.75)
@@ -331,6 +330,7 @@ scale = Vector2(1.0194, 1.0194)
 texture = ExtResource("8_p47g0")
 
 [node name="MarbleGround" type="Sprite2D" parent="Background" index="2"]
+visible = false
 z_index = 1
 position = Vector2(13251, 820)
 texture = ExtResource("56_t2mje")
@@ -365,7 +365,12 @@ visible = false
 position = Vector2(2779, -457)
 texture = ExtResource("37_lr1et")
 
-[node name="TaxManRoomLight" type="PointLight2D" parent="Background" index="3"]
+[node name="Image" type="Sprite2D" parent="Background" index="3"]
+position = Vector2(13183, 378)
+scale = Vector2(2.93358, 2.96929)
+texture = ExtResource("16_wylcn")
+
+[node name="TaxManRoomLight" type="PointLight2D" parent="Background" index="4"]
 position = Vector2(13827, 396)
 enabled = false
 energy = 0.0
@@ -374,7 +379,7 @@ texture_scale = 4.0
 script = ExtResource("16_rlks8")
 day_cycle_data = ExtResource("4_y5lul")
 
-[node name="SideWalk3" type="Node2D" parent="Background" index="4"]
+[node name="SideWalk3" type="Node2D" parent="Background" index="5"]
 visible = false
 position = Vector2(9143, 416)
 scale = Vector2(1.08542, 2.5394)
@@ -387,29 +392,29 @@ variation_textures = Array[Texture2D]([ExtResource("8_fsw4y"), ExtResource("9_7k
 variations_weights = Array[float]([0.347292, 0.946498, 1.70621])
 texture_sequence = Array[int]([1, 2, 2, 0, 2, 1])
 
-[node name="FosterMart" type="Sprite2D" parent="Background" index="5"]
+[node name="FosterMart" type="Sprite2D" parent="Background" index="6"]
 position = Vector2(3774, 104)
 scale = Vector2(1.07531, 1.07531)
 texture = ExtResource("22_lge2l")
 
-[node name="Rocks" type="Sprite2D" parent="Background" index="6"]
+[node name="Rocks" type="Sprite2D" parent="Background" index="7"]
 position = Vector2(9166, 364)
 texture = ExtResource("10_oy6ry")
 
-[node name="Option3" type="Sprite2D" parent="Background" index="7"]
+[node name="Option3" type="Sprite2D" parent="Background" index="8"]
 position = Vector2(4700.5, 107)
 texture = ExtResource("24_qiwg1")
 
-[node name="Floornewnew" type="Sprite2D" parent="Background" index="8"]
+[node name="Floornewnew" type="Sprite2D" parent="Background" index="9"]
 texture_filter = 1
 texture_repeat = 2
-position = Vector2(3276.5, 908)
+position = Vector2(1927, 908)
 texture = ExtResource("25_wylcn")
 region_enabled = true
 region_rect = Rect2(0, 0, 16537, 819)
 region_filter_clip_enabled = true
 
-[node name="BrickBuilding1" type="Node2D" parent="Background" index="9"]
+[node name="BrickBuilding1" type="Node2D" parent="Background" index="10"]
 position = Vector2(514, 565)
 
 [node name="BrickWall" parent="Background/BrickBuilding1" index="0" instance=ExtResource("4_8ntk5")]
@@ -476,12 +481,12 @@ position = Vector2(-9, -385)
 position = Vector2(-46, -566)
 texture = ExtResource("47_tcjgr")
 
-[node name="Option1" type="Sprite2D" parent="Background" index="10"]
+[node name="Option1" type="Sprite2D" parent="Background" index="11"]
 position = Vector2(5338.5, 108)
 scale = Vector2(1.01416, 1.01416)
 texture = ExtResource("23_wylcn")
 
-[node name="ChickenKing" parent="Background" index="11" instance=ExtResource("4_8mlpl")]
+[node name="ChickenKing" parent="Background" index="12" instance=ExtResource("4_8mlpl")]
 visible = false
 position = Vector2(2572, 505)
 
@@ -490,12 +495,12 @@ visible = false
 position = Vector2(-543, -623)
 scale = Vector2(1.49074, 1.49074)
 
-[node name="KF6PfD90DoBvSsV1v0Fbk9z3Qdupb" type="Sprite2D" parent="Background" index="12"]
+[node name="KF6PfD90DoBvSsV1v0Fbk9z3Qdupb" type="Sprite2D" parent="Background" index="13"]
 position = Vector2(2603, 4.76837e-07)
 scale = Vector2(1.25815, 1.25815)
 texture = ExtResource("40_qiwg1")
 
-[node name="SideWalk2" type="Node2D" parent="Background" index="13"]
+[node name="SideWalk2" type="Node2D" parent="Background" index="14"]
 visible = false
 position = Vector2(1842.36, 482.217)
 script = ExtResource("2_0ledp")
@@ -515,35 +520,35 @@ texture = ExtResource("37_lr1et")
 position = Vector2(7918.64, -215.217)
 texture = ExtResource("37_lr1et")
 
-[node name="VendingMachine3" type="Sprite2D" parent="Background" index="14"]
+[node name="VendingMachine3" type="Sprite2D" parent="Background" index="15"]
 visible = false
 position = Vector2(6537.75, 375.856)
 scale = Vector2(1.21205, 1.21205)
 texture = ExtResource("28_f64gi")
 
-[node name="VendingMachine2" type="Sprite2D" parent="Background" index="15"]
+[node name="VendingMachine2" type="Sprite2D" parent="Background" index="16"]
 visible = false
 position = Vector2(6394.75, 374.856)
 scale = Vector2(1.21205, 1.21205)
 texture = ExtResource("29_70lla")
 
-[node name="Prop020" type="Sprite2D" parent="Background" index="16"]
+[node name="Prop020" type="Sprite2D" parent="Background" index="17"]
 position = Vector2(200, 573)
 scale = Vector2(1.58297, 1.58297)
 texture = ExtResource("55_26684")
 
-[node name="Prop011" type="Sprite2D" parent="Background" index="17"]
+[node name="Prop011" type="Sprite2D" parent="Background" index="18"]
 position = Vector2(285, 582)
 scale = Vector2(1.91803, 1.91803)
 texture = ExtResource("56_3q82n")
 
-[node name="VendingMachine" type="Sprite2D" parent="Background" index="18"]
+[node name="VendingMachine" type="Sprite2D" parent="Background" index="19"]
 visible = false
 position = Vector2(6210.75, 374.856)
 scale = Vector2(1.21205, 1.21205)
 texture = ExtResource("30_8bcgp")
 
-[node name="BrickBuilding2" type="Node2D" parent="Background" index="19"]
+[node name="BrickBuilding2" type="Node2D" parent="Background" index="20"]
 position = Vector2(96, 0)
 
 [node name="BrickWall2" parent="Background/BrickBuilding2" index="0" instance=ExtResource("4_8ntk5")]
@@ -589,7 +594,7 @@ texture = ExtResource("10_gbajp")
 position = Vector2(1746, -213)
 texture = ExtResource("30_5joav")
 
-[node name="SideWalk" type="Node2D" parent="Background" index="20"]
+[node name="SideWalk" type="Node2D" parent="Background" index="21"]
 visible = false
 position = Vector2(439.363, 541.217)
 script = ExtResource("2_0ledp")
@@ -667,27 +672,27 @@ position = Vector2(6582.64, -27.217)
 scale = Vector2(0.80948, 1.38224)
 texture = ExtResource("65_bay6v")
 
-[node name="Prop052" type="Sprite2D" parent="Background" index="21"]
+[node name="Prop052" type="Sprite2D" parent="Background" index="22"]
 position = Vector2(1429, 466)
 scale = Vector2(2.01886, 2.01886)
 texture = ExtResource("68_tcjgr")
 
-[node name="box2" type="Sprite2D" parent="Background" index="22"]
+[node name="box2" type="Sprite2D" parent="Background" index="23"]
 position = Vector2(2130.87, 514.642)
 scale = Vector2(1.59987, 1.5547)
 texture = ExtResource("64_ygepa")
 
-[node name="box3" type="Sprite2D" parent="Background" index="23"]
+[node name="box3" type="Sprite2D" parent="Background" index="24"]
 position = Vector2(2017.87, 548.642)
 scale = Vector2(1.68691, 1.63928)
 texture = ExtResource("64_ygepa")
 
-[node name="box" type="Sprite2D" parent="Background" index="24"]
+[node name="box" type="Sprite2D" parent="Background" index="25"]
 position = Vector2(2071.87, 401.642)
 scale = Vector2(1.58891, 1.54404)
 texture = ExtResource("64_ygepa")
 
-[node name="box lights" type="LightOccluder2D" parent="Background" index="25"]
+[node name="box lights" type="LightOccluder2D" parent="Background" index="26"]
 modulate = Color(0.312484, 0.590715, 9.43363e-06, 1)
 show_behind_parent = true
 top_level = true
@@ -697,38 +702,38 @@ position = Vector2(2046, 449)
 occluder = SubResource("OccluderPolygon2D_mwunp")
 occluder_light_mask = 5
 
-[node name="wood floor" type="Sprite2D" parent="Background" index="26"]
+[node name="wood floor" type="Sprite2D" parent="Background" index="27"]
 visible = false
 position = Vector2(14138, 958)
 scale = Vector2(6.12569, 0.931851)
 texture = ExtResource("61_2nd85")
 
-[node name="Prop039" type="Sprite2D" parent="Background" index="27"]
+[node name="Prop039" type="Sprite2D" parent="Background" index="28"]
 position = Vector2(5755, 509)
 scale = Vector2(0.687381, 0.799099)
 texture = ExtResource("59_uymx4")
 
-[node name="Prop040" type="Sprite2D" parent="Background" index="28"]
+[node name="Prop040" type="Sprite2D" parent="Background" index="29"]
 visible = false
 position = Vector2(8417, 929)
 texture = ExtResource("59_uymx4")
 
-[node name="Prop055" type="Sprite2D" parent="Background" index="29"]
+[node name="Prop055" type="Sprite2D" parent="Background" index="30"]
 position = Vector2(8319.74, 413.281)
 scale = Vector2(1.77407, 1.77407)
 texture = ExtResource("60_2nd85")
 
-[node name="Prop056" type="Sprite2D" parent="Background" index="30"]
+[node name="Prop056" type="Sprite2D" parent="Background" index="31"]
 position = Vector2(8249.74, 453.281)
 scale = Vector2(1.77407, 1.77407)
 texture = ExtResource("60_2nd85")
 
-[node name="Prop057" type="Sprite2D" parent="Background" index="31"]
+[node name="Prop057" type="Sprite2D" parent="Background" index="32"]
 position = Vector2(8313.74, 487.281)
 scale = Vector2(1.77407, 1.77407)
 texture = ExtResource("60_2nd85")
 
-[node name="Prop038" type="Sprite2D" parent="Background" index="32"]
+[node name="Prop038" type="Sprite2D" parent="Background" index="33"]
 position = Vector2(7399, 1104)
 scale = Vector2(4.72463, 4.72463)
 texture = ExtResource("61_erbt0")
@@ -827,8 +832,8 @@ texture = ExtResource("34_wrols")
 
 [node name="TelefonePole4" type="Sprite2D" parent="Foreground" index="1"]
 material = SubResource("ShaderMaterial_juikt")
-position = Vector2(6633, 281)
-scale = Vector2(2, 2)
+position = Vector2(10955, 58)
+scale = Vector2(3.59577, 2.91305)
 texture = ExtResource("34_wrols")
 
 [node name="ForegroundParallax" type="ParallaxBackground" parent="Foreground" index="2"]

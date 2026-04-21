@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://c4l1tfqymlsbi"]
+[gd_scene load_steps=22 format=3 uid="uid://c4l1tfqymlsbi"]
 
 [ext_resource type="Theme" uid="uid://brlect5oi7d4w" path="res://ui/_base/theme_template.tres" id="1_2dr55"]
 [ext_resource type="Script" uid="uid://8bmlae5ekn8s" path="res://ui/end_screen/end_screen.gd" id="1_ll1aa"]
@@ -16,6 +16,7 @@
 [ext_resource type="BitMap" uid="uid://c54ps7mf67b0b" path="res://ui/pause_menu/pngs/buttons/quit_mask_normal.png" id="14_xd73w"]
 [ext_resource type="BitMap" uid="uid://c3n1563und8fe" path="res://ui/pause_menu/pngs/buttons/quit_mask_big.png" id="15_o8nli"]
 [ext_resource type="PackedScene" uid="uid://b5qfufu6dkbvt" path="res://ui/leaderboard/leaderboard.tscn" id="16_lead"]
+[ext_resource type="Texture2D" path="res://ui/end_screen/pngs/youwin.png" id="17_win"]
 
 [sub_resource type="Animation" id="Animation_8g40m"]
 length = 0.001
@@ -162,6 +163,18 @@ offset_bottom = 2633.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("3_oikt8")
+
+[node name="VictoryImage" type="TextureRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("17_win")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 custom_minimum_size = Vector2(0, 445)

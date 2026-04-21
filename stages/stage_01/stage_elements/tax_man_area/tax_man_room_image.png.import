@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bg164vx5yfm4o"
-path="res://.godot/imported/tax_man_windows.png-35fd0da6b44b0d677cbcdec5fccdffb6.ctex"
+uid="uid://dxpid27lo77lv"
+path="res://.godot/imported/tax_man_room_image.png-6ee5d19bebc06c801905aef8e24a7415.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://stages/stage_01/stage_elements/tax_man_area/tax_man_windows.png"
-dest_files=["res://.godot/imported/tax_man_windows.png-35fd0da6b44b0d677cbcdec5fccdffb6.ctex"]
+source_file="res://stages/stage_01/stage_elements/tax_man_area/tax_man_room_image.png"
+dest_files=["res://.godot/imported/tax_man_room_image.png-6ee5d19bebc06c801905aef8e24a7415.ctex"]
 
 [params]
 

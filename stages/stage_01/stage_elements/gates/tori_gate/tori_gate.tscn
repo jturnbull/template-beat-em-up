@@ -27,8 +27,9 @@ texture = ExtResource("2_hw1c3")
 offset = Vector2(-91, -1037)
 
 [node name="Rightgate" type="Sprite2D" parent="."]
-position = Vector2(353.333, -581.334)
+position = Vector2(353.333, 365.333)
 texture = ExtResource("3_2spm1")
+offset = Vector2(0, -946.667)
 
 [node name="StaticBody2d" type="StaticBody2D" parent="."]
 position = Vector2(-220, -96)

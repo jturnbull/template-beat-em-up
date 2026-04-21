@@ -3,10 +3,10 @@ extends Control
 
 signal entry_flow_finished
 
-@export var rows_count := 10
+@export var rows_count := 6
 @export var show_date := false
-@export var show_time := true
-@export var font_scale := 3.0
+@export var show_time := false
+@export var font_scale := 1.5
 @export var title_scale := 0.5
 @export var subtitle_scale := 0.6
 @export var blink_interval := 0.4
@@ -281,6 +281,8 @@ func _setup_blink_timer() -> void:
 	_blink_timer = Timer.new()
 	_blink_timer.wait_time = blink_interval
 	_blink_timer.one_shot = false
+	_blink_timer.ignore_time_scale = true
+	_blink_timer.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_blink_timer)
 	_blink_timer.timeout.connect(_on_blink_timeout)
 
@@ -332,8 +334,6 @@ func _column_width(key: String) -> int:
 			return int(150 * font_scale)
 		"score":
 			return int(180 * font_scale)
-		"time":
-			return int(150 * font_scale)
 		"date":
 			return int(180 * font_scale)
 		_:
@@ -356,8 +356,6 @@ func _column_header(key: String) -> String:
 			return "NAME"
 		"score":
 			return "SCORE"
-		"time":
-			return "TIME"
 		"date":
 			return "DATE"
 		_:
@@ -395,6 +393,8 @@ func _setup_font() -> void:
 func _setup_auto_close_timer() -> void:
 	_auto_close_timer = Timer.new()
 	_auto_close_timer.one_shot = true
+	_auto_close_timer.ignore_time_scale = true
+	_auto_close_timer.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_auto_close_timer)
 	_auto_close_timer.timeout.connect(_on_auto_close_timeout)
 
@@ -422,7 +422,7 @@ func _on_auto_close_timeout() -> void:
 func _fit_panel_to_viewport() -> void:
 	var viewport_size := get_viewport_rect().size
 	var target_size := _panel.size
-	target_size.x = min(880.0, max(540.0, viewport_size.x - 64.0))
+	target_size.x = min(viewport_size.x - 64.0, _desired_panel_width())
 	target_size.y = max(320.0, viewport_size.y - (viewport_margin * 2.0))
 	_panel.custom_minimum_size = target_size
 	_panel.size = target_size
@@ -436,3 +436,14 @@ func _sync_scroll_position(row_index: int) -> void:
 	var clamped_index := int(clamp(row_index, 0, _rows.size() - 1))
 	var row := _rows[clamped_index] as HBoxContainer
 	_rows_scroll.scroll_vertical = int(row.position.y)
+
+
+func _desired_panel_width() -> float:
+	var margins := 56.0
+	var row_separation := 18.0 * font_scale
+	var column_widths := 0.0
+	for key in _column_keys:
+		column_widths += _column_width(key)
+	var separators: float = max(0, _column_keys.size() - 1) * row_separation
+	var footer_padding := 60.0
+	return max(560.0, column_widths + separators + margins + footer_padding)
