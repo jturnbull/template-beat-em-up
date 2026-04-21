@@ -32,13 +32,6 @@ func _ready() -> void:
 	pass
 
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("pause"):
-		if not visible:
-			open_pause_menu()
-		else:
-			close_pause_menu()
-
 ### -----------------------------------------------------------------------------------------------
 
 
