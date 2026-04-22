@@ -31,6 +31,7 @@ position = Vector2(536, 827)
 input_action_prefix = "p1"
 
 [node name="LevelCamera" parent="Level/Characters/Chad" instance=ExtResource("16_hjekt")]
+zoom = Vector2(0.8, 0.8)
 limit_top = -280
 limit_bottom = 1200
 editor_draw_limits = true

@@ -48,6 +48,9 @@ func _ready() -> void:
 func _input(event: InputEvent) -> void:
 	if _animator.assigned_animation == "game_started":
 		return
+	if _is_exit_combo(event):
+		get_tree().quit()
+		return
 	if event.is_action_pressed("p2_start"):
 		_start_game(2)
 		return
@@ -170,5 +173,15 @@ func _hide_leaderboard() -> void:
 	if _idle_active and _leaderboard_timer:
 		_leaderboard_timer.wait_time = leaderboard_show_seconds
 		_leaderboard_timer.start()
+
+
+func _is_exit_combo(event: InputEvent) -> bool:
+	if not event.is_pressed():
+		return false
+	if event.is_action_pressed("p1_start"):
+		return Input.is_action_pressed("p2_start")
+	if event.is_action_pressed("p2_start"):
+		return Input.is_action_pressed("p1_start")
+	return false
 
 ### -----------------------------------------------------------------------------------------------

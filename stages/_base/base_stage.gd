@@ -63,6 +63,10 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if OS.has_feature("debug") and event.is_action_pressed("debug_restart"):
 		reload_prototype()
+
+	if _is_exit_combo(event):
+		get_tree().quit()
+		return
 	
 	if not _player_two_active and not _player_two_dead and event.is_action_pressed("p2_start"):
 		_set_player_two_active(true)
@@ -232,6 +236,16 @@ func _get_player_display_name(player: QuiverCharacter, fallback: String) -> Stri
 		return player.attributes.display_name
 	
 	return fallback
+
+
+func _is_exit_combo(event: InputEvent) -> bool:
+	if not event.is_pressed():
+		return false
+	if event.is_action_pressed("p1_start"):
+		return Input.is_action_pressed("p2_start")
+	if event.is_action_pressed("p2_start"):
+		return Input.is_action_pressed("p1_start")
+	return false
 
 
 func _on_characters_root_child_entered_tree(node: Node) -> void:

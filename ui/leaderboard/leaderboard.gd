@@ -329,15 +329,15 @@ func _build_columns() -> void:
 func _column_width(key: String) -> int:
 	match key:
 		"rank":
-			return int(70 * font_scale)
+			return int(60 * font_scale)
 		"name":
-			return int(150 * font_scale)
+			return int(120 * font_scale)
 		"score":
-			return int(180 * font_scale)
+			return int(120 * font_scale)
 		"date":
-			return int(180 * font_scale)
+			return int(120 * font_scale)
 		_:
-			return int(100 * font_scale)
+			return int(90 * font_scale)
 
 
 func _column_align(key: String) -> HorizontalAlignment:
@@ -422,7 +422,7 @@ func _on_auto_close_timeout() -> void:
 func _fit_panel_to_viewport() -> void:
 	var viewport_size := get_viewport_rect().size
 	var target_size := _panel.size
-	target_size.x = min(viewport_size.x - 64.0, _desired_panel_width())
+	target_size.x = min(720.0, viewport_size.x - 64.0)
 	target_size.y = max(320.0, viewport_size.y - (viewport_margin * 2.0))
 	_panel.custom_minimum_size = target_size
 	_panel.size = target_size
@@ -436,14 +436,3 @@ func _sync_scroll_position(row_index: int) -> void:
 	var clamped_index := int(clamp(row_index, 0, _rows.size() - 1))
 	var row := _rows[clamped_index] as HBoxContainer
 	_rows_scroll.scroll_vertical = int(row.position.y)
-
-
-func _desired_panel_width() -> float:
-	var margins := 56.0
-	var row_separation := 18.0 * font_scale
-	var column_widths := 0.0
-	for key in _column_keys:
-		column_widths += _column_width(key)
-	var separators: float = max(0, _column_keys.size() - 1) * row_separation
-	var footer_padding := 60.0
-	return max(560.0, column_widths + separators + margins + footer_padding)
